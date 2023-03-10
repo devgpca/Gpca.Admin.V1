@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gpca.Admin.V1", "Gpca.Admin.V1\Gpca.Admin.V1.csproj", "{DB3BAF5C-5390-483B-91FC-73BDC2A56A85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB3BAF5C-5390-483B-91FC-73BDC2A56A85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB3BAF5C-5390-483B-91FC-73BDC2A56A85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB3BAF5C-5390-483B-91FC-73BDC2A56A85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB3BAF5C-5390-483B-91FC-73BDC2A56A85}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A67EFEDD-3A7E-476F-9986-9C6B7656B4BB}
+	EndGlobalSection
+EndGlobal

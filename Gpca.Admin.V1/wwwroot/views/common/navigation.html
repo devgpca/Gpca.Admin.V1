@@ -1,0 +1,75 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul side-navigation class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+
+                <div class="profile-element" uib-dropdown>
+                    <img alt="image" style="width: 160px;" src="../../img/LOGO_SISTEMA.png" />
+                </div>
+                <div class="logo-element">
+                    <img alt="image" src="../../img/SIMBOLO_SISTEMA.png" style="width:35px;" />
+                </div>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="inicio.blank"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">{{ 'Blank' | translate }}</span> </a>
+            </li>
+            <!--<li ng-class="{active: $state.includes('usuario')}" ng-show="usuario.length > 0">
+                <a href="#"><i class="fa fa-user-o"></i> <span class="nav-label">{{ 'Usuario' | translate }}</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('usuario')}">
+                    <li ui-sref-active="active" ng-repeat="uSubMenu in usuario[0].subMenus">
+                        <a ui-sref="{{usuario[0].descricao | lowercase}}.{{uSubMenu.descricao | trim | lowercase}}">{{uSubMenu.descricao}}</a>
+                    </li>
+                </ul>
+            </li>
+            <li ng-class="{active: $state.includes('emprestimo')}" ng-show="emprestimo.length > 0">
+                <a href="#"><i class="fa fa-money"></i> <span class="nav-label">{{ 'Emprestimo' | translate }}</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('emprestimo')}">
+
+                    <li ui-sref-active="active" ng-repeat="eSubMenu in emprestimo[0].subMenus">
+                        <a ui-sref="{{emprestimo[0].descricao | lowercase}}.{{eSubMenu.descricao | lowercase}}">{{eSubMenu.descricao }}</a>
+                    </li>
+                </ul>
+            </li>
+            <li ui-sref-active="active" ng-show="sms.length > 0">
+                <a ui-sref="sms.envio"><i class="fa fa-mobile-phone"></i> <span class="nav-label">{{ 'SMS' | translate }}</span> </a>
+            </li>
+            <li ui-sref-active="active" ng-show="etapa.length > 0">
+                <a ui-sref="etapa.consulta"><i class="fa fa-list-ol"></i> <span class="nav-label">{{ 'Etapa' | translate }}</span> </a>
+            </li>
+            <li ng-class="{active: $state.includes('status')}" ng-show="status.length > 0">
+                <a href="#"><i class="fa fa-exclamation-triangle"></i> <span class="nav-label">{{ 'Status' | translate }}</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('status')}">
+
+                    <li ui-sref-active="active" ng-repeat="eSubMenu in status[0].subMenus">
+                        <a ui-sref="{{status[0].descricao | lowercase}}.{{eSubMenu.descricao | lowercase}}">{{eSubMenu.descricao }}</a>
+                    </li>
+                </ul>
+            </li>
+            <li ui-sref-active="active" ng-show="fatores.length > 0">
+                <a ui-sref="fatores.cadastro"><i class="fa fa-subscript"></i> <span class="nav-label">{{ 'Fatores' | translate }}</span> </a>
+            </li>
+            <li ng-class="{active: $state.includes('companhias')}" ng-show="companhia.length > 0">
+                <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">{{ 'Companhias' | translate }}</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('companhias')}">
+                    <li ui-sref-active="active" ng-repeat="cSubMenu in companhia[0].subMenus">
+                        <a ui-sref="{{companhia[0].descricao | lowercase}}.{{cSubMenu.descricao | lowercase}}">{{cSubMenu.descricao }}</a>
+                    </li>
+                </ul>
+            </li>
+            <li ng-class="{active: $state.includes('importacao')}" ng-show="importacao.length > 0">
+                <a href="#"><i class="fa fa-upload"></i> <span class="nav-label">{{ 'Importacao' | translate }}</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('importacao')}">
+                    <li ui-sref-active="active" ng-repeat="iSubMenu in importacao[0].subMenus">
+                        <a ui-sref="{{importacao[0].descricao | lowercase}}.{{iSubMenu.descricao | lowercase}}">{{iSubMenu.descricao }}</a>
+                    </li>
+                </ul>
+            </li>
+            <li ui-sref-active="active" ng-show="ip.length > 0">
+                <a ui-sref="ip.consulta"><i class="fa fa-desktop"></i> <span class="nav-label">{{ 'Ip Acesso' | translate }}</span> </a>
+            </li>
+            <li ui-sref-active="active" ng-show="permissoes.length > 0">
+                <a ui-sref="permissao.consulta"><i class="fa fa-lock"></i> <span class="nav-label">{{ 'Permissoes' | translate }}</span> </a>
+            </li>-->
+        </ul>
+    </div>
+</nav>
