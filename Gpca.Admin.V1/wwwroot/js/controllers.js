@@ -387,4 +387,470 @@ angular.module('gpca')
                 })
             });
         };
-    });
+    })
+    .controller('consorcioCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+
+        $scope.incluir = function () {
+            $uibModal.open({
+                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
+                controller: 'fatoresModalCtrl',
+                windowClass: "animated fadeIn",
+                resolve: {
+                    fatorSelected: function () {
+                        return null;
+                    }
+                }
+            }).result.then(function () {
+                $scope.obterFatores();
+            });
+        }
+
+        $scope.editar = function (fator) {
+            $uibModal.open({
+                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
+                controller: 'fatoresModalCtrl',
+                windowClass: "animated fadeIn",
+                resolve: {
+                    fatorSelected: function () {
+                        return fator;
+                    }
+                }
+            }).result.then(function () {
+                $scope.obterFatores();
+            });
+        }
+
+        $scope.ativarDesativar = function (fator) {
+            $scope.title = fator.fa_Ativo == "1" ? "ativar" : "desativar";
+            $scope.result = fator.fa_Ativo == "1" ? "ativado" : "desativado";
+
+            SweetAlert.swal({
+                title: "Deseja " + $scope.title + " ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Sim, " + $scope.title + " !",
+                cancelButtonText: "Não, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http.post(constants.UrlApi + "Fator/AtivarDesativar", fator.fa_Id, {
+                            headers: { 'Authorization': 'Bearer ' + $localStorage.token }
+                        }).then(function (response) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "O fator foi " + $scope.result + " com sucesso.",
+                                type: "success"
+                            });
+
+                            $scope.obterFatores();
+
+                        }, function (response) {
+                            return alert("Erro: " + response.status);
+                        });
+                    } else {
+                        SweetAlert.swal({
+                            title: "Cancelado!",
+                            text: "Você cancelou a alteração do registro",
+                            type: "error"
+                        });
+                    }
+                });
+        }
+    })
+    .controller('JVCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+
+        $scope.incluir = function () {
+            $uibModal.open({
+                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
+                controller: 'fatoresModalCtrl',
+                windowClass: "animated fadeIn",
+                resolve: {
+                    fatorSelected: function () {
+                        return null;
+                    }
+                }
+            }).result.then(function () {
+                $scope.obterFatores();
+            });
+        }
+
+        $scope.editar = function (fator) {
+            $uibModal.open({
+                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
+                controller: 'fatoresModalCtrl',
+                windowClass: "animated fadeIn",
+                resolve: {
+                    fatorSelected: function () {
+                        return fator;
+                    }
+                }
+            }).result.then(function () {
+                $scope.obterFatores();
+            });
+        }
+
+        $scope.ativarDesativar = function (fator) {
+            $scope.title = fator.fa_Ativo == "1" ? "ativar" : "desativar";
+            $scope.result = fator.fa_Ativo == "1" ? "ativado" : "desativado";
+
+            SweetAlert.swal({
+                title: "Deseja " + $scope.title + " ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Sim, " + $scope.title + " !",
+                cancelButtonText: "Não, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http.post(constants.UrlApi + "Fator/AtivarDesativar", fator.fa_Id, {
+                            headers: { 'Authorization': 'Bearer ' + $localStorage.token }
+                        }).then(function (response) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "O fator foi " + $scope.result + " com sucesso.",
+                                type: "success"
+                            });
+
+                            $scope.obterFatores();
+
+                        }, function (response) {
+                            return alert("Erro: " + response.status);
+                        });
+                    } else {
+                        SweetAlert.swal({
+                            title: "Cancelado!",
+                            text: "Você cancelou a alteração do registro",
+                            type: "error"
+                        });
+                    }
+                });
+        }
+    })
+    .controller('TIPICtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+
+        $scope.incluir = function () {
+            $uibModal.open({
+                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
+                controller: 'fatoresModalCtrl',
+                windowClass: "animated fadeIn",
+                resolve: {
+                    fatorSelected: function () {
+                        return null;
+                    }
+                }
+            }).result.then(function () {
+                $scope.obterFatores();
+            });
+        }
+
+        $scope.editar = function (fator) {
+            $uibModal.open({
+                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
+                controller: 'fatoresModalCtrl',
+                windowClass: "animated fadeIn",
+                resolve: {
+                    fatorSelected: function () {
+                        return fator;
+                    }
+                }
+            }).result.then(function () {
+                $scope.obterFatores();
+            });
+        }
+
+        $scope.ativarDesativar = function (fator) {
+            $scope.title = fator.fa_Ativo == "1" ? "ativar" : "desativar";
+            $scope.result = fator.fa_Ativo == "1" ? "ativado" : "desativado";
+
+            SweetAlert.swal({
+                title: "Deseja " + $scope.title + " ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Sim, " + $scope.title + " !",
+                cancelButtonText: "Não, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http.post(constants.UrlApi + "Fator/AtivarDesativar", fator.fa_Id, {
+                            headers: { 'Authorization': 'Bearer ' + $localStorage.token }
+                        }).then(function (response) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "O fator foi " + $scope.result + " com sucesso.",
+                                type: "success"
+                            });
+
+                            $scope.obterFatores();
+
+                        }, function (response) {
+                            return alert("Erro: " + response.status);
+                        });
+                    } else {
+                        SweetAlert.swal({
+                            title: "Cancelado!",
+                            text: "Você cancelou a alteração do registro",
+                            type: "error"
+                        });
+                    }
+                });
+        }
+    })
+    .controller('metaobjCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+
+        $scope.incluir = function () {
+            $uibModal.open({
+                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
+                controller: 'fatoresModalCtrl',
+                windowClass: "animated fadeIn",
+                resolve: {
+                    fatorSelected: function () {
+                        return null;
+                    }
+                }
+            }).result.then(function () {
+                $scope.obterFatores();
+            });
+        }
+
+        $scope.editar = function (fator) {
+            $uibModal.open({
+                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
+                controller: 'fatoresModalCtrl',
+                windowClass: "animated fadeIn",
+                resolve: {
+                    fatorSelected: function () {
+                        return fator;
+                    }
+                }
+            }).result.then(function () {
+                $scope.obterFatores();
+            });
+        }
+
+        $scope.ativarDesativar = function (fator) {
+            $scope.title = fator.fa_Ativo == "1" ? "ativar" : "desativar";
+            $scope.result = fator.fa_Ativo == "1" ? "ativado" : "desativado";
+
+            SweetAlert.swal({
+                title: "Deseja " + $scope.title + " ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Sim, " + $scope.title + " !",
+                cancelButtonText: "Não, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http.post(constants.UrlApi + "Fator/AtivarDesativar", fator.fa_Id, {
+                            headers: { 'Authorization': 'Bearer ' + $localStorage.token }
+                        }).then(function (response) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "O fator foi " + $scope.result + " com sucesso.",
+                                type: "success"
+                            });
+
+                            $scope.obterFatores();
+
+                        }, function (response) {
+                            return alert("Erro: " + response.status);
+                        });
+                    } else {
+                        SweetAlert.swal({
+                            title: "Cancelado!",
+                            text: "Você cancelou a alteração do registro",
+                            type: "error"
+                        });
+                    }
+                });
+        }
+    })
+    .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+
+        $scope.incluir = function () {
+            $uibModal.open({
+                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
+                controller: 'fatoresModalCtrl',
+                windowClass: "animated fadeIn",
+                resolve: {
+                    fatorSelected: function () {
+                        return null;
+                    }
+                }
+            }).result.then(function () {
+                $scope.obterFatores();
+            });
+        }
+
+        $scope.editar = function (fator) {
+            $uibModal.open({
+                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
+                controller: 'fatoresModalCtrl',
+                windowClass: "animated fadeIn",
+                resolve: {
+                    fatorSelected: function () {
+                        return fator;
+                    }
+                }
+            }).result.then(function () {
+                $scope.obterFatores();
+            });
+        }
+
+        $scope.ativarDesativar = function (fator) {
+            $scope.title = fator.fa_Ativo == "1" ? "ativar" : "desativar";
+            $scope.result = fator.fa_Ativo == "1" ? "ativado" : "desativado";
+
+            SweetAlert.swal({
+                title: "Deseja " + $scope.title + " ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Sim, " + $scope.title + " !",
+                cancelButtonText: "Não, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http.post(constants.UrlApi + "Fator/AtivarDesativar", fator.fa_Id, {
+                            headers: { 'Authorization': 'Bearer ' + $localStorage.token }
+                        }).then(function (response) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "O fator foi " + $scope.result + " com sucesso.",
+                                type: "success"
+                            });
+
+                            $scope.obterFatores();
+
+                        }, function (response) {
+                            return alert("Erro: " + response.status);
+                        });
+                    } else {
+                        SweetAlert.swal({
+                            title: "Cancelado!",
+                            text: "Você cancelou a alteração do registro",
+                            type: "error"
+                        });
+                    }
+                });
+        }
+    })
+    ;

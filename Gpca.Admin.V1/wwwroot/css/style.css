@@ -230,7 +230,7 @@ ul.nav-second-level {
 }
 
 .nav > li.active {
-    border-left: 4px solid #19aa8d;
+    border-left: 4px solid #1c84c6;
     background: #293846;
 }
 
@@ -2127,7 +2127,7 @@ div.dt-button-info {
 }
 
 .pace .pace-progress {
-    background: #1ab394;
+    background: #1a7bb9;
     position: fixed;
     z-index: 2040;
     top: 0;
