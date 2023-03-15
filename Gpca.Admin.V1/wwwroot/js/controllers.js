@@ -388,7 +388,14 @@ angular.module('gpca')
             });
         };
     })
-    .controller('consorcioCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {
+    .controller('consorcioCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope, ConsortiumService) {
+
+        $scope.consorcio = {
+            id: 0,
+            descricao: "",
+            ativo: false
+        }
+
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
             .withButtons([
@@ -411,10 +418,10 @@ angular.module('gpca')
             ]);
 
 
-        $scope.incluir = function () {
+        $scope.btnAdd = function () {
             $uibModal.open({
-                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
-                controller: 'fatoresModalCtrl',
+                templateUrl: 'views/modal/consorcio/incluir_editar_consorcio.html',
+                controller: 'consorcioCtrl',
                 windowClass: "animated fadeIn",
                 resolve: {
                     fatorSelected: function () {
@@ -479,6 +486,10 @@ angular.module('gpca')
                         });
                     }
                 });
+        }
+
+        $scope.Incluir = function () {
+            ConsortiumService.CadConsorcio($scope.consorcio);
         }
     })
     .controller('JVCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {

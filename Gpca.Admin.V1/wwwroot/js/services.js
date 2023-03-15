@@ -66,17 +66,34 @@ angular.module('gpca')
                     });
                 });
         }
+    })
+    .service('ConsortiumService', function ($http, constants, toaster, $timeout, $localStorage) { 
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.CadConsorcio = function (obj) { 
+            $http.post(constants.UrlRelatorioApi + 'Consorcio/Create', obj, params)
+                .then(function (response) {
+                    toaster.pop({
+                        type: 'success',
+                        title: 'Sucesso',
+                        body: response.data.message,
+                        showCloseButton: true,
+                        timeout: 5000
+                    });
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        toaster.pop({
+                            type: 'error',
+                            title: value.propertyName,
+                            body: value.errorMessage,
+                            showCloseButton: true,
+                            timeout: 5000
+                        });
+                    });
+                });
+        }
     });
-
-//function AuthService($http, $scope, constants) {
-
-//    $scope.logar = function (obj) {
-
-//        $http.post(constants.UrlApi + '/Login', obj)
-//            .then(function (response) {
-//                console.log(response);
-//            }, function (error) {
-//                console.log(error);
-//            });
-//    }
-//}

@@ -10368,6 +10368,13 @@ input[type="radio"] {
         color: #ccc;
     }
 
+.divLogin {
+    border: 1px solid #d1d1d1c4;
+    padding: 15px !important;
+    box-shadow: 20px 20px 20px 1px rgb(0 0 0 / 10%);
+    border-radius: 5px !important;
+}
+
 
 @keyframes effect {
     0% {

@@ -40,7 +40,8 @@
         }
     }).constant('constants',
         {
-            UrlAuthApi: 'https://localhost:8081/api/v1/Auth'
+            UrlAuthApi: 'https://localhost:8081/api/v1/Auth',
+            UrlRelatorioApi: 'https://localhost:7011/api/v1/'
         })
         .filter('parseUrl', function ($sce) {
             var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim

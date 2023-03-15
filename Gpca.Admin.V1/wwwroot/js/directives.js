@@ -3,9 +3,9 @@ function pageTitle($rootScope, $timeout) {
         link: function (scope, element) {
             var listener = function (event, toState, toParams, fromState, fromParams) {
                 // Default title - load on Dashboard 1
-                var title = 'Plancred | Responsive Admin Theme';
+                var title = 'GPCA | Responsive Admin Theme';
                 // Create your own title pattern
-                if (toState.data && toState.data.pageTitle) title = 'Plancred | ' + toState.data.pageTitle;
+                if (toState.data && toState.data.pageTitle) title = 'GPCA | ' + toState.data.pageTitle;
                 $timeout(function () {
                     element.text(title);
                 });
