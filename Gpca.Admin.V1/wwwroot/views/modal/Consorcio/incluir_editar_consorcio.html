@@ -1,20 +1,22 @@
 ﻿<div class="inmodal">
     <form role="form">
-        <div class="modal-body" style="width: 300px; height: 300px; background: #ffff !important; ">
-            <div class="title-modal">
-                <strong> Conórcio</strong>
+        <div class="modal-body" style="height: 180px; background: #ffff !important; ">
+            <div class="">
+                <h2><strong>Consórcio</strong></h2>
             </div>
-            <div class="container-modal">
-                <label>Nome do Consórcio</label>
-                <input type="text" placeholder="Ex.: Poço-M-123" ng-model="consorcio.descricao" />
-                <div class="form-check form-switch">
+            <div class="" style="padding: 8px;">
+                <div style="position: absolute; z-index: 2000">
+                    <label style="font-size: 1.5rem; font-weight: 600;">Nome do Consórcio</label>
+                    <input type="text" class="form-control input-sm" placeholder="Ex.: Poço-M-123" ng-model="consorcio.descricao" />
+                </div>
+                <div class="col-md-10 form-check form-switch" style="position: relative; padding-left: 180px; padding-top: 35px;">
                     <input class="form-check-input" type="checkbox" ng-model="consorcio.ativo" checked>
-                    <label class="form-check-label" for="flexSwitchCheckChecked">Ativo</label>
+                    <label class="form-check-label" for="flexSwitchCheckChecked" style="font-size: 1.5rem; font-weight: 600;">Ativo</label>
+                </div>
+                <div class="col-md-2" style="position: relative; padding-top: 25px;">
+                    <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" ng-click="Incluir()"><i class="fa fa-save"></i> Incluir</button>
                 </div>
             </div>
-        </div>
-        <div>
-            <button ng-click="Incluir()">Incluir</button>
-        </div>
+        </div>        
     </form>
 </div>

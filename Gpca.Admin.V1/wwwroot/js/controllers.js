@@ -388,13 +388,20 @@ angular.module('gpca')
             });
         };
     })
-    .controller('consorcioCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope, ConsortiumService) {
+    .controller('consorcioCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, ConsortiumService, $q) {
+
+        var GetList = ConsortiumService.GetConsorcio();
+
+        $q.all([GetList]).then(function (response) {
+            $scope.getData = response[0].data;
+            console.log($scope.getData);
+        });
 
         $scope.consorcio = {
             id: 0,
             descricao: "",
             ativo: false
-        }
+        };
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
@@ -421,36 +428,37 @@ angular.module('gpca')
         $scope.btnAdd = function () {
             $uibModal.open({
                 templateUrl: 'views/modal/consorcio/incluir_editar_consorcio.html',
-                controller: 'consorcioCtrl',
+                controller: function ($scope, $uibModalInstance) {
+                    $scope.Incluir = function () {
+                        ConsortiumService.CadConsorcio($scope.consorcio);
+                        $uibModalInstance.close();;
+                    }
+                },
                 windowClass: "animated fadeIn",
                 resolve: {
                     fatorSelected: function () {
                         return null;
                     }
                 }
-            }).result.then(function () {
-                $scope.obterFatores();
             });
         }
 
-        $scope.editar = function (fator) {
+        $scope.editar = function (data) {
             $uibModal.open({
-                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
+                templateUrl: 'views/modal/consorcio/incluir_editar_consorcio.html',
                 controller: 'fatoresModalCtrl',
                 windowClass: "animated fadeIn",
                 resolve: {
                     fatorSelected: function () {
-                        return fator;
+                        return data;
                     }
                 }
-            }).result.then(function () {
-                $scope.obterFatores();
             });
         }
 
-        $scope.ativarDesativar = function (fator) {
-            $scope.title = fator.fa_Ativo == "1" ? "ativar" : "desativar";
-            $scope.result = fator.fa_Ativo == "1" ? "ativado" : "desativado";
+        $scope.ativarDesativarConsorcio = function (data) {
+            $scope.title = data.ativo == false ? "ativar" : "desativar";
+            $scope.result = data.ativo == false ? "ativado" : "desativado";
 
             SweetAlert.swal({
                 title: "Deseja " + $scope.title + " ?",
@@ -490,9 +498,21 @@ angular.module('gpca')
 
         $scope.Incluir = function () {
             ConsortiumService.CadConsorcio($scope.consorcio);
+            
         }
     })
-    .controller('JVCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {
+    .controller('JVCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope, ConsorcioJvService) {
+
+
+        $scope.objJv = {
+            item: "",
+            consorioId: 1,
+            jv: "",
+            situacao: "",
+            cutback: "",
+            planilha: 1
+        }
+
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
             .withButtons([
@@ -583,6 +603,10 @@ angular.module('gpca')
                         });
                     }
                 });
+        }
+
+        $scope.IncluirJv = function () {
+            ConsorcioJvService.CreayeJv($scope.objJv);
         }
     })
     .controller('TIPICtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {

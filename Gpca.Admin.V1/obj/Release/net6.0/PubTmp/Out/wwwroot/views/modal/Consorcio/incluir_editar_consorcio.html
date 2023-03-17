@@ -1,0 +1,20 @@
+﻿<div class="inmodal">
+    <form role="form">
+        <div class="modal-body" style="width: 300px; height: 300px; background: #ffff !important; ">
+            <div class="title-modal">
+                <strong> Conórcio</strong>
+            </div>
+            <div class="container-modal">
+                <label>Nome do Consórcio</label>
+                <input type="text" placeholder="Ex.: Poço-M-123" ng-model="consorcio.descricao" />
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" ng-model="consorcio.ativo" checked>
+                    <label class="form-check-label" for="flexSwitchCheckChecked">Ativo</label>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button ng-click="Incluir()">Incluir</button>
+        </div>
+    </form>
+</div>

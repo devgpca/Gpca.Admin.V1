@@ -1,0 +1,29 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul side-navigation class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+
+                <div class="profile-element" uib-dropdown>
+                    <img alt="image" style="width: 160px;" src="../../img/Grupo Performance Consultoria & Assessoria - fundo transparente 01.png" />
+                </div>
+                <div class="logo-element">
+                    <img alt="image" src="../../img/Grupo Performance Consultoria & Assessoria - fundo transparente 01.png" style="width:35px;" />
+                </div>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="inicio.blank"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">{{ 'Blank' | translate }}</span> </a>
+            </li>
+
+            <li ng-class="{active: $state.includes('tabelas')}">
+                <a href="#"><i class="fa fa-list-alt"></i> <span class="nav-label">{{ 'Tabelas' | translate }}</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('tabelas')}">
+                    <li ui-sref-active="active"><a ui-sref="tabelas.consorcio">{{ 'Consorcio' | translate }}</a></li>
+                    <li ui-sref-active="active"><a ui-sref="tabelas.JV">JV</a></li>
+                    <li ui-sref-active="active"><a ui-sref="tabelas.TIPI">TIPI</a></li>
+                    <li ui-sref-active="active"><a ui-sref="tabelas.metaObjeto">Meta Objeto</a></li>
+                    <li ui-sref-active="active"><a ui-sref="tabelas.texto">Texto</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

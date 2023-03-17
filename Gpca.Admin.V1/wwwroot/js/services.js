@@ -1,7 +1,7 @@
 angular.module('gpca')
     .service('AuthService', function ($http, constants, toaster, $timeout, $localStorage) {
         this.logar = function (obj) {
-            $http.post(constants.UrlAuthApi + '/Login', obj)
+            $http.post(constants.UrlAuthApi + 'Auth/Login', obj)
                 .then(function (response) {
                     if (response.data.authenticated) {
 
@@ -67,33 +67,33 @@ angular.module('gpca')
                 });
         }
     })
-    .service('ConsortiumService', function ($http, constants, toaster, $timeout, $localStorage) { 
+    .service('ConsortiumService', function ($http, constants, $timeout, $localStorage) {
         var params = {
             headers: {
                 'RefreshToken': $localStorage.user.refreshToken
             }
         };
 
-        this.CadConsorcio = function (obj) { 
+        this.CadConsorcio = function (obj) {
             $http.post(constants.UrlRelatorioApi + 'Consorcio/Create', obj, params)
                 .then(function (response) {
-                    toaster.pop({
-                        type: 'success',
-                        title: 'Sucesso',
-                        body: response.data.message,
-                        showCloseButton: true,
-                        timeout: 5000
-                    });
+                    return response;
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
-                        toaster.pop({
-                            type: 'error',
-                            title: value.propertyName,
-                            body: value.errorMessage,
-                            showCloseButton: true,
-                            timeout: 5000
-                        });
+                        return value;
                     });
                 });
+        }
+
+        this.GetConsorcio = function () {
+            var obj = {};
+            return $http.post(constants.UrlRelatorioApi + 'Consorcio/GetList', obj, params)
+                    .then(function (response) {
+                        return response.data;
+                    }, function (error) {
+                        angular.forEach(error.data, function (value, index) {
+                            return value;
+                        });
+                    });
         }
     });

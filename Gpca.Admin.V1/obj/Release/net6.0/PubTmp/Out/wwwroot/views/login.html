@@ -1,0 +1,27 @@
+<toaster-container></toaster-container>
+<div class="middle-box text-center loginscreen  animated fadeInDown" ng-controller="LoginCtrl" style="padding-top:200px;">
+    <div class="divLogin">
+        <div style="margin-bottom:30px;">
+            <img src="../img/Grupo Performance Consultoria & Assessoria - fundo branco.png" style="width:250px;"/>
+        </div>
+        <form class="m-t" role="form" name="loginForm" ng-submit="autenticar(user);">
+            <div class="form-group">
+                <select class="form-control" name="tipo" id="tipo" ng-model="tipo" ng-options="t.tipo as t.nome for t in tipos">
+                    <option value="">Selecione o tipo pessoa</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="CPF" name="CpfCnpj" ng-model="user.CpfCnpj" ng-show="tipo == 'PF'" ui-br-cpf-mask>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="CNPJ" name="CpfCnpj" ng-model="user.CpfCnpj" ng-show="tipo == 'PJ'" ui-br-cnpj-mask>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Senha" ng-model="user.Senha">
+            </div>
+            <button type="submit" class="btn btn-success block full-width m-b">Login</button>
+
+            <a ui-sref="forgot_password"><small>Esqueceu a senha?</small></a>
+        </form>
+    </div>
+</div>

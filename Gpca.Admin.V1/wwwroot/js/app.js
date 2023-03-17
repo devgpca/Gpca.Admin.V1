@@ -40,7 +40,9 @@
         }
     }).constant('constants',
         {
-            UrlAuthApi: 'https://localhost:8081/api/v1/Auth',
+            //UrlAuthApi: 'http://auth.grupopca.kinghost.net/api/v1/',
+            //UrlRelatorioApi: 'http://rest.grupopca.kinghost.net/api/v1/'
+            UrlAuthApi: 'https://localhost:8081/api/v1/',
             UrlRelatorioApi: 'https://localhost:7011/api/v1/'
         })
         .filter('parseUrl', function ($sce) {
