@@ -6145,6 +6145,10 @@
       "PackagePath": "staticwebassets\\views\\modal\\Consorcio\\incluir_editar_consorcio.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Consorcio\\incluir_editar_consorcioJV.html",
+      "PackagePath": "staticwebassets\\views\\modal\\Consorcio\\incluir_editar_consorcioJV.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\modal_base.html",
       "PackagePath": "staticwebassets\\views\\modal\\modal_base.html"
     },

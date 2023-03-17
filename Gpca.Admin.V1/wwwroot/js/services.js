@@ -88,12 +88,54 @@ angular.module('gpca')
         this.GetConsorcio = function () {
             var obj = {};
             return $http.post(constants.UrlRelatorioApi + 'Consorcio/GetList', obj, params)
-                    .then(function (response) {
-                        return response.data;
-                    }, function (error) {
-                        angular.forEach(error.data, function (value, index) {
-                            return value;
-                        });
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
                     });
+                });
+        }
+    })
+    .service('ConsortiumJvService', function ($http, constants, $localStorage) {
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.CreateJv = function (obj) {
+            obj.planilha = parseInt(obj.planilha);
+            return $http.post(constants.UrlRelatorioApi + 'ConsorcioJv/Create', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditJv = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ConsorcioJv/Edit', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetConsorcioJVs = function () {
+            var obj = {};
+            return $http.post(constants.UrlRelatorioApi + 'ConsorcioJv/GetList', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
         }
     });

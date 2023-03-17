@@ -293,7 +293,7 @@ angular.module('gpca')
         $onInit = function () {
             $scope.tipo = "PF";
         };
-        
+
         $scope.tipos = [
             { tipo: "PF", nome: "Pessoa Fisica" },
             { tipo: "PJ", nome: "Pessoa Juridica" }
@@ -360,7 +360,7 @@ angular.module('gpca')
         //    window.location = "#/login";
         //}
 
-        $scope.user = "Leonardo Damascena"
+        $scope.user = $localStorage.user.userName.split('-')[1];
         console.log($localStorage.user)
 
         $scope.logout = function () {
@@ -498,19 +498,29 @@ angular.module('gpca')
 
         $scope.Incluir = function () {
             ConsortiumService.CadConsorcio($scope.consorcio);
-            
+
         }
     })
-    .controller('JVCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope, ConsorcioJvService) {
+    .controller('JVCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, ConsortiumJvService, ConsortiumService, $q) {
 
+        $scope.consorcioList = [];
+        var GetListJvs = ConsortiumJvService.GetConsorcioJVs();
+        var GetList = ConsortiumService.GetConsorcio();
 
-        $scope.objJv = {
-            item: "",
-            consorioId: 1,
+        $q.all([GetListJvs, GetList]).then(function (response) {
+            $scope.getData = response[0].data;
+            $scope.consorcioList = response[1].data;
+            //console.log($scope.consorcioList);
+        });
+
+        $scope.consorcioJv = {
+            id: 0,
+            consorcioId: null,
             jv: "",
             situacao: "",
             cutback: "",
-            planilha: 1
+            planilha: null,
+            ativo: true
         }
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
@@ -535,39 +545,41 @@ angular.module('gpca')
             ]);
 
 
-        $scope.incluir = function () {
+        $scope.btnAddJv = function () {
             $uibModal.open({
-                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
-                controller: 'fatoresModalCtrl',
+                scope: $scope,
+                templateUrl: 'views/modal/consorcio/incluir_editar_consorcioJV.html',
+                controller: function ($scope, $uibModalInstance) {
+                    $scope.IncluirJv = function () {
+                        ConsortiumJvService.CreateJv($scope.consorcioJv);
+                        $uibModalInstance.close();
+                    }
+                },
                 windowClass: "animated fadeIn",
                 resolve: {
                     fatorSelected: function () {
                         return null;
                     }
                 }
-            }).result.then(function () {
-                $scope.obterFatores();
             });
         }
 
-        $scope.editar = function (fator) {
+        $scope.editar = function (data) {
             $uibModal.open({
                 templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
                 controller: 'fatoresModalCtrl',
                 windowClass: "animated fadeIn",
                 resolve: {
                     fatorSelected: function () {
-                        return fator;
+                        return data;
                     }
                 }
-            }).result.then(function () {
-                $scope.obterFatores();
             });
         }
 
-        $scope.ativarDesativar = function (fator) {
-            $scope.title = fator.fa_Ativo == "1" ? "ativar" : "desativar";
-            $scope.result = fator.fa_Ativo == "1" ? "ativado" : "desativado";
+        $scope.ativarDesativarJV = function (data) {
+            $scope.title = data.ativo == false ? "ativar" : "desativar";
+            $scope.result = data.ativo == false ? "ativado" : "desativado";
 
             SweetAlert.swal({
                 title: "Deseja " + $scope.title + " ?",
@@ -590,8 +602,6 @@ angular.module('gpca')
                                 type: "success"
                             });
 
-                            $scope.obterFatores();
-
                         }, function (response) {
                             return alert("Erro: " + response.status);
                         });
@@ -605,9 +615,6 @@ angular.module('gpca')
                 });
         }
 
-        $scope.IncluirJv = function () {
-            ConsorcioJvService.CreayeJv($scope.objJv);
-        }
     })
     .controller('TIPICtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
