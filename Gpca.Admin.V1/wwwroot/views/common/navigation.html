@@ -11,17 +11,24 @@
                 </div>
             </li>
             <li ui-sref-active="active">
-                <a ui-sref="inicio.blank"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">{{ 'Blank' | translate }}</span> </a>
+                <a ui-sref="inicio.blank"><i class="fa fa-area-chart"></i> <span class="nav-label">{{ 'Blank' | translate }}</span> </a>
             </li>
 
             <li ng-class="{active: $state.includes('tabelas')}">
-                <a href="#"><i class="fa fa-list-alt"></i> <span class="nav-label">{{ 'Tabelas' | translate }}</span><span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-list-alt"></i> <span class="nav-label">{{ 'Cadastros' | translate }}</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('tabelas')}">
-                    <li ui-sref-active="active"><a ui-sref="tabelas.consorcio">{{ 'Consorcio' | translate }}</a></li>
-                    <li ui-sref-active="active"><a ui-sref="tabelas.JV">JV</a></li>
+                    <li ui-sref-active="active"><a ui-sref="tabelas.consorcio">{{ 'Consorcios' | translate }}</a></li>
+                    <li ui-sref-active="active"><a ui-sref="tabelas.JV">JVs</a></li>
                     <li ui-sref-active="active"><a ui-sref="tabelas.TIPI">TIPI</a></li>
                     <li ui-sref-active="active"><a ui-sref="tabelas.metaObjeto">Meta Objeto</a></li>
                     <li ui-sref-active="active"><a ui-sref="tabelas.texto">Texto</a></li>
+                </ul>
+            </li>
+            <li ng-class="{active: $state.includes('relatorios')}">
+                <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Relatorios</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('relatorios')}">
+                    <li ui-sref-active="active"><a ui-sref="relatorios.consolidado">Consolidado</a></li>
+                    <li ui-sref-active="active"><a ui-sref="relatorios.resumo">Resumo</a></li>
                 </ul>
             </li>
         </ul>

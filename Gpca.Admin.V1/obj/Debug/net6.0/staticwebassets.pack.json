@@ -6149,6 +6149,14 @@
       "PackagePath": "staticwebassets\\views\\modal\\Consorcio\\incluir_editar_consorcioJV.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Meta\\incluir_editar_metaobj.html",
+      "PackagePath": "staticwebassets\\views\\modal\\Meta\\incluir_editar_metaobj.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\TIPI\\incluir_editar_tipi.html",
+      "PackagePath": "staticwebassets\\views\\modal\\TIPI\\incluir_editar_tipi.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\modal_base.html",
       "PackagePath": "staticwebassets\\views\\modal\\modal_base.html"
     },

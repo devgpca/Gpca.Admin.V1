@@ -138,4 +138,107 @@ angular.module('gpca')
                     });
                 });
         }
-    });
+    })
+    .service('TIPIService', function ($http, constants, $localStorage) {
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.CreateTipi = function (obj) {
+            obj.planilha = parseInt(obj.planilha);
+            return $http.post(constants.UrlRelatorioApi + 'Tipi/Create', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditTipi = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Tipi/Edit', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetTIPIs = function () {
+            var obj = {};
+            return $http.post(constants.UrlRelatorioApi + 'Tipi/GetList', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })
+    .service('MetaObjetoService', function ($http, constants, $localStorage) {
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.CreateMeta = function (obj) {
+            obj.planilha = parseInt(obj.planilha);
+            return $http.post(constants.UrlRelatorioApi + 'MetaObjeto/Create', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditMeta = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'MetaObjeto/Edit', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetMetaObjs = function () {
+            var obj = {};
+            return $http.post(constants.UrlRelatorioApi + 'MetaObjeto/GetList', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })
+    .service('RelatoriosService', function ($http, constants, $localStorage) {
+
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.CreateExcel = function () {
+            return $http.post(constants.UrlRelatorioApi + 'Consolidado/Download', null, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "fjRRuwnvH+utsGckfKRbmp6lwdlZKdKRuE1K9g728GQ=",
+  "Hash": "BAOhozszQNKPko4rKyddhHK8SFXLP4rTSbI1Kwhu6/4=",
   "Source": "Gpca.Admin.V1",
   "BasePath": "_content/Gpca.Admin.V1",
   "Mode": "Default",
@@ -26129,6 +26129,23 @@
       "OriginalItemSpec": "wwwroot\\views\\modal\\Consorcio\\incluir_editar_consorcioJV.html"
     },
     {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Meta\\incluir_editar_metaobj.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/modal/Meta/incluir_editar_metaobj.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\modal\\Meta\\incluir_editar_metaobj.html"
+    },
+    {
       "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\modal_base.html",
       "SourceId": "Gpca.Admin.V1",
       "SourceType": "Discovered",
@@ -26144,6 +26161,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\views\\modal\\modal_base.html"
+    },
+    {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\TIPI\\incluir_editar_tipi.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/modal/TIPI/incluir_editar_tipi.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\modal\\TIPI\\incluir_editar_tipi.html"
     },
     {
       "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\texto.html",

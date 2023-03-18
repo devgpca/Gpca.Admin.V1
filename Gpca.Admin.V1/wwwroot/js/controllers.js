@@ -616,7 +616,26 @@ angular.module('gpca')
         }
 
     })
-    .controller('TIPICtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {
+    .controller('TIPICtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TIPIService) {
+        $scope.Tipi = [];
+        var GetListTIPIs = TIPIService.GetTIPIs();
+
+        $q.all([GetListTIPIs]).then(function (response) {
+            $scope.getData = response[0].data;
+            //$scope.consorcioList = response[1].data;
+            //console.log($scope.consorcioList);
+        });
+
+        $scope.Tipi = {
+            id: 0,
+            consorcioId: null,
+            jv: "",
+            situacao: "",
+            cutback: "",
+            planilha: null,
+            ativo: true
+        }
+
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
             .withButtons([
@@ -639,39 +658,41 @@ angular.module('gpca')
             ]);
 
 
-        $scope.incluir = function () {
+        $scope.btnAdd = function () {
             $uibModal.open({
-                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
-                controller: 'fatoresModalCtrl',
+                scope: $scope,
+                templateUrl: 'views/modal/TIPI/incluir_editar_tipi.html',
+                controller: function ($scope, $uibModalInstance) {
+                    $scope.IncluirJv = function () {
+                        ConsortiumJvService.CreateJv($scope.consorcioJv);
+                        $uibModalInstance.close();
+                    }
+                },
                 windowClass: "animated fadeIn",
                 resolve: {
                     fatorSelected: function () {
                         return null;
                     }
                 }
-            }).result.then(function () {
-                $scope.obterFatores();
             });
         }
 
-        $scope.editar = function (fator) {
+        $scope.editar = function (data) {
             $uibModal.open({
-                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
-                controller: 'fatoresModalCtrl',
+                templateUrl: 'views/modal/TIPI/incluir_editar_tipi.html',
+                controller: 'TIPICtrl',
                 windowClass: "animated fadeIn",
                 resolve: {
                     fatorSelected: function () {
-                        return fator;
+                        return data;
                     }
                 }
-            }).result.then(function () {
-                $scope.obterFatores();
             });
         }
 
-        $scope.ativarDesativar = function (fator) {
-            $scope.title = fator.fa_Ativo == "1" ? "ativar" : "desativar";
-            $scope.result = fator.fa_Ativo == "1" ? "ativado" : "desativado";
+        $scope.ativarDesativarTipi = function (data) {
+            $scope.title = data.ativo == false ? "ativar" : "desativar";
+            $scope.result = data.ativo == false ? "ativado" : "desativado";
 
             SweetAlert.swal({
                 title: "Deseja " + $scope.title + " ?",
@@ -693,8 +714,6 @@ angular.module('gpca')
                                 text: "O fator foi " + $scope.result + " com sucesso.",
                                 type: "success"
                             });
-
-                            $scope.obterFatores();
 
                         }, function (response) {
                             return alert("Erro: " + response.status);
@@ -709,7 +728,27 @@ angular.module('gpca')
                 });
         }
     })
-    .controller('metaobjCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {
+    .controller('metaobjCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, MetaObjetoService) {
+
+        $scope.MetaObj = [];
+        var GetMetaObjs = MetaObjetoService.GetMetaObjs();
+
+        $q.all([GetMetaObjs]).then(function (response) {
+            $scope.getData = response[0].data;
+            //$scope.consorcioList = response[1].data;
+            //console.log($scope.consorcioList);
+        });
+
+        $scope.MetaObj = {
+            id: 0,
+            consorcioId: null,
+            jv: "",
+            situacao: "",
+            cutback: "",
+            planilha: null,
+            ativo: true
+        }
+
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
             .withButtons([
@@ -732,39 +771,41 @@ angular.module('gpca')
             ]);
 
 
-        $scope.incluir = function () {
+        $scope.btnAdd = function () {
             $uibModal.open({
-                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
-                controller: 'fatoresModalCtrl',
+                scope: $scope,
+                templateUrl: 'views/modal/Meta/incluir_editar_metaobj.html',
+                controller: function ($scope, $uibModalInstance) {
+                    $scope.IncluirJv = function () {
+                        ConsortiumJvService.CreateJv($scope.consorcioJv);
+                        $uibModalInstance.close();
+                    }
+                },
                 windowClass: "animated fadeIn",
                 resolve: {
                     fatorSelected: function () {
                         return null;
                     }
                 }
-            }).result.then(function () {
-                $scope.obterFatores();
             });
         }
 
-        $scope.editar = function (fator) {
+        $scope.editar = function (data) {
             $uibModal.open({
-                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
-                controller: 'fatoresModalCtrl',
+                templateUrl: 'views/modal/Meta/incluir_editar_metaobj.html',
+                controller: 'TIPICtrl',
                 windowClass: "animated fadeIn",
                 resolve: {
                     fatorSelected: function () {
-                        return fator;
+                        return data;
                     }
                 }
-            }).result.then(function () {
-                $scope.obterFatores();
             });
         }
 
-        $scope.ativarDesativar = function (fator) {
-            $scope.title = fator.fa_Ativo == "1" ? "ativar" : "desativar";
-            $scope.result = fator.fa_Ativo == "1" ? "ativado" : "desativado";
+        $scope.ativarDesativarTipi = function (data) {
+            $scope.title = data.ativo == false ? "ativar" : "desativar";
+            $scope.result = data.ativo == false ? "ativado" : "desativado";
 
             SweetAlert.swal({
                 title: "Deseja " + $scope.title + " ?",
@@ -786,8 +827,6 @@ angular.module('gpca')
                                 text: "O fator foi " + $scope.result + " com sucesso.",
                                 type: "success"
                             });
-
-                            $scope.obterFatores();
 
                         }, function (response) {
                             return alert("Erro: " + response.status);
@@ -894,5 +933,14 @@ angular.module('gpca')
                     }
                 });
         }
+    })
+    .controller('ConsolidadoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+
+        $scope.btnGerar = function () {
+            RelatoriosService.CreateExcel();
+        }
+    })
+    .controller('ResumoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+        
     })
     ;
