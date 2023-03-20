@@ -971,4 +971,10 @@ angular.module('gpca')
     .controller('ResumoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
 
     })
+    .controller('RelDuplicidadeCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+
+    })
+    .controller('ImportacaoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+
+    })
     ;

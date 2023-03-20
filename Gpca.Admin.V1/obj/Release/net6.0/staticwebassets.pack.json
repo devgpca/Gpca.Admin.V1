@@ -6125,6 +6125,10 @@
       "PackagePath": "staticwebassets\\views\\common\\topnavbar.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\consolidado.html",
+      "PackagePath": "staticwebassets\\views\\consolidado.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\consorcio.html",
       "PackagePath": "staticwebassets\\views\\consorcio.html"
     },
@@ -6145,8 +6149,24 @@
       "PackagePath": "staticwebassets\\views\\modal\\Consorcio\\incluir_editar_consorcio.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Consorcio\\incluir_editar_consorcioJV.html",
+      "PackagePath": "staticwebassets\\views\\modal\\Consorcio\\incluir_editar_consorcioJV.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Meta\\incluir_editar_metaobj.html",
+      "PackagePath": "staticwebassets\\views\\modal\\Meta\\incluir_editar_metaobj.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\TIPI\\incluir_editar_tipi.html",
+      "PackagePath": "staticwebassets\\views\\modal\\TIPI\\incluir_editar_tipi.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\modal_base.html",
       "PackagePath": "staticwebassets\\views\\modal\\modal_base.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\resumo.html",
+      "PackagePath": "staticwebassets\\views\\resumo.html"
     },
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\texto.html",

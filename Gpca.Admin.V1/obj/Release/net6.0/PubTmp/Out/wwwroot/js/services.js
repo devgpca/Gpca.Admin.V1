@@ -67,33 +67,178 @@ angular.module('gpca')
                 });
         }
     })
-    .service('ConsortiumService', function ($http, constants, toaster, $timeout, $localStorage) { 
+    .service('ConsortiumService', function ($http, constants, $timeout, $localStorage) {
         var params = {
             headers: {
                 'RefreshToken': $localStorage.user.refreshToken
             }
         };
 
-        this.CadConsorcio = function (obj) { 
+        this.CadConsorcio = function (obj) {
             $http.post(constants.UrlRelatorioApi + 'Consorcio/Create', obj, params)
                 .then(function (response) {
-                    toaster.pop({
-                        type: 'success',
-                        title: 'Sucesso',
-                        body: response.data.message,
-                        showCloseButton: true,
-                        timeout: 5000
-                    });
+                    return response;
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
-                        toaster.pop({
-                            type: 'error',
-                            title: value.propertyName,
-                            body: value.errorMessage,
-                            showCloseButton: true,
-                            timeout: 5000
-                        });
+                        return value;
                     });
                 });
         }
-    });
+
+        this.GetConsorcio = function () {
+            var obj = {};
+            return $http.post(constants.UrlRelatorioApi + 'Consorcio/GetList', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })
+    .service('ConsortiumJvService', function ($http, constants, $localStorage) {
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.CreateJv = function (obj) {
+            obj.planilha = parseInt(obj.planilha);
+            return $http.post(constants.UrlRelatorioApi + 'ConsorcioJv/Create', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditJv = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ConsorcioJv/Edit', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetConsorcioJVs = function () {
+            var obj = {};
+            return $http.post(constants.UrlRelatorioApi + 'ConsorcioJv/GetList', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })
+    .service('TIPIService', function ($http, constants, $localStorage) {
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.CreateTipi = function (obj) {
+            obj.planilha = parseInt(obj.planilha);
+            return $http.post(constants.UrlRelatorioApi + 'Tipi/Create', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditTipi = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Tipi/Edit', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetTIPIs = function () {
+            var obj = {};
+            return $http.post(constants.UrlRelatorioApi + 'Tipi/GetList', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })
+    .service('MetaObjetoService', function ($http, constants, $localStorage) {
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.CreateMeta = function (obj) {
+            obj.planilha = parseInt(obj.planilha);
+            return $http.post(constants.UrlRelatorioApi + 'MetaObjeto/Create', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditMeta = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'MetaObjeto/Edit', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetMetaObjs = function () {
+            var obj = {};
+            return $http.post(constants.UrlRelatorioApi + 'MetaObjeto/GetList', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })
+    .service('RelatoriosService', function ($http, constants, $localStorage) {
+
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.CreateExcel = function () {
+            return $http.post(constants.UrlRelatorioApi + 'Consolidado/Download', null, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })
