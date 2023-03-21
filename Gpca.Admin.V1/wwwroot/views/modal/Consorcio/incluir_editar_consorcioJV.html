@@ -5,41 +5,41 @@
                 <h2><strong>JV</strong></h2>
             </div>
             <div class="" style="padding: 8px;">
-                <!--selecionado: {{consorcioJv.consorcioId}}-->
+                data: {{data}}
                 <div class="row" style=" z-index: 2000">
                     <div class="col-md-6 p-sm">
                         <label style="font-size: 1.5rem; font-weight: 600;">Consórcio</label>
-                        <select class="form-control input-sm" ng-model="consorcioJv.consorcioId">
+                        <select class="form-control input-sm" ng-model="data.consorcioId">
                             <option value="">--- Selecione ---</option> <!-- not selected / blank option -->
-                            <option ng-repeat="data in consorcioList" value="{{data.id}}">{{data.descricao}}</option> <!-- interpolation -->
+                            <option ng-repeat="item in consorcioList" value="{{item.id}}" ng-model="data.id == item.id">{{item.descricao}}</option> <!-- interpolation -->
                         </select>
                     </div>
                     <div class="col-md-6 p-sm">
                         <label style="font-size: 1.5rem; font-weight: 600;">JV</label>
-                        <input type="text" class="form-control input-sm" placeholder="Ex.: JV123" ng-model="consorcioJv.jv" />
+                        <input type="text" class="form-control input-sm" placeholder="Ex.: JV123" ng-model="data.jv" />
                     </div>
                 </div>
                 <div class="row" style="z-index: 2000">
                     <div class="col-md-6 p-sm">
                         <label style="font-size: 1.5rem; font-weight: 600;">Situação</label>
-                        <input type="text" class="form-control input-sm" ng-model="consorcioJv.situacao" />
+                        <input type="text" class="form-control input-sm" ng-model="data.situacao" />
                     </div>
                     <div class="col-md-6 p-sm">
                         <label style="font-size: 1.5rem; font-weight: 600;">Cutback</label>
-                        <input type="text" class="form-control input-sm" placeholder="Ex.: 123,111%" ng-model="consorcioJv.cutback" />
+                        <input type="text" class="form-control input-sm" placeholder="Ex.: 123,111%" ng-model="data.cutback" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 p-sm">
                         <label style="font-size: 1.5rem; font-weight: 600;">Planilha/Aba</label>
-                        <select class="form-control input-sm" ng-model="consorcioJv.planilha">
+                        <select class="form-control input-sm" ng-model="data.planilha">
                             <option value="">--- Selecione ---</option> <!-- not selected / blank option -->
                             <option value="1">Petrobras</option> 
                             <option value="2">Demais planilhas</option> 
                         </select>
                     </div>
                     <div class="col-md-3 form-check form-switch" style="padding-top: 50px;">
-                        <input class="form-check-input" type="checkbox" ng-model="consorcioJv.ativo" checked>
+                        <input class="form-check-input" type="checkbox" ng-model="data.ativo" checked>
                         <label class="form-check-label" for="flexSwitchCheckChecked" style="font-size: 1.5rem; font-weight: 600;">Ativo</label>
                     </div>
                     <div class="col-md-2" style="position: relative; padding-top: 40px;">

@@ -323,7 +323,7 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
             }
         })
         .state('relatorios.importacao', {
-            url: "/resumo",
+            url: "/importacao",
             templateUrl: "views/importacao.html",
             data: { pageTitle: 'Sistemas' },
             resolve: {
@@ -355,7 +355,7 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
             }
         })
         .state('relatorios.duplicidade', {
-            url: "/resumo",
+            url: "/duplicidade",
             templateUrl: "views/duplicidade.html",
             data: { pageTitle: 'Sistemas' },
             resolve: {

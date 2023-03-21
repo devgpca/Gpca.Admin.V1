@@ -566,11 +566,17 @@ angular.module('gpca')
 
         $scope.editar = function (data) {
             $uibModal.open({
-                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
-                controller: 'fatoresModalCtrl',
+                scope: $scope,
+                templateUrl: 'views/modal/consorcio/incluir_editar_consorcioJV.html',
+                controller: function ($scope, $uibModalInstance) {
+                    $scope.IncluirJv = function () {
+                        ConsortiumJvService.EditJv($scope.consorcioJv);
+                        $uibModalInstance.close();
+                    }
+                },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    fatorSelected: function () {
+                    dataSelected: function () {
                         return data;
                     }
                 }
@@ -960,12 +966,24 @@ angular.module('gpca')
                     }
                 });
         }
-        
+
     })
-    .controller('ConsolidadoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+    .controller('ConsolidadoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, constants, $q) {
 
         $scope.btnGerar = function () {
-            RelatoriosService.CreateExcel();
+            var request = new XMLHttpRequest();
+            request.setRequestHeader("RefreshToken", $localStorage.user.refreshToken);
+            request.responseType = "blob";
+            request.open("GET", constants.UrlRelatorioApi + "ArquivoConsolidado/Download");
+            request.onload = function () {
+                var url = window.URL.createObjectURL(this.response);
+                var a = document.createElement("a");
+                document.body.appendChild(a);
+                a.href = url;
+                a.download = "Consolidação Relatórios de Gastos.xlsx";
+                a.click();
+            }
+            request.send();
         }
     })
     .controller('ResumoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
@@ -974,7 +992,53 @@ angular.module('gpca')
     .controller('RelDuplicidadeCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
 
     })
-    .controller('ImportacaoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+    .controller('ImportacaoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, RelatoriosService, $q) {
 
+        var GetList = RelatoriosService.GetFiles();
+        $scope.dataProcessamento = "";
+
+        $q.all([GetList]).then(function (response) {
+            $scope.GetFiles = response[0].data;
+        });
+
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+        $scope.importarArquivo = function (file) {
+            if ($scope.dataProcessamento == "") {
+                SweetAlert.swal("Atenção!", "Data de processamento não pode ser vazio.", "warning");
+            } else {
+                var json = {
+                    fileName: file.nomeArquivo,
+                    yearsMonthProccess: $scope.dataProcessamento
+                }
+
+                var result = RelatoriosService.Importar(json);
+
+                $q.all([result]).then(function (response) {
+                    console.log(response);
+                    //alert(response[0].message);
+                    SweetAlert.swal("Boa!", response[0].message, "success");
+                });
+            }
+        }
     })
     ;

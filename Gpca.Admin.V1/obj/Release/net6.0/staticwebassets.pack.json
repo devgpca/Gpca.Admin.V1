@@ -6133,8 +6133,16 @@
       "PackagePath": "staticwebassets\\views\\consorcio.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\duplicidade.html",
+      "PackagePath": "staticwebassets\\views\\duplicidade.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\forgot_password.html",
       "PackagePath": "staticwebassets\\views\\forgot_password.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\importacao.html",
+      "PackagePath": "staticwebassets\\views\\importacao.html"
     },
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\login.html",
@@ -6159,6 +6167,10 @@
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\TIPI\\incluir_editar_tipi.html",
       "PackagePath": "staticwebassets\\views\\modal\\TIPI\\incluir_editar_tipi.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Texto\\incluir_editar_texto.html",
+      "PackagePath": "staticwebassets\\views\\modal\\Texto\\incluir_editar_texto.html"
     },
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\modal_base.html",

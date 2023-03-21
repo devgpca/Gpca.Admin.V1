@@ -728,120 +728,15 @@ angular.module('gpca')
                 });
         }
     })
-    .controller('metaobjCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, MetaObjetoService) {
+    .controller('metaobjCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, MetaObjetoService, $q) {
 
-        $scope.MetaObj = [];
-        var GetMetaObjs = MetaObjetoService.GetMetaObjs();
+        var GetList = MetaObjetoService.GetMetaObjs();
 
-        $q.all([GetMetaObjs]).then(function (response) {
-            $scope.getData = response[0].data;
-            //$scope.consorcioList = response[1].data;
-            //console.log($scope.consorcioList);
+        $q.all([GetList]).then(function (response) {
+            $scope.metaObj = response[0].data;
         });
 
-        $scope.MetaObj = {
-            id: 0,
-            consorcioId: null,
-            jv: "",
-            situacao: "",
-            cutback: "",
-            planilha: null,
-            ativo: true
-        }
 
-        $scope.dtOptions = DTOptionsBuilder.newOptions()
-            .withDOM('<"html5buttons"B>lTfgitp')
-            .withButtons([
-                { extend: 'copy' },
-                { extend: 'csv' },
-                { extend: 'excel', title: 'ExampleFile' },
-                { extend: 'pdf', title: 'ExampleFile' },
-
-                {
-                    extend: 'print',
-                    customize: function (win) {
-                        $(win.document.body).addClass('white-bg');
-                        $(win.document.body).css('font-size', '10px');
-
-                        $(win.document.body).find('table')
-                            .addClass('compact')
-                            .css('font-size', 'inherit');
-                    }
-                }
-            ]);
-
-
-        $scope.btnAdd = function () {
-            $uibModal.open({
-                scope: $scope,
-                templateUrl: 'views/modal/Meta/incluir_editar_metaobj.html',
-                controller: function ($scope, $uibModalInstance) {
-                    $scope.IncluirJv = function () {
-                        ConsortiumJvService.CreateJv($scope.consorcioJv);
-                        $uibModalInstance.close();
-                    }
-                },
-                windowClass: "animated fadeIn",
-                resolve: {
-                    fatorSelected: function () {
-                        return null;
-                    }
-                }
-            });
-        }
-
-        $scope.editar = function (data) {
-            $uibModal.open({
-                templateUrl: 'views/modal/Meta/incluir_editar_metaobj.html',
-                controller: 'TIPICtrl',
-                windowClass: "animated fadeIn",
-                resolve: {
-                    fatorSelected: function () {
-                        return data;
-                    }
-                }
-            });
-        }
-
-        $scope.ativarDesativarTipi = function (data) {
-            $scope.title = data.ativo == false ? "ativar" : "desativar";
-            $scope.result = data.ativo == false ? "ativado" : "desativado";
-
-            SweetAlert.swal({
-                title: "Deseja " + $scope.title + " ?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Sim, " + $scope.title + " !",
-                cancelButtonText: "Não, cancelar!",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        $http.post(constants.UrlApi + "Fator/AtivarDesativar", fator.fa_Id, {
-                            headers: { 'Authorization': 'Bearer ' + $localStorage.token }
-                        }).then(function (response) {
-                            SweetAlert.swal({
-                                title: "Alterado!",
-                                text: "O fator foi " + $scope.result + " com sucesso.",
-                                type: "success"
-                            });
-
-                        }, function (response) {
-                            return alert("Erro: " + response.status);
-                        });
-                    } else {
-                        SweetAlert.swal({
-                            title: "Cancelado!",
-                            text: "Você cancelou a alteração do registro",
-                            type: "error"
-                        });
-                    }
-                });
-        }
-    })
-    .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, $rootScope) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
             .withButtons([
@@ -866,40 +761,64 @@ angular.module('gpca')
 
         $scope.incluir = function () {
             $uibModal.open({
-                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
-                controller: 'fatoresModalCtrl',
+                scope: $scope,
+                templateUrl: 'views/modal/Meta/incluir_editar_metaobj.html',
+                controller: function ($scope, $uibModalInstance) {
+                    $scope.IncluirJv = function () {
+                        $scope.value = metaSelected;
+                        ConsortiumJvService.EditMeta($scope.obj);
+                        $uibModalInstance.close();
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    fatorSelected: function () {
+                    metaSelected: function () {
                         return null;
                     }
                 }
-            }).result.then(function () {
-                $scope.obterFatores();
             });
         }
 
-        $scope.editar = function (fator) {
+        $scope.editar = function (data) {
             $uibModal.open({
-                templateUrl: 'views/modal/fatores/incluir_editar_fator.html',
-                controller: 'fatoresModalCtrl',
+                scope: $scope,
+                templateUrl: 'views/modal/Meta/incluir_editar_metaobj.html',
+                controller: function ($scope, $uibModalInstance, metaSelected, MetaObjetoService) {
+                    $scope.value = metaSelected;
+                    $scope.obj.descricao = metaSelected.descricao;
+                    $scope.obj.credito = metaSelected.credito
+
+                    $scope.editar = function () {
+                        metaSelected.descricao = $scope.obj.descricao;
+                        metaSelected.credito = $scope.obj.credito;
+
+                        MetaObjetoService.EditMeta(metaSelected);
+                        $uibModalInstance.dismiss('dimiss');
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    fatorSelected: function () {
-                        return fator;
+                    metaSelected: function () {
+                        return data;
                     }
                 }
-            }).result.then(function () {
-                $scope.obterFatores();
             });
         }
 
-        $scope.ativarDesativar = function (fator) {
-            $scope.title = fator.fa_Ativo == "1" ? "ativar" : "desativar";
-            $scope.result = fator.fa_Ativo == "1" ? "ativado" : "desativado";
+        $scope.ativarDesativar = function (data) {
+            $scope.title = !data.ativo ? "ativar" : "desativar";
+            $scope.result = !data.ativo ? "ativada" : "desativada";
 
             SweetAlert.swal({
-                title: "Deseja " + $scope.title + " ?",
+                title: "Deseja " + $scope.title + " " + data.descricao + " ?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -910,20 +829,12 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        $http.post(constants.UrlApi + "Fator/AtivarDesativar", fator.fa_Id, {
-                            headers: { 'Authorization': 'Bearer ' + $localStorage.token }
-                        }).then(function (response) {
-                            SweetAlert.swal({
-                                title: "Alterado!",
-                                text: "O fator foi " + $scope.result + " com sucesso.",
-                                type: "success"
-                            });
-
-                            $scope.obterFatores();
-
-                        }, function (response) {
-                            return alert("Erro: " + response.status);
+                        SweetAlert.swal({
+                            title: "Alterado!",
+                            text: "A etapa foi " + $scope.result + " com sucesso.",
+                            type: "success"
                         });
+
                     } else {
                         SweetAlert.swal({
                             title: "Cancelado!",
@@ -934,6 +845,123 @@ angular.module('gpca')
                 });
         }
     })
+    .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TextoService, $q) {
+
+        var GetList = TextoService.GetList();
+
+        $q.all([GetList]).then(function (response) {
+            $scope.textos = response[0].data;
+        });
+
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+        $scope.incluir = function () {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Texto/incluir_editar_texto.html',
+                controller: function ($scope, $uibModalInstance, TextoService) {
+                    $scope.IncluirJv = function () {
+                        $scope.value = textoSelected;
+                        TextoService.Create($scope.obj);
+                        $uibModalInstance.close();
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    textoSelected: function () {
+                        return null;
+                    }
+                }
+            });
+        }
+
+        $scope.editar = function (data) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Texto/incluir_editar_texto.html',
+                controller: function ($scope, $uibModalInstance, textoSelected, TextoService) {
+                    $scope.obj = {};
+                    $scope.value = textoSelected;
+                    $scope.obj.descricao = textoSelected.descricao;
+                    $scope.obj.creditavel = textoSelected.creditavel
+
+                    $scope.editar = function () {
+                        textoSelected.descricao = $scope.obj.descricao;
+                        textoSelected.creditavel = $scope.obj.creditavel;
+
+                        TextoService.Edit(textoSelected);
+                        $uibModalInstance.dismiss('dimiss');
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    textoSelected: function () {
+                        return data;
+                    }
+                }
+            });
+        }
+
+        $scope.ativarDesativar = function (data) {
+            $scope.title = !data.ativo ? "ativar" : "desativar";
+            $scope.result = !data.ativo ? "ativada" : "desativada";
+
+            SweetAlert.swal({
+                title: "Deseja " + $scope.title + " " + data.descricao + " ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Sim, " + $scope.title + " !",
+                cancelButtonText: "Não, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        SweetAlert.swal({
+                            title: "Alterado!",
+                            text: "A etapa foi " + $scope.result + " com sucesso.",
+                            type: "success"
+                        });
+
+                    } else {
+                        SweetAlert.swal({
+                            title: "Cancelado!",
+                            text: "Você cancelou a alteração do registro",
+                            type: "error"
+                        });
+                    }
+                });
+        }
+        
+    })
     .controller('ConsolidadoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
 
         $scope.btnGerar = function () {
@@ -941,6 +969,53 @@ angular.module('gpca')
         }
     })
     .controller('ResumoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
-        
+
+    })
+    .controller('RelDuplicidadeCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+
+    })
+    .controller('ImportacaoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, RelatoriosService, $q) {
+
+        var GetList = RelatoriosService.GetFiles();
+        $scope.dataProcessamento = "";
+
+        $q.all([GetList]).then(function (response) {
+            $scope.GetFiles = response[0].data;
+        });
+
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+        $scope.importarArquivo = function (file) {
+            var json = {
+                fileName: file.nomeArquivo,
+                yearsMonthProccess: $scope.dataProcessamento
+            }
+
+            var result = RelatoriosService.Importar(json);
+
+            $q.all([result]).then(function (response) {
+                console.log(response);
+                alert(response[0].message);
+            });
+        }
     })
     ;

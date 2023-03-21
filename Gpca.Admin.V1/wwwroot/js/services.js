@@ -274,9 +274,31 @@ angular.module('gpca')
         };
 
         this.CreateExcel = function () {
-            return $http.post(constants.UrlRelatorioApi + 'Consolidado/Download', null, params)
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download', params)
                 .then(function (response) {
                     return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetFiles = function () {
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetFilesToImport', params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.Importar = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Relatorio/ImportFile', obj, params)
+                .then(function (response) {
+                    return response.data;
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
                         return value;

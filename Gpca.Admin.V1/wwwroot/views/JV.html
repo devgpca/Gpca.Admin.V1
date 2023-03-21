@@ -31,6 +31,7 @@
                             <thead>
                                 <tr>
                                     <th>Id</th>
+                                    <th>Consórcio</th>
                                     <th>JV</th>
                                     <th>Situação JV</th>
                                     <th>Cutback</th>
@@ -44,6 +45,7 @@
                             <tbody>
                                 <tr ng-repeat="data in getData">
                                     <td>{{ data.id }}</td>
+                                    <td>{{ data.consorcio.descricao }}</td>
                                     <td>{{ data.jv }}</td>
                                     <td>{{ data.situacaoJV }}</td>
                                     <td>{{ data.cutback }}</td>

@@ -223,6 +223,48 @@ angular.module('gpca')
                 });
         }
     })
+    .service('TextoService', function ($http, constants, $localStorage) {
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.Create = function (obj) {
+            obj.planilha = parseInt(obj.planilha);
+            return $http.post(constants.UrlRelatorioApi + 'Texto/Create', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.Edit = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Texto/Edit', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetList = function () {
+            var obj = {};
+            return $http.post(constants.UrlRelatorioApi + 'Texto/GetList', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })
     .service('RelatoriosService', function ($http, constants, $localStorage) {
 
         var params = {
@@ -232,9 +274,31 @@ angular.module('gpca')
         };
 
         this.CreateExcel = function () {
-            return $http.post(constants.UrlRelatorioApi + 'Consolidado/Download', null, params)
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download', null, params)
                 .then(function (response) {
                     return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetFiles = function () {
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetFilesToImport', null, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.Importar = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Relatorio/ImportFile', obj, params)
+                .then(function (response) {
+                    return response.data;
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
                         return value;
