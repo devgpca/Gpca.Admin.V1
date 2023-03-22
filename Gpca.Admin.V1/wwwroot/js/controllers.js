@@ -990,7 +990,60 @@ angular.module('gpca')
 
     })
     .controller('RelDuplicidadeCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+        $scope.dateOptions = {
+            formatYear: 'yy',
+            maxDate: new Date(),
+            minDate: new Date(),
+            startingDay: 1
+        };
 
+        $scope.inlineOptions = {
+            customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+        };
+
+        $scope.format = 'MMMM'
+
+        $scope.toggleMin = function () {
+            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+            $scope.dateOptions.datepickerMode = "month";
+            $scope.dateOptions.minMode = "month";
+        };
+
+        $scope.toggleMin();
+
+        $scope.open1 = function () {
+            $scope.popup1.opened = true;
+        };
+
+        $scope.popup1 = {
+            opened: false
+        };
+
+        function getDayClass(data) {
+            var date = data.date,
+                mode = data.mode;
+            if (mode === 'day') {
+                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                for (var i = 0; i < $scope.events.length; i++) {
+                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                    if (dayToCheck === currentDay) {
+                        return $scope.events[i].status;
+                    }
+                }
+            }
+
+            return '';
+        }
+
+        $scope.download = function () {
+            var requestData = $scope.data;
+            RelatoriosService.DownloadDuplicados(requestData);
+        }
     })
     .controller('ImportacaoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, RelatoriosService, $q) {
 
@@ -1040,5 +1093,8 @@ angular.module('gpca')
                 });
             }
         }
+    })
+    .controller('ManualCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+
     })
     ;

@@ -305,4 +305,23 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.DownloadDuplicados = function (params) {
+            $http({
+                url: constants.UrlRelatorioApi + 'ArquivoConsolidado/DownloadDuplicados',
+                method: 'POST',
+                responseType: 'arraybuffer',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: params
+            }).then(function (response) {
+                var blob = new Blob([response.data], { type: 'application/octet-stream' });
+                var url = window.URL.createObjectURL(blob);
+                var link = document.createElement('a');
+                link.href = url;
+                link.download = 'Consolidacao Relatorios de Gastos Duplicados.xlsx';
+                link.click();
+            });
+        }
     })
