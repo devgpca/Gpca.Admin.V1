@@ -289,10 +289,27 @@ angular.module('gpca')
             }
         };
     })
-    .controller('LoginCtrl', function ($scope, toaster, AuthService) {
+    .controller('LoginCtrl', function ($scope, toaster, AuthService, $q, $localStorage) {
         $onInit = function () {
             $scope.tipo = "PF";
         };
+
+        $scope.verificaCpfCnpj = function () {
+            if ($localStorage.user != undefined) {
+                var cpfCnpj = $scope.user.CpfCnpj.replace('.', '').replace('.', '').replace('-', '');
+                if ($localStorage.user.userName == cpfCnpj) {
+                    if ($localStorage.user.message.includes('primeiro acesso')) {
+                        $scope.isCodeAccess = true;
+                    } else {
+                        $scope.isCodeAccess = false;
+                    }
+                } else {
+                    $scope.isCodeAccess = false;
+                }
+            } else {
+                $scope.isCodeAccess = false;
+            }
+        }
 
         $scope.tipos = [
             { tipo: "PF", nome: "Pessoa Fisica" },
@@ -330,28 +347,13 @@ angular.module('gpca')
             { tipo: "PF", nome: "Pessoa Fisica" },
             { tipo: "PJ", nome: "Pessoa Juridica" }
         ]
-        $scope.cadastrar = function (user) {
-            if ($scope.registerForm.$error.cpf != undefined && $scope.tipo == "PF") {
-                toaster.pop({
-                    type: 'error',
-                    title: 'CPF',
-                    body: "Preencha um CPF válido",
-                    showCloseButton: true,
-                    timeout: 5000
-                });
-            }
-            else if ($scope.registerForm.$error.cnpj != undefined && $scope.tipo == "PJ") {
-                toaster.pop({
-                    type: 'error',
-                    title: 'CNPJ',
-                    body: "Preencha um CNPJ válido",
-                    showCloseButton: true,
-                    timeout: 5000
-                });
-            }
-            else {
-                AuthService.cadastrar(user);
-            }
+
+        $scope.RedefinirUsuario = function (user) {
+            AuthService.RedefinirSenha(user);
+        };
+
+        $scope.CriarUsuario = function (user) {
+            AuthService.cadastrar(user);
         }
     })
     .controller('topNavCtrl', function ($scope, $localStorage, $http, $uibModal, SweetAlert) {
