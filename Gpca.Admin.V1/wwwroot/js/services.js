@@ -1,7 +1,7 @@
 angular.module('gpca')
     .service('AuthService', function ($http, constants, toaster, $timeout, $localStorage) {
         this.logar = function (obj) {
-            $http.post(constants.UrlAuthApi + 'Auth/Login', obj)
+            return $http.post(constants.UrlAuthApi + 'Auth/Login', obj)
                 .then(function (response) {
                     if (response.data.authenticated) {
 
@@ -12,6 +12,8 @@ angular.module('gpca')
                             showCloseButton: true,
                             timeout: 5000
                         });
+
+                        $localStorage.$reset();
                         $localStorage.user = response.data;
 
                         $timeout(function () {
@@ -20,6 +22,8 @@ angular.module('gpca')
                     }
 
                     else {
+                        $localStorage.user = response.data;
+
                         toaster.pop({
                             type: 'error',
                             title: 'Error',
@@ -27,6 +31,10 @@ angular.module('gpca')
                             showCloseButton: true,
                             timeout: 5000
                         });
+
+                        $timeout(function () {
+                            window.location.reload(true);
+                        }, 2000);
                     }
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
@@ -40,8 +48,9 @@ angular.module('gpca')
                     });
                 });
         }
+
         this.cadastrar = function (obj) {
-            $http.post(constants.UrlAuthApi + '/CreateUser', obj)
+            $http.post(constants.UrlAuthApi + 'Auth/CreateUser', obj)
                 .then(function (response) {
                     toaster.pop({
                         type: 'success',
@@ -66,6 +75,49 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.RedefinirSenha = function (obj) {
+            $http.post(constants.UrlAuthApi + 'Auth/RedefintionPassword', obj)
+                .then(function (response) {
+                    if (response.data.success) {
+
+                        toaster.pop({
+                            type: 'success',
+                            title: 'Sucesso',
+                            body: response.data.message,
+                            showCloseButton: true,
+                            timeout: 5000
+                        });
+
+                        $localStorage.$reset();
+                        $localStorage.user = response.data;
+
+                        $timeout(function () {
+                            window.location = "#/login";
+                        }, 5000);
+                    }
+                    else {
+                        toaster.pop({
+                            type: 'error',
+                            title: 'Error',
+                            body: response.data.message,
+                            showCloseButton: true,
+                            timeout: 5000
+                        });
+                    }
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        toaster.pop({
+                            type: 'error',
+                            title: value.propertyName,
+                            body: value.errorMessage,
+                            showCloseButton: true,
+                            timeout: 5000
+                        });
+                    });
+                });
+        }
+
     })
     .service('ConsortiumService', function ($http, constants, $timeout, $localStorage) {
         var params = {
