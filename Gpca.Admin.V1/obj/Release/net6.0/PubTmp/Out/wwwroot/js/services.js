@@ -1,7 +1,7 @@
 angular.module('gpca')
     .service('AuthService', function ($http, constants, toaster, $timeout, $localStorage) {
         this.logar = function (obj) {
-            $http.post(constants.UrlAuthApi + 'Auth/Login', obj)
+            return $http.post(constants.UrlAuthApi + 'Auth/Login', obj)
                 .then(function (response) {
                     if (response.data.authenticated) {
 
@@ -12,6 +12,8 @@ angular.module('gpca')
                             showCloseButton: true,
                             timeout: 5000
                         });
+
+                        $localStorage.$reset();
                         $localStorage.user = response.data;
 
                         $timeout(function () {
@@ -20,6 +22,8 @@ angular.module('gpca')
                     }
 
                     else {
+                        $localStorage.user = response.data;
+
                         toaster.pop({
                             type: 'error',
                             title: 'Error',
@@ -27,6 +31,10 @@ angular.module('gpca')
                             showCloseButton: true,
                             timeout: 5000
                         });
+
+                        $timeout(function () {
+                            window.location.reload(true);
+                        }, 2000);
                     }
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
@@ -40,8 +48,9 @@ angular.module('gpca')
                     });
                 });
         }
+
         this.cadastrar = function (obj) {
-            $http.post(constants.UrlAuthApi + '/CreateUser', obj)
+            $http.post(constants.UrlAuthApi + 'Auth/CreateUser', obj)
                 .then(function (response) {
                     toaster.pop({
                         type: 'success',
@@ -66,6 +75,49 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.RedefinirSenha = function (obj) {
+            $http.post(constants.UrlAuthApi + 'Auth/RedefintionPassword', obj)
+                .then(function (response) {
+                    if (response.data.success) {
+
+                        toaster.pop({
+                            type: 'success',
+                            title: 'Sucesso',
+                            body: response.data.message,
+                            showCloseButton: true,
+                            timeout: 5000
+                        });
+
+                        $localStorage.$reset();
+                        $localStorage.user = response.data;
+
+                        $timeout(function () {
+                            window.location = "#/login";
+                        }, 5000);
+                    }
+                    else {
+                        toaster.pop({
+                            type: 'error',
+                            title: 'Error',
+                            body: response.data.message,
+                            showCloseButton: true,
+                            timeout: 5000
+                        });
+                    }
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        toaster.pop({
+                            type: 'error',
+                            title: value.propertyName,
+                            body: value.errorMessage,
+                            showCloseButton: true,
+                            timeout: 5000
+                        });
+                    });
+                });
+        }
+
     })
     .service('ConsortiumService', function ($http, constants, $timeout, $localStorage) {
         var params = {
@@ -139,16 +191,16 @@ angular.module('gpca')
                 });
         }
     })
-    .service('TIPIService', function ($http, constants, $localStorage) {
+    .service('NCMService', function ($http, constants, $localStorage) {
         var params = {
             headers: {
                 'RefreshToken': $localStorage.user.refreshToken
             }
         };
 
-        this.CreateTipi = function (obj) {
+        this.Create = function (obj) {
             obj.planilha = parseInt(obj.planilha);
-            return $http.post(constants.UrlRelatorioApi + 'Tipi/Create', obj, params)
+            return $http.post(constants.UrlRelatorioApi + 'NCM/Create', obj, params)
                 .then(function (response) {
                     return response;
                 }, function (error) {
@@ -158,8 +210,8 @@ angular.module('gpca')
                 });
         }
 
-        this.EditTipi = function (obj) {
-            return $http.post(constants.UrlRelatorioApi + 'Tipi/Edit', obj, params)
+        this.Edit = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'NCM/Update', obj, params)
                 .then(function (response) {
                     return response;
                 }, function (error) {
@@ -169,9 +221,9 @@ angular.module('gpca')
                 });
         }
 
-        this.GetTIPIs = function () {
+        this.GetList = function () {
             var obj = {};
-            return $http.post(constants.UrlRelatorioApi + 'Tipi/GetList', obj, params)
+            return $http.post(constants.UrlRelatorioApi + 'NCM/GetList', obj, params)
                 .then(function (response) {
                     return response.data;
                 }, function (error) {
@@ -188,7 +240,7 @@ angular.module('gpca')
             }
         };
 
-        this.CreateMeta = function (obj) {
+        this.Create = function (obj) {
             obj.planilha = parseInt(obj.planilha);
             return $http.post(constants.UrlRelatorioApi + 'MetaObjeto/Create', obj, params)
                 .then(function (response) {
@@ -200,8 +252,8 @@ angular.module('gpca')
                 });
         }
 
-        this.EditMeta = function (obj) {
-            return $http.post(constants.UrlRelatorioApi + 'MetaObjeto/Edit', obj, params)
+        this.Edit = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'MetaObjeto/Update', obj, params)
                 .then(function (response) {
                     return response;
                 }, function (error) {
@@ -243,7 +295,7 @@ angular.module('gpca')
         }
 
         this.Edit = function (obj) {
-            return $http.post(constants.UrlRelatorioApi + 'Texto/Edit', obj, params)
+            return $http.post(constants.UrlRelatorioApi + 'Texto/Update', obj, params)
                 .then(function (response) {
                     return response;
                 }, function (error) {
@@ -265,6 +317,47 @@ angular.module('gpca')
                 });
         }
     })
+    .service('CfopService', function ($http, constants, $localStorage) {
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.Create = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'CFOP/Create', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.Edit = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'CFOP/Update', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetList = function () {
+            var obj = {};
+            return $http.post(constants.UrlRelatorioApi + 'CFOP/GetList', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })
     .service('RelatoriosService', function ($http, constants, $localStorage) {
 
         var params = {
@@ -274,7 +367,7 @@ angular.module('gpca')
         };
 
         this.CreateExcel = function () {
-            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download', null, params)
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download', params)
                 .then(function (response) {
                     return response;
                 }, function (error) {
@@ -285,7 +378,7 @@ angular.module('gpca')
         }
 
         this.GetFiles = function () {
-            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetFilesToImport', null, params)
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetFilesToImport', params)
                 .then(function (response) {
                     return response.data;
                 }, function (error) {
@@ -305,4 +398,143 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.DownloadDuplicados = function (params) {
+            $http({
+                url: constants.UrlRelatorioApi + 'ArquivoConsolidado/DownloadDuplicados',
+                method: 'POST',
+                responseType: 'arraybuffer',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: params
+            }).then(function (response) {
+                var blob = new Blob([response.data], { type: 'application/octet-stream' });
+                var url = window.URL.createObjectURL(blob);
+                var link = document.createElement('a');
+                link.href = url;
+                link.download = 'Consolidacao Relatorios de Gastos Duplicados.xlsx';
+                link.click();
+            });
+        }
+    })
+    .service('ManualService', function ($http, constants, $localStorage) {
+
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+
+        this.GetH01 = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetH01PaginateAsync', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetH02 = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetH02PaginateAsync', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetH03 = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetH03PaginateAsync', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetH04 = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetH04PaginateAsync', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetH05 = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetH05PaginateAsync', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditH01 = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/EditH01Async', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditH02 = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/EditH02Async', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditH03 = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/EditH03Async', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditH04 = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/EditH04Async', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditH05 = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/EditH05Async', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
     })

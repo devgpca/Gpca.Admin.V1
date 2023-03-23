@@ -20,7 +20,15 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <br/>
-            <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" ng-click="btnGerar()"><i class="fa fa-download"></i> Gerar relatório</button>
+            <div class="col-md-1">
+                <input type="text" class="form-control input-sm" ng-model="dtProcessamento" placeholder="Data de processamento" style="width: 130px;" />
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" ng-click="btnGerar(dtProcessamento);"><i class="fa fa-download"></i> Gerar relatório</button>
+            </div>
+            <!--<div class="col-md-6">
+                <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" ng-click="btnMontarLayout()"><i class="fa fa-download"></i> Montar layout</button>
+            </div>-->
         </div>
     </div>
 </div>

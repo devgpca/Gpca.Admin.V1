@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "BWEof+pqyfO0yX7rKxkH6Dt2/Q3TYedU4h5M9iPdoQE=",
+  "Hash": "NgT5YidpSdDa36Df5g5pTH2PaXT2Ib1pZUXG3KQqk64=",
   "Source": "Gpca.Admin.V1",
   "BasePath": "_content/Gpca.Admin.V1",
   "Mode": "Default",
@@ -25789,6 +25789,23 @@
       "OriginalItemSpec": "wwwroot\\views\\cadastro.html"
     },
     {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\cfop.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/cfop.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\cfop.html"
+    },
+    {
       "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\common\\content.html",
       "SourceId": "Gpca.Admin.V1",
       "SourceType": "Discovered",
@@ -26129,6 +26146,91 @@
       "OriginalItemSpec": "wwwroot\\views\\login.html"
     },
     {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\manualh01.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/manualh01.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\manualh01.html"
+    },
+    {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\manualh02.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/manualh02.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\manualh02.html"
+    },
+    {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\manualh03.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/manualh03.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\manualh03.html"
+    },
+    {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\manualh04.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/manualh04.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\manualh04.html"
+    },
+    {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\manualh05.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/manualh05.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\manualh05.html"
+    },
+    {
       "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\metaobj.html",
       "SourceId": "Gpca.Admin.V1",
       "SourceType": "Discovered",
@@ -26144,6 +26246,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\views\\metaobj.html"
+    },
+    {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Cfop\\incluir_editar_cfop.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/modal/Cfop/incluir_editar_cfop.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\modal\\Cfop\\incluir_editar_cfop.html"
     },
     {
       "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Consorcio\\incluir_editar_consorcio.html",
@@ -26180,6 +26299,23 @@
       "OriginalItemSpec": "wwwroot\\views\\modal\\Consorcio\\incluir_editar_consorcioJV.html"
     },
     {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Manual\\editar_manuais.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/modal/Manual/editar_manuais.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\modal\\Manual\\editar_manuais.html"
+    },
+    {
       "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Meta\\incluir_editar_metaobj.html",
       "SourceId": "Gpca.Admin.V1",
       "SourceType": "Discovered",
@@ -26214,6 +26350,23 @@
       "OriginalItemSpec": "wwwroot\\views\\modal\\modal_base.html"
     },
     {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\NCM\\incluir_editar_ncm.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/modal/NCM/incluir_editar_ncm.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\modal\\NCM\\incluir_editar_ncm.html"
+    },
+    {
       "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Texto\\incluir_editar_texto.html",
       "SourceId": "Gpca.Admin.V1",
       "SourceType": "Discovered",
@@ -26231,12 +26384,12 @@
       "OriginalItemSpec": "wwwroot\\views\\modal\\Texto\\incluir_editar_texto.html"
     },
     {
-      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\TIPI\\incluir_editar_tipi.html",
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\NCM.html",
       "SourceId": "Gpca.Admin.V1",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
       "BasePath": "_content/Gpca.Admin.V1",
-      "RelativePath": "views/modal/TIPI/incluir_editar_tipi.html",
+      "RelativePath": "views/NCM.html",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -26245,7 +26398,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\views\\modal\\TIPI\\incluir_editar_tipi.html"
+      "OriginalItemSpec": "wwwroot\\views\\NCM.html"
     },
     {
       "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\resumo.html",
@@ -26265,6 +26418,23 @@
       "OriginalItemSpec": "wwwroot\\views\\resumo.html"
     },
     {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\signin_up.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/signin_up.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\signin_up.html"
+    },
+    {
       "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\texto.html",
       "SourceId": "Gpca.Admin.V1",
       "SourceType": "Discovered",
@@ -26280,23 +26450,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\views\\texto.html"
-    },
-    {
-      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\TIPI.html",
-      "SourceId": "Gpca.Admin.V1",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
-      "BasePath": "_content/Gpca.Admin.V1",
-      "RelativePath": "views/TIPI.html",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\views\\TIPI.html"
     }
   ]
 }

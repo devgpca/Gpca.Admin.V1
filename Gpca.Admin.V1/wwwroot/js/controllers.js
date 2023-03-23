@@ -340,6 +340,14 @@ angular.module('gpca')
         }
     })
     .controller('RegisterCtrl', function ($scope, toaster, AuthService) {
+
+        $scope.user = {
+            CpfCnpj: "",
+            Email: "",
+            Senha: "",
+            SenhaConfirmacao: ""
+        };
+
         $onInit = function () {
             $scope.tipo = "PF";
         };
@@ -1178,7 +1186,7 @@ angular.module('gpca')
 
         $scope.btnGerar = function () {
             var request = new XMLHttpRequest();
-            request.setRequestHeader("RefreshToken", $localStorage.user.refreshToken);
+            //request.setRequestHeader("RefreshToken", $localStorage.user.refreshToken);
             request.responseType = "blob";
             request.open("GET", constants.UrlRelatorioApi + "ArquivoConsolidado/Download");
             request.onload = function () {
