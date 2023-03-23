@@ -363,7 +363,7 @@ angular.module('gpca')
         //}
 
         $scope.user = $localStorage.user.userName.split('-')[1];
-        console.log($localStorage.user)
+        
 
         $scope.logout = function () {
             $localStorage.$reset();
@@ -396,7 +396,7 @@ angular.module('gpca')
 
         $q.all([GetList]).then(function (response) {
             $scope.getData = response[0].data;
-            console.log($scope.getData);
+            
         });
 
         $scope.consorcio = {
@@ -512,7 +512,7 @@ angular.module('gpca')
         $q.all([GetListJvs, GetList]).then(function (response) {
             $scope.getData = response[0].data;
             $scope.consorcioList = response[1].data;
-            //console.log($scope.consorcioList);
+            
         });
 
         $scope.consorcioJv = {
@@ -624,25 +624,166 @@ angular.module('gpca')
         }
 
     })
-    .controller('TIPICtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TIPIService) {
-        $scope.Tipi = [];
-        var GetListTIPIs = TIPIService.GetTIPIs();
+    .controller('cfopCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, CfopService, $q) {
 
-        $q.all([GetListTIPIs]).then(function (response) {
-            $scope.getData = response[0].data;
-            //$scope.consorcioList = response[1].data;
-            //console.log($scope.consorcioList);
-        });
+        $scope.GetAllCfops = function () {
+            var GetList = CfopService.GetList();
 
-        $scope.Tipi = {
-            id: 0,
-            consorcioId: null,
-            jv: "",
-            situacao: "",
-            cutback: "",
-            planilha: null,
-            ativo: true
+            $q.all([GetList]).then(function (response) {
+                $scope.cfops = response[0].data;
+            });
         }
+
+        $scope.GetAllCfops();
+
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+        $scope.novo = function () {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Cfop/incluir_editar_cfop.html',
+                controller: function ($scope, $uibModalInstance, SweetAlert) {
+                    $scope.Incluir = function () {
+                        CfopService.Create($scope.obj).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $uibModalInstance.close();
+                        })
+
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    CfopService: function () {
+                        return null;
+                    }
+                }
+            }).result.then(function (result) {
+                $scope.GetAllCfops();
+            });
+
+        }
+
+        $scope.editar = function (data) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Cfop/incluir_editar_cfop.html',
+                controller: function ($scope, $uibModalInstance, CfopSelected, SweetAlert) {
+                    $scope.obj = {};
+                    $scope.value = CfopSelected;
+                    $scope.obj.numeracao = CfopSelected.numeracao;
+                    $scope.obj.descricao = CfopSelected.descricao;
+                    $scope.obj.entradaSaida = CfopSelected.entradaSaida;
+                    $scope.obj.credito = CfopSelected.credito
+
+                    $scope.Alterar = function () {
+                        CfopSelected.numeracao = $scope.obj.numeracao
+                        CfopSelected.descricao = $scope.obj.descricao;
+                        CfopSelected.entradaSaida = $scope.obj.entradaSaida;
+                        CfopSelected.credito = $scope.obj.credito;
+
+                        CfopService.Edit(CfopSelected).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $uibModalInstance.dismiss('dimiss');
+                        })
+
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    CfopSelected: function () {
+                        return data;
+                    }
+                }
+            })
+                .result.then(function (result) {
+                    $scope.GetAllCfops();
+                });
+        }
+
+        // Função só esta sendo chamada, mas não a correta, criar a função de desativar no backend
+
+        $scope.ativarDesativar = function (data) {
+            $scope.title = !data.ativo ? "ativar" : "desativar";
+            $scope.result = !data.ativo ? "ativada" : "desativada";
+
+            SweetAlert.swal({
+                title: "Deseja " + $scope.title + " " + data.descricao + " ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Sim, " + $scope.title + " !",
+                cancelButtonText: "Não, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        CfopService.Edit(data).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "A etapa foi " + $scope.result + " com sucesso.",
+                                type: "success"
+                            });
+                        })
+                    } else {
+                        SweetAlert.swal({
+                            title: "Cancelado!",
+                            text: "Você cancelou a alteração do registro",
+                            type: "error"
+                        });
+                    }
+                });
+        }
+
+    })
+    .controller('NCMCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, NCMService, $q) {
+
+        $scope.GetAll = function () {
+            var GetList = NCMService.GetList();
+
+            $q.all([GetList]).then(function (response) {
+                $scope.ncms = response[0].data;
+                //$scope.consorcioList = response[1].data;
+                
+            });
+        }
+
+        $scope.GetAll()
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
@@ -666,44 +807,86 @@ angular.module('gpca')
             ]);
 
 
-        $scope.btnAdd = function () {
+        $scope.novo = function () {
             $uibModal.open({
                 scope: $scope,
-                templateUrl: 'views/modal/TIPI/incluir_editar_tipi.html',
-                controller: function ($scope, $uibModalInstance) {
-                    $scope.IncluirJv = function () {
-                        ConsortiumJvService.CreateJv($scope.consorcioJv);
-                        $uibModalInstance.close();
+                templateUrl: 'views/modal/NCM/incluir_editar_ncm.html',
+                controller: function ($scope, $uibModalInstance, ncmSelected, NCMService) {
+
+                    $scope.Incluir = function () {
+                        $scope.value = ncmSelected;
+
+
+                        NCMService.Create($scope.obj).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $uibModalInstance.close();
+                        })
                     }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
                 },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    fatorSelected: function () {
+                    ncmSelected: function () {
                         return null;
                     }
                 }
+            }).result.then(function (result) {
+                $scope.GetAll();
             });
         }
 
         $scope.editar = function (data) {
             $uibModal.open({
-                templateUrl: 'views/modal/TIPI/incluir_editar_tipi.html',
-                controller: 'TIPICtrl',
+                scope: $scope,
+                templateUrl: 'views/modal/NCM/incluir_editar_ncm.html',
+                controller: function ($scope, $uibModalInstance, ncmSelected, NCMService) {
+                    $scope.value = ncmSelected;
+                    $scope.obj = {};
+                    $scope.obj.descricao = ncmSelected.descricao;
+                    $scope.obj.credito = ncmSelected.credito
+
+                    $scope.Alterar = function () {
+                        ncmSelected.descricao = $scope.obj.descricao;
+                        ncmSelected.credito = $scope.obj.credito;
+
+                        NCMService.Edit(ncmSelected).then(function () {
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $uibModalInstance.close();
+                        })
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    fatorSelected: function () {
+                    metaSelected: function () {
                         return data;
                     }
                 }
+            }).result.then(function (result) {
+                $scope.GetAll();
             });
         }
 
-        $scope.ativarDesativarTipi = function (data) {
-            $scope.title = data.ativo == false ? "ativar" : "desativar";
-            $scope.result = data.ativo == false ? "ativado" : "desativado";
+        $scope.ativarDesativar = function (data) {
+            $scope.title = !data.ativo ? "ativar" : "desativar";
+            $scope.result = !data.ativo ? "ativada" : "desativada";
 
             SweetAlert.swal({
-                title: "Deseja " + $scope.title + " ?",
+                title: "Deseja " + $scope.title + " " + data.descricao + " ?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -714,18 +897,12 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        $http.post(constants.UrlApi + "Fator/AtivarDesativar", fator.fa_Id, {
-                            headers: { 'Authorization': 'Bearer ' + $localStorage.token }
-                        }).then(function (response) {
-                            SweetAlert.swal({
-                                title: "Alterado!",
-                                text: "O fator foi " + $scope.result + " com sucesso.",
-                                type: "success"
-                            });
-
-                        }, function (response) {
-                            return alert("Erro: " + response.status);
+                        SweetAlert.swal({
+                            title: "Alterado!",
+                            text: "A etapa foi " + $scope.result + " com sucesso.",
+                            type: "success"
                         });
+
                     } else {
                         SweetAlert.swal({
                             title: "Cancelado!",
@@ -738,12 +915,15 @@ angular.module('gpca')
     })
     .controller('metaobjCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, MetaObjetoService, $q) {
 
-        var GetList = MetaObjetoService.GetMetaObjs();
+        $scope.GetAll = function () {
+            var GetList = MetaObjetoService.GetMetaObjs();
 
-        $q.all([GetList]).then(function (response) {
-            $scope.metaObj = response[0].data;
-        });
+            $q.all([GetList]).then(function (response) {
+                $scope.metaObj = response[0].data;
+            });
+        }
 
+        $scope.GetAll();
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
@@ -767,15 +947,24 @@ angular.module('gpca')
             ]);
 
 
-        $scope.incluir = function () {
+        $scope.novo = function () {
             $uibModal.open({
                 scope: $scope,
                 templateUrl: 'views/modal/Meta/incluir_editar_metaobj.html',
-                controller: function ($scope, $uibModalInstance) {
-                    $scope.IncluirJv = function () {
+                controller: function ($scope, $uibModalInstance, MetaObjetoService, metaSelected) {
+
+                    $scope.Incluir = function () {  
                         $scope.value = metaSelected;
-                        ConsortiumJvService.EditMeta($scope.obj);
-                        $uibModalInstance.close();
+                        
+
+                        MetaObjetoService.Create($scope.obj).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $uibModalInstance.close();
+                        })
                     }
 
                     $scope.cancel = function () {
@@ -788,6 +977,8 @@ angular.module('gpca')
                         return null;
                     }
                 }
+            }).result.then(function (result) {
+                $scope.GetAll();
             });
         }
 
@@ -797,15 +988,22 @@ angular.module('gpca')
                 templateUrl: 'views/modal/Meta/incluir_editar_metaobj.html',
                 controller: function ($scope, $uibModalInstance, metaSelected, MetaObjetoService) {
                     $scope.value = metaSelected;
+                    $scope.obj = {};
                     $scope.obj.descricao = metaSelected.descricao;
                     $scope.obj.credito = metaSelected.credito
 
-                    $scope.editar = function () {
+                    $scope.Alterar = function () {
                         metaSelected.descricao = $scope.obj.descricao;
                         metaSelected.credito = $scope.obj.credito;
 
-                        MetaObjetoService.EditMeta(metaSelected);
-                        $uibModalInstance.dismiss('dimiss');
+                        MetaObjetoService.Edit(metaSelected).then(function () {
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $uibModalInstance.close();
+                        })
                     }
 
                     $scope.cancel = function () {
@@ -818,6 +1016,8 @@ angular.module('gpca')
                         return data;
                     }
                 }
+            }).result.then(function (result) {
+                $scope.GetAll();
             });
         }
 
@@ -855,11 +1055,15 @@ angular.module('gpca')
     })
     .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TextoService, $q) {
 
-        var GetList = TextoService.GetList();
+        $scope.GetAll = function () {
+            var GetList = TextoService.GetList();
 
-        $q.all([GetList]).then(function (response) {
-            $scope.textos = response[0].data;
-        });
+            $q.all([GetList]).then(function (response) {
+                $scope.textos = response[0].data;
+            });
+        }
+        // Colocar paginação na consulta
+        /*$scope.GetAll();*/
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
@@ -1089,14 +1293,335 @@ angular.module('gpca')
                 var result = RelatoriosService.Importar(json);
 
                 $q.all([result]).then(function (response) {
-                    console.log(response);
                     //alert(response[0].message);
                     SweetAlert.swal("Boa!", response[0].message, "success");
                 });
             }
         }
     })
-    .controller('ManualCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+    .controller('ManualH01Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading, SweetAlert) {
+        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.maxSize = 10;
+        $scope.currentPage = 1;
+        $scope.numPerPage = $scope.obj.pageSize;
+        $scope.totalRecords = 0;
+
+
+        $scope.ObterPlanilha = function (d) {
+            $loading.start('load');
+            ManualService.GetH01(d).then(function (data) {
+                $scope.listH01 = data.data;
+                $scope.totalRecords = data.totalRecords;
+                $loading.finish('load');
+            })
+        }
+
+        $scope.ObterPlanilha($scope.obj);
+
+        $scope.pageChanged = function () {
+            $scope.obj.pageNumber = $scope.currentPage;
+            $scope.ObterPlanilha($scope.obj);
+        }
+
+        $scope.editar = function (obj) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Manual/editar_manuais.html',
+                controller: function ($scope, $uibModalInstance, manualSelected) {
+                    
+                    $scope.creditos = ["Creditável", "Não Creditável"];
+                    $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
+                    $scope.obj = {};
+                    $scope.obj.Creditos = manualSelected.creditos;
+                    $scope.obj.TipoItem = manualSelected.tipoItem
+
+                    $scope.alterar = function () {
+                        manualSelected.creditos = $scope.obj.Creditos
+                        manualSelected.tipoItem = $scope.obj.TipoItem
+
+                        ManualService.EditH01(manualSelected).then(function () {
+                            $uibModalInstance.dismiss('dimiss');
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                        })
+
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    manualSelected: function () {
+                        return obj;
+                    }
+                }
+            });
+        }
+
+    })
+    .controller('ManualH02Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.maxSize = 10;
+        $scope.currentPage = 1;
+        $scope.numPerPage = $scope.obj.pageSize;
+        $scope.totalRecords = 0;
+
+
+        $scope.ObterPlanilha = function (d) {
+            $loading.start('load');
+            ManualService.GetH02(d).then(function (data) {
+                $scope.listH02 = data.data;
+                $scope.totalRecords = data.totalRecords;
+                $loading.finish('load');
+            })
+        }
+
+        $scope.ObterPlanilha($scope.obj);
+
+        $scope.pageChanged = function () {
+            $scope.obj.pageNumber = $scope.currentPage;
+            $scope.ObterPlanilha($scope.obj);
+        }
+
+        $scope.editar = function (obj) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Manual/editar_manuais.html',
+                controller: function ($scope, $uibModalInstance, manualSelected) {
+                    
+                    $scope.creditos = ["Creditável", "Não Creditável"];
+                    $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
+                    $scope.obj = {};
+                    $scope.obj.Creditos = manualSelected.creditos;
+                    $scope.obj.TipoItem = manualSelected.tipoItem
+
+                    $scope.alterar = function () {
+                        manualSelected.creditos = $scope.obj.Creditos
+                        manualSelected.tipoItem = $scope.obj.TipoItem
+
+                        ManualService.EditH02(manualSelected).then(function () {
+                            $uibModalInstance.dismiss('dimiss');
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                        })
+
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    manualSelected: function () {
+                        return obj;
+                    }
+                }
+            });
+        }
+
+    })
+    .controller('ManualH03Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.maxSize = 10;
+        $scope.currentPage = 1;
+        $scope.numPerPage = $scope.obj.pageSize;
+        $scope.totalRecords = 0;
+
+
+        $scope.ObterPlanilha = function (d) {
+            $loading.start('load');
+            ManualService.GetH03(d).then(function (data) {
+                $scope.listH03 = data.data;
+                $scope.totalRecords = data.totalRecords;
+                $loading.finish('load');
+            })
+        }
+
+        $scope.ObterPlanilha($scope.obj);
+
+        $scope.pageChanged = function () {
+            $scope.obj.pageNumber = $scope.currentPage;
+            $scope.ObterPlanilha($scope.obj);
+        }
+
+        $scope.editar = function (obj) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Manual/editar_manuais.html',
+                controller: function ($scope, $uibModalInstance, manualSelected) {
+                    
+                    $scope.creditos = ["Creditável", "Não Creditável"];
+                    $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
+                    $scope.obj = {};
+                    $scope.obj.Creditos = manualSelected.creditos;
+                    $scope.obj.TipoItem = manualSelected.tipoItem
+
+                    $scope.alterar = function () {
+                        manualSelected.creditos = $scope.obj.Creditos
+                        manualSelected.tipoItem = $scope.obj.TipoItem
+
+                        ManualService.EditH03(manualSelected).then(function () {
+                            $uibModalInstance.dismiss('dimiss');
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                        })
+
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    manualSelected: function () {
+                        return obj;
+                    }
+                }
+            });
+        }
+
+    })
+    .controller('ManualH04Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.maxSize = 10;
+        $scope.currentPage = 1;
+        $scope.numPerPage = $scope.obj.pageSize;
+        $scope.totalRecords = 0;
+
+
+        $scope.ObterPlanilha = function (d) {
+            $loading.start('load');
+            ManualService.GetH04(d).then(function (data) {
+                $scope.listH04 = data.data;
+                $scope.totalRecords = data.totalRecords;
+                $loading.finish('load');
+            })
+        }
+
+        $scope.ObterPlanilha($scope.obj);
+
+        $scope.pageChanged = function () {
+            $scope.obj.pageNumber = $scope.currentPage;
+            $scope.ObterPlanilha($scope.obj);
+        }
+
+        $scope.editar = function (obj) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Manual/editar_manuais.html',
+                controller: function ($scope, $uibModalInstance, manualSelected) {
+
+                    $scope.creditos = ["Creditável", "Não Creditável"];
+                    $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
+                    $scope.obj = {};
+                    $scope.obj.Creditos = manualSelected.creditos;
+                    $scope.obj.TipoItem = manualSelected.tipoItem
+
+                    $scope.alterar = function () {
+                        manualSelected.creditos = $scope.obj.Creditos
+                        manualSelected.tipoItem = $scope.obj.TipoItem
+
+                        ManualService.EditH04(manualSelected).then(function () {
+                            $uibModalInstance.dismiss('dimiss');
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                        })
+
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    manualSelected: function () {
+                        return obj;
+                    }
+                }
+            });
+        }
+
+    })
+    .controller('ManualH05Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.maxSize = 10;
+        $scope.currentPage = 1;
+        $scope.numPerPage = $scope.obj.pageSize;
+        $scope.totalRecords = 0;
+
+
+        $scope.ObterPlanilha = function (d) {
+            $loading.start('load');
+            ManualService.GetH05(d).then(function (data) {
+                $scope.listH05 = data.data;
+                $scope.totalRecords = data.totalRecords;
+                $loading.finish('load');
+            })
+        }
+
+        $scope.ObterPlanilha($scope.obj);
+
+        $scope.pageChanged = function () {
+            $scope.obj.pageNumber = $scope.currentPage;
+            $scope.ObterPlanilha($scope.obj);
+        }
+
+        $scope.editar = function (obj) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Manual/editar_manuais.html',
+                controller: function ($scope, $uibModalInstance, manualSelected) {
+
+                    $scope.creditos = ["Creditável", "Não Creditável"];
+                    $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
+                    $scope.obj = {};
+                    $scope.obj.Creditos = manualSelected.creditos;
+                    $scope.obj.TipoItem = manualSelected.tipoItem
+
+                    $scope.alterar = function () {
+                        manualSelected.creditos = $scope.obj.Creditos
+                        manualSelected.tipoItem = $scope.obj.TipoItem
+
+                        ManualService.EditH05(manualSelected).then(function () {
+                            $uibModalInstance.dismiss('dimiss');
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                        })
+
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    manualSelected: function () {
+                        return obj;
+                    }
+                }
+            });
+        }
 
     })
     ;

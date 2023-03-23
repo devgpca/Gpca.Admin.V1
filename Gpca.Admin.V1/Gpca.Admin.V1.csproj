@@ -7,8 +7,4 @@
 		<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
 	</PropertyGroup>
 
-	<ItemGroup>
-	  <Folder Include="wwwroot\views\modal\NCM\" />
-	</ItemGroup>
-
 </Project>
