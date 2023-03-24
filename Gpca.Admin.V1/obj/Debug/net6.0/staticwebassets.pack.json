@@ -6061,8 +6061,8 @@
       "PackagePath": "staticwebassets\\views\\JV.html"
     },
     {
-      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\TIPI.html",
-      "PackagePath": "staticwebassets\\views\\TIPI.html"
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\NCM.html",
+      "PackagePath": "staticwebassets\\views\\NCM.html"
     },
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\blank.html",
@@ -6071,6 +6071,10 @@
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\cadastro.html",
       "PackagePath": "staticwebassets\\views\\cadastro.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\cfop.html",
+      "PackagePath": "staticwebassets\\views\\cfop.html"
     },
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\common\\content.html",
@@ -6133,16 +6137,48 @@
       "PackagePath": "staticwebassets\\views\\consorcio.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\duplicidade.html",
+      "PackagePath": "staticwebassets\\views\\duplicidade.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\forgot_password.html",
       "PackagePath": "staticwebassets\\views\\forgot_password.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\importacao.html",
+      "PackagePath": "staticwebassets\\views\\importacao.html"
     },
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\login.html",
       "PackagePath": "staticwebassets\\views\\login.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\manualh01.html",
+      "PackagePath": "staticwebassets\\views\\manualh01.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\manualh02.html",
+      "PackagePath": "staticwebassets\\views\\manualh02.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\manualh03.html",
+      "PackagePath": "staticwebassets\\views\\manualh03.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\manualh04.html",
+      "PackagePath": "staticwebassets\\views\\manualh04.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\manualh05.html",
+      "PackagePath": "staticwebassets\\views\\manualh05.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\metaobj.html",
       "PackagePath": "staticwebassets\\views\\metaobj.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Cfop\\incluir_editar_cfop.html",
+      "PackagePath": "staticwebassets\\views\\modal\\Cfop\\incluir_editar_cfop.html"
     },
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Consorcio\\incluir_editar_consorcio.html",
@@ -6153,12 +6189,16 @@
       "PackagePath": "staticwebassets\\views\\modal\\Consorcio\\incluir_editar_consorcioJV.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Manual\\editar_manuais.html",
+      "PackagePath": "staticwebassets\\views\\modal\\Manual\\editar_manuais.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Meta\\incluir_editar_metaobj.html",
       "PackagePath": "staticwebassets\\views\\modal\\Meta\\incluir_editar_metaobj.html"
     },
     {
-      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\TIPI\\incluir_editar_tipi.html",
-      "PackagePath": "staticwebassets\\views\\modal\\TIPI\\incluir_editar_tipi.html"
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\NCM\\incluir_editar_ncm.html",
+      "PackagePath": "staticwebassets\\views\\modal\\NCM\\incluir_editar_ncm.html"
     },
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Texto\\incluir_editar_texto.html",
@@ -6171,6 +6211,10 @@
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\resumo.html",
       "PackagePath": "staticwebassets\\views\\resumo.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\signin_up.html",
+      "PackagePath": "staticwebassets\\views\\signin_up.html"
     },
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\texto.html",

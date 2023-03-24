@@ -1,7 +1,16 @@
 angular.module('gpca')
     .service('AuthService', function ($http, constants, toaster, $timeout, $localStorage) {
+
+        var pars = {
+            headers: {
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Origin": constants.UrlAuthApi,
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+            }
+        }
+
         this.logar = function (obj) {
-            return $http.post(constants.UrlAuthApi + 'Auth/Login', obj)
+            return $http.post(constants.UrlAuthApi + 'Auth/Login', obj, pars)
                 .then(function (response) {
                     if (response.data.authenticated) {
 
@@ -361,13 +370,11 @@ angular.module('gpca')
     .service('RelatoriosService', function ($http, constants, $localStorage) {
 
         var params = {
-            headers: {
-                'RefreshToken': $localStorage.user.refreshToken
-            }
+            responseType: "blob"
         };
 
-        this.CreateExcel = function () {
-            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download', params)
+        this.CreateExcel = function (date) {
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download?dateProccess=' + date, params)
                 .then(function (response) {
                     return response;
                 }, function (error) {

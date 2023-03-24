@@ -289,12 +289,14 @@ angular.module('gpca')
             }
         };
     })
-    .controller('LoginCtrl', function ($scope, toaster, AuthService, $q, $localStorage) {
+    .controller('LoginCtrl', function ($scope, toaster, AuthService, $loading, $localStorage) {
         $onInit = function () {
             $scope.tipo = "PF";
         };
 
         $scope.verificaCpfCnpj = function () {
+            $loading.start('load');
+
             if ($localStorage.user != undefined) {
                 var cpfCnpj = $scope.user.CpfCnpj.replace('.', '').replace('.', '').replace('-', '');
                 if ($localStorage.user.userName == cpfCnpj) {
@@ -309,6 +311,8 @@ angular.module('gpca')
             } else {
                 $scope.isCodeAccess = false;
             }
+
+            $loading.finish('load');
         }
 
         $scope.tipos = [
@@ -316,6 +320,8 @@ angular.module('gpca')
             { tipo: "PJ", nome: "Pessoa Juridica" }
         ]
         $scope.autenticar = function (user) {
+            $loading.start('load');
+
             if ($scope.loginForm.$error.cpf != undefined && $scope.tipo == "PF") {
                 toaster.pop({
                     type: 'error',
@@ -337,6 +343,8 @@ angular.module('gpca')
             else {
                 AuthService.logar(user);
             }
+
+            $loading.finish('load');
         }
     })
     .controller('RegisterCtrl', function ($scope, toaster, AuthService) {
@@ -371,7 +379,7 @@ angular.module('gpca')
         //}
 
         $scope.user = $localStorage.user.userName.split('-')[1];
-        
+
 
         $scope.logout = function () {
             $localStorage.$reset();
@@ -404,7 +412,7 @@ angular.module('gpca')
 
         $q.all([GetList]).then(function (response) {
             $scope.getData = response[0].data;
-            
+
         });
 
         $scope.consorcio = {
@@ -520,7 +528,7 @@ angular.module('gpca')
         $q.all([GetListJvs, GetList]).then(function (response) {
             $scope.getData = response[0].data;
             $scope.consorcioList = response[1].data;
-            
+
         });
 
         $scope.consorcioJv = {
@@ -787,7 +795,7 @@ angular.module('gpca')
             $q.all([GetList]).then(function (response) {
                 $scope.ncms = response[0].data;
                 //$scope.consorcioList = response[1].data;
-                
+
             });
         }
 
@@ -961,9 +969,9 @@ angular.module('gpca')
                 templateUrl: 'views/modal/Meta/incluir_editar_metaobj.html',
                 controller: function ($scope, $uibModalInstance, MetaObjetoService, metaSelected) {
 
-                    $scope.Incluir = function () {  
+                    $scope.Incluir = function () {
                         $scope.value = metaSelected;
-                        
+
 
                         MetaObjetoService.Create($scope.obj).then(function (data) {
                             SweetAlert.swal({
@@ -1182,23 +1190,35 @@ angular.module('gpca')
         }
 
     })
-    .controller('ConsolidadoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, constants, $q) {
+    .controller('ConsolidadoCtrl', function ($scope, RelatoriosService, SweetAlert, $q, constants, $loading) {
 
-        $scope.btnGerar = function () {
-            var request = new XMLHttpRequest();
-            //request.setRequestHeader("RefreshToken", $localStorage.user.refreshToken);
-            request.responseType = "blob";
-            request.open("GET", constants.UrlRelatorioApi + "ArquivoConsolidado/Download");
-            request.onload = function () {
-                var url = window.URL.createObjectURL(this.response);
-                var a = document.createElement("a");
-                document.body.appendChild(a);
-                a.href = url;
-                a.download = "Consolidação Relatórios de Gastos.xlsx";
-                a.click();
+        $scope.dtProcessamento = '';
+
+        $scope.btnGerar = function (date) {
+            $loading.start('load');
+
+            if ($scope.dtProcessamento != '' || $scope.dtProcessamento != undefined) {
+
+                var getExcel = RelatoriosService.CreateExcel(date);
+
+                $q.all([getExcel]).then(function (response) {
+
+                    const blob = response[0].data
+                    var url = window.URL.createObjectURL(blob);
+                    var a = document.createElement("a");
+                    document.body.appendChild(a);
+                    a.href = url;
+                    a.download = "Consolidação Relatórios de Gastos.xlsx";
+                    a.click();
+
+                    $loading.finish('load');
+                }, function (error) {
+                    console.log(error);
+                    $loading.finish('load');
+                });
             }
-            request.send();
         }
+
     })
     .controller('ResumoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
 
@@ -1259,13 +1279,15 @@ angular.module('gpca')
             RelatoriosService.DownloadDuplicados(requestData);
         }
     })
-    .controller('ImportacaoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, RelatoriosService, $q) {
+    .controller('ImportacaoCtrl', function ($scope, DTOptionsBuilder, $loading, SweetAlert, $localStorage, RelatoriosService, $q) {
 
+        $loading.start('load');
         var GetList = RelatoriosService.GetFiles();
         $scope.dataProcessamento = "";
 
         $q.all([GetList]).then(function (response) {
             $scope.GetFiles = response[0].data;
+            $loading.finish('load');
         });
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
@@ -1336,7 +1358,7 @@ angular.module('gpca')
                 scope: $scope,
                 templateUrl: 'views/modal/Manual/editar_manuais.html',
                 controller: function ($scope, $uibModalInstance, manualSelected) {
-                    
+
                     $scope.creditos = ["Creditável", "Não Creditável"];
                     $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
                     $scope.obj = {};
@@ -1401,7 +1423,7 @@ angular.module('gpca')
                 scope: $scope,
                 templateUrl: 'views/modal/Manual/editar_manuais.html',
                 controller: function ($scope, $uibModalInstance, manualSelected) {
-                    
+
                     $scope.creditos = ["Creditável", "Não Creditável"];
                     $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
                     $scope.obj = {};
@@ -1466,7 +1488,7 @@ angular.module('gpca')
                 scope: $scope,
                 templateUrl: 'views/modal/Manual/editar_manuais.html',
                 controller: function ($scope, $uibModalInstance, manualSelected) {
-                    
+
                     $scope.creditos = ["Creditável", "Não Creditável"];
                     $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
                     $scope.obj = {};
