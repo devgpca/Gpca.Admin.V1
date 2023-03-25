@@ -379,6 +379,17 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.GetAllPaginate = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Texto/GetAllPaginate', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
     })
     .service('CfopService', function ($http, constants, $localStorage) {
         var params = {

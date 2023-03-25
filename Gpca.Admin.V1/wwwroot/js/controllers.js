@@ -1237,38 +1237,29 @@ angular.module('gpca')
                 });
         }
     })
-    .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TextoService, $q) {
+    .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TextoService, $q, $loading ) {
 
-        $scope.GetAll = function () {
-            var GetList = TextoService.GetList();
+        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.maxSize = 10;
+        $scope.currentPage = 1;
+        $scope.numPerPage = $scope.obj.pageSize;
+        $scope.totalRecords = 0;
 
-            $q.all([GetList]).then(function (response) {
-                $scope.textos = response[0].data;
-            });
+        $scope.GetAll = function (d) {
+            $loading.start('load');
+            TextoService.GetAllPaginate(d).then(function (data) {
+                $scope.textos = data.data;
+                $scope.totalRecords = data.totalRecords;
+                $loading.finish('load');
+            })
         }
-        // Colocar paginação na consulta
-        /*$scope.GetAll();*/
 
-        $scope.dtOptions = DTOptionsBuilder.newOptions()
-            .withDOM('<"html5buttons"B>lTfgitp')
-            .withButtons([
-                { extend: 'copy' },
-                { extend: 'csv' },
-                { extend: 'excel', title: 'ExampleFile' },
-                { extend: 'pdf', title: 'ExampleFile' },
+        $scope.GetAll($scope.obj);
 
-                {
-                    extend: 'print',
-                    customize: function (win) {
-                        $(win.document.body).addClass('white-bg');
-                        $(win.document.body).css('font-size', '10px');
-
-                        $(win.document.body).find('table')
-                            .addClass('compact')
-                            .css('font-size', 'inherit');
-                    }
-                }
-            ]);
+        $scope.pageChanged = function () {
+            $scope.obj.pageNumber = $scope.currentPage;
+            $scope.GetAll($scope.obj);
+        }
 
         $scope.incluir = function () {
             $uibModal.open({
@@ -1302,7 +1293,7 @@ angular.module('gpca')
                     $scope.obj = {};
                     $scope.value = textoSelected;
                     $scope.obj.descricao = textoSelected.descricao;
-                    $scope.obj.creditavel = textoSelected.creditavel
+                    $scope.obj.creditavel = textoSelected.creditavel.toString();
 
                     $scope.editar = function () {
                         textoSelected.descricao = $scope.obj.descricao;
