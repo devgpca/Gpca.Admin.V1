@@ -289,12 +289,14 @@ angular.module('gpca')
             }
         };
     })
-    .controller('LoginCtrl', function ($scope, toaster, AuthService, $q, $localStorage) {
+    .controller('LoginCtrl', function ($scope, toaster, AuthService, $loading, $localStorage) {
         $onInit = function () {
             $scope.tipo = "PF";
         };
 
         $scope.verificaCpfCnpj = function () {
+            $loading.start('load');
+
             if ($localStorage.user != undefined) {
                 var cpfCnpj = $scope.user.CpfCnpj.replace('.', '').replace('.', '').replace('-', '');
                 if ($localStorage.user.userName == cpfCnpj) {
@@ -309,6 +311,8 @@ angular.module('gpca')
             } else {
                 $scope.isCodeAccess = false;
             }
+
+            $loading.finish('load');
         }
 
         $scope.tipos = [
@@ -316,6 +320,8 @@ angular.module('gpca')
             { tipo: "PJ", nome: "Pessoa Juridica" }
         ]
         $scope.autenticar = function (user) {
+            $loading.start('load');
+
             if ($scope.loginForm.$error.cpf != undefined && $scope.tipo == "PF") {
                 toaster.pop({
                     type: 'error',
@@ -337,6 +343,8 @@ angular.module('gpca')
             else {
                 AuthService.logar(user);
             }
+
+            $loading.finish('load');
         }
     })
     .controller('RegisterCtrl', function ($scope, toaster, AuthService) {

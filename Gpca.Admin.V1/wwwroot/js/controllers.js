@@ -953,8 +953,7 @@ angular.module('gpca')
                 templateUrl: 'views/modal/NCM/incluir_editar_ncm.html',
                 controller: function ($scope, $uibModalInstance, ncmSelected, NCMService) {
 
-                    $scope.parseISOString = function (d)
-                    {
+                    $scope.parseISOString = function (d) {
                         var b = d.split(/\D+/);
                         return new Date(Date.UTC(b[0], --b[1], ++b[2], b[3], b[4], b[5]));
                     }
@@ -1018,7 +1017,7 @@ angular.module('gpca')
                     }
 
                     $scope.obj = {};
-                    
+
                     $scope.value = ncmSelected;
 
                     $scope.obj.codigo = ncmSelected.codigo;
@@ -1237,7 +1236,7 @@ angular.module('gpca')
                 });
         }
     })
-    .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TextoService, $q, $loading ) {
+    .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TextoService, $q, $loading) {
 
         $scope.obj = { pageNumber: 1, pageSize: 10 }
         $scope.maxSize = 10;
@@ -1351,34 +1350,73 @@ angular.module('gpca')
         }
 
     })
-    .controller('ConsolidadoCtrl', function ($scope, RelatoriosService, SweetAlert, $q, constants, $loading) {
+    .controller('ConsolidadoCtrl', function ($scope, RelatoriosService, DTOptionsBuilder, $q, SweetAlert, $loading) {
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+        var list = RelatoriosService.GetProcessedReports();
         $scope.dtProcessamento = '';
 
-        $scope.btnGerar = function (date) {
+        $q.all([list]).then(function (response) {
+            $scope.GetFiles = response[0].data;
+        });
+
+        $scope.btnGerar = function (date, flagReproc) {
             $loading.start('load');
 
-            if ($scope.dtProcessamento != '' || $scope.dtProcessamento != undefined) {
+            if (date != '' || date != undefined) {
 
-                var getExcel = RelatoriosService.CreateExcel(date);
-
-                $q.all([getExcel]).then(function (response) {
-
-                    const blob = response[0].data
-                    var url = window.URL.createObjectURL(blob);
-                    var a = document.createElement("a");
-                    document.body.appendChild(a);
-                    a.href = url;
-                    a.download = "Consolidação Relatórios de Gastos.xlsx";
-                    a.click();
-
+                if ($scope.GetFiles.filter(a => a.mesCompetencia == date.substr(3, 7))) {
                     $loading.finish('load');
-                }, function (error) {
-                    console.log(error);
-                    $loading.finish('load');
-                });
+                    SweetAlert.swal({
+                        title: 'O período selecionado "' + date + '" já foi processado. Procure-o no grid para "Reprocessar" ou "Baixar" novamente.',
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "OK",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    });
+
+                } else {
+
+                    var reproc = flagReproc == 1 ? true : false;
+                    var getExcel = RelatoriosService.CreateExcel(date, reproc);
+
+                    $q.all([getExcel]).then(function (response) {
+
+                        const blob = response[0].data
+                        var url = window.URL.createObjectURL(blob);
+                        var a = document.createElement("a");
+                        document.body.appendChild(a);
+                        a.href = url;
+                        a.download = "Consolidação Relatórios de Gastos.xlsx";
+                        a.click();
+
+                        $loading.finish('load');
+                    }, function (error) {
+                        console.log(error);
+                        $loading.finish('load');
+                    });
+                }
             }
         }
+
+
 
     })
     .controller('ResumoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {

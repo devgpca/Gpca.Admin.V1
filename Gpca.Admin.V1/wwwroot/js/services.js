@@ -445,11 +445,12 @@ angular.module('gpca')
     })
     .service('RelatoriosService', function ($http, constants, $localStorage) {
 
-        this.CreateExcel = function (date) {
+        this.CreateExcel = function (date, flagReproc) {
             var params = {
                 responseType: "blob"
             };
-            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download?dateProccess=' + date, params)
+
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download?dateProccess=' + date + "&flagReprocessa=" + flagReproc, params)
                 .then(function (response) {
                     return response;
                 }, function (error) {
@@ -508,6 +509,22 @@ angular.module('gpca')
                 link.download = 'Consolidacao Relatorios de Gastos Duplicados.xlsx';
                 link.click();
             });
+        }
+
+        this.GetProcessedReports = function () {
+            var hedrs = {
+                headers: {
+                    'RefreshToken': $localStorage.user.refreshToken
+                }
+            };
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetProcessedReports', hedrs)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
         }
     })
     .service('ManualService', function ($http, constants, $localStorage) {

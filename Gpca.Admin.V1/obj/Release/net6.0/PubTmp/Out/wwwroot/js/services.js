@@ -369,11 +369,10 @@ angular.module('gpca')
     })
     .service('RelatoriosService', function ($http, constants, $localStorage) {
 
-        var params = {
-            responseType: "blob"
-        };
-
         this.CreateExcel = function (date) {
+            var params = {
+                responseType: "blob"
+            };
             return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download?dateProccess=' + date, params)
                 .then(function (response) {
                     return response;
@@ -385,7 +384,12 @@ angular.module('gpca')
         }
 
         this.GetFiles = function () {
-            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetFilesToImport', params)
+            var hedrs = {
+                headers: {
+                    'RefreshToken': $localStorage.user.refreshToken
+                }
+            };
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetFilesToImport', hedrs)
                 .then(function (response) {
                     return response.data;
                 }, function (error) {
@@ -396,7 +400,12 @@ angular.module('gpca')
         }
 
         this.Importar = function (obj) {
-            return $http.post(constants.UrlRelatorioApi + 'Relatorio/ImportFile', obj, params)
+            var hedrs = {
+                headers: {
+                    'RefreshToken': $localStorage.user.refreshToken
+                }
+            };
+            return $http.post(constants.UrlRelatorioApi + 'Relatorio/ImportFile', obj, hedrs)
                 .then(function (response) {
                     return response.data;
                 }, function (error) {
