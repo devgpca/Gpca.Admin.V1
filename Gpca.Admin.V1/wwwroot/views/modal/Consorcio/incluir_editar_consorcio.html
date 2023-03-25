@@ -1,22 +1,20 @@
 ﻿<div class="inmodal">
-    <form role="form">
-        <div class="modal-body" style="height: 180px; background: #ffff !important; ">
-            <div class="">
-                <h2><strong>Consórcio</strong></h2>
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel();"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Inclusao/Alteracao de Consórcio</h4>
+        <small class="font-bold">Tela exclusivamente para inclusao/alteracao de Consórcio.</small>
+    </div>
+    <form role="form" name="fatorForm">
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Descrição</label>
+                <input type="text" id="numeracao" name="numeracao" class="form-control" ng-model="obj.Descricao">
             </div>
-            <div class="" style="padding: 8px;">
-                <div style="position: absolute; z-index: 2000">
-                    <label style="font-size: 1.5rem; font-weight: 600;">Nome do Consórcio</label>
-                    <input type="text" class="form-control input-sm" placeholder="Ex.: Poço-M-123" ng-model="consorcio.descricao" />
-                </div>
-                <div class="col-md-10 form-check form-switch" style="position: relative; padding-left: 180px; padding-top: 35px;">
-                    <input class="form-check-input" type="checkbox" ng-model="consorcio.ativo" checked>
-                    <label class="form-check-label" for="flexSwitchCheckChecked" style="font-size: 1.5rem; font-weight: 600;">Ativo</label>
-                </div>
-                <div class="col-md-2" style="position: relative; padding-top: 25px;">
-                    <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" ng-click="Incluir()"><i class="fa fa-save"></i> Incluir</button>
-                </div>
-            </div>
-        </div>        
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-white" ng-click="cancel()">Fechar</button>
+            <button type="button" class="btn btn-primary" ng-show="value == null" ng-click="Incluir()">Incluir</button>
+            <button type="button" class="btn btn-primary" ng-show="value != null" ng-click="Alterar()">alterar</button>
+        </div>
     </form>
 </div>

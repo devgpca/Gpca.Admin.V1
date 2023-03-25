@@ -135,8 +135,19 @@ angular.module('gpca')
             }
         };
 
-        this.CadConsorcio = function (obj) {
-            $http.post(constants.UrlRelatorioApi + 'Consorcio/Create', obj, params)
+        this.Create = function (obj) {
+            $http.post(constants.UrlRelatorioApi + 'Consorcio/Create', obj , params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.Edit = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Consorcio/Update', obj, params)
                 .then(function (response) {
                     return response;
                 }, function (error) {
@@ -151,6 +162,17 @@ angular.module('gpca')
             return $http.post(constants.UrlRelatorioApi + 'Consorcio/GetList', obj, params)
                 .then(function (response) {
                     return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Consorcio/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
                         return value;
@@ -208,7 +230,6 @@ angular.module('gpca')
         };
 
         this.Create = function (obj) {
-            obj.planilha = parseInt(obj.planilha);
             return $http.post(constants.UrlRelatorioApi + 'NCM/Create', obj, params)
                 .then(function (response) {
                     return response;
@@ -235,6 +256,17 @@ angular.module('gpca')
             return $http.post(constants.UrlRelatorioApi + 'NCM/GetList', obj, params)
                 .then(function (response) {
                     return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'NCM/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
                         return value;
@@ -283,6 +315,17 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'MetaObjeto/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
     })
     .service('TextoService', function ($http, constants, $localStorage) {
         var params = {
@@ -325,6 +368,17 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Texto/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
     })
     .service('CfopService', function ($http, constants, $localStorage) {
         var params = {
@@ -360,6 +414,17 @@ angular.module('gpca')
             return $http.post(constants.UrlRelatorioApi + 'CFOP/GetList', obj, params)
                 .then(function (response) {
                     return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'cfop/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
                         return value;

@@ -406,20 +406,18 @@ angular.module('gpca')
             });
         };
     })
-    .controller('consorcioCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, ConsortiumService, $q) {
+    .controller('consorcioCtrl', function ($scope, DTOptionsBuilder, $uibModal, $localStorage, ConsortiumService, $q, SweetAlert) {
 
-        var GetList = ConsortiumService.GetConsorcio();
+        $scope.GetAll = function () {
+            var GetList = ConsortiumService.GetConsorcio();
 
-        $q.all([GetList]).then(function (response) {
-            $scope.getData = response[0].data;
+            $q.all([GetList]).then(function (response) {
+                $scope.getData = response[0].data;
 
-        });
+            });
+        }
 
-        $scope.consorcio = {
-            id: 0,
-            descricao: "",
-            ativo: false
-        };
+        $scope.GetAll();
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
@@ -444,42 +442,83 @@ angular.module('gpca')
 
 
         $scope.btnAdd = function () {
+
             $uibModal.open({
+                scope: $scope,
                 templateUrl: 'views/modal/consorcio/incluir_editar_consorcio.html',
-                controller: function ($scope, $uibModalInstance) {
+                controller: function ($scope, $uibModalInstance, SweetAlert, consorcioSelected, ConsortiumService) {
                     $scope.Incluir = function () {
-                        ConsortiumService.CadConsorcio($scope.consorcio);
-                        $uibModalInstance.close();;
+                        $scope.value = consorcioSelected;
+                        ConsortiumService.Create($scope.obj)
+                        SweetAlert.swal({
+                            title: "Sucesso!",
+                            text: "valores alterados com sucesso",
+                            type: "success"
+                        });
+                        $uibModalInstance.close();
+
                     }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
                 },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    fatorSelected: function () {
+                    consorcioSelected: function () {
                         return null;
                     }
                 }
-            });
+            }).result.then(function (result) {
+                $scope.GetAll();
+            })
         }
 
         $scope.editar = function (data) {
             $uibModal.open({
+                scope: $scope,
                 templateUrl: 'views/modal/consorcio/incluir_editar_consorcio.html',
-                controller: 'fatoresModalCtrl',
+                controller: function ($scope, $uibModalInstance, consorcioSelected, SweetAlert, ConsortiumService) {
+                    $scope.obj = {};
+                    $scope.value = consorcioSelected;
+                    $scope.obj.Descricao = consorcioSelected.descricao;
+
+
+                    $scope.Alterar = function () {
+                        consorcioSelected.descricao = $scope.obj.Descricao;
+                        ConsortiumService.Edit(consorcioSelected).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $uibModalInstance.dismiss('dimiss');
+                        })
+
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    fatorSelected: function () {
+                    consorcioSelected: function () {
                         return data;
                     }
                 }
-            });
+            })
+                .result.then(function (result) {
+                    $scope.GetAll();
+                });
         }
 
-        $scope.ativarDesativarConsorcio = function (data) {
-            $scope.title = data.ativo == false ? "ativar" : "desativar";
-            $scope.result = data.ativo == false ? "ativado" : "desativado";
+        $scope.ativarDesativar = function (data) {
+            $scope.title = !data.ativo ? "ativar" : "desativar";
+            $scope.result = !data.ativo ? "ativada" : "desativada";
 
             SweetAlert.swal({
-                title: "Deseja " + $scope.title + " ?",
+                title: "Deseja " + $scope.title + " " + data.descricao + " ?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -490,20 +529,14 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        $http.post(constants.UrlApi + "Fator/AtivarDesativar", fator.fa_Id, {
-                            headers: { 'Authorization': 'Bearer ' + $localStorage.token }
-                        }).then(function (response) {
+                        ConsortiumService.EnableDisable(data).then(function (data) {
                             SweetAlert.swal({
                                 title: "Alterado!",
-                                text: "O fator foi " + $scope.result + " com sucesso.",
+                                text: "valores alterados com sucesso",
                                 type: "success"
                             });
-
-                            $scope.obterFatores();
-
-                        }, function (response) {
-                            return alert("Erro: " + response.status);
-                        });
+                            $scope.GetAll();
+                        })
                     } else {
                         SweetAlert.swal({
                             title: "Cancelado!",
@@ -523,11 +556,10 @@ angular.module('gpca')
 
         $scope.consorcioList = [];
         var GetListJvs = ConsortiumJvService.GetConsorcioJVs();
-        var GetList = ConsortiumService.GetConsorcio();
 
-        $q.all([GetListJvs, GetList]).then(function (response) {
+
+        $q.all([GetListJvs]).then(function (response) {
             $scope.getData = response[0].data;
-            $scope.consorcioList = response[1].data;
 
         });
 
@@ -769,12 +801,13 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        CfopService.Edit(data).then(function (data) {
+                        CfopService.EnableDisable(data).then(function (data) {
                             SweetAlert.swal({
                                 title: "Alterado!",
-                                text: "A etapa foi " + $scope.result + " com sucesso.",
+                                text: "valores alterados com sucesso",
                                 type: "success"
                             });
+                            $scope.GetAllCfops();
                         })
                     } else {
                         SweetAlert.swal({
@@ -799,7 +832,7 @@ angular.module('gpca')
             });
         }
 
-        $scope.GetAll()
+        $scope.GetAll();
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
@@ -829,10 +862,66 @@ angular.module('gpca')
                 templateUrl: 'views/modal/NCM/incluir_editar_ncm.html',
                 controller: function ($scope, $uibModalInstance, ncmSelected, NCMService) {
 
+                    $scope.dateOptions = {
+                        formatYear: 'yy',
+                        startingDay: 1
+                    };
+
+                    $scope.inlineOptions = {
+                        customClass: getDayClass,
+                        minDate: new Date(),
+                        showWeeks: true
+                    };
+
+                    $scope.format = 'dd/MM/yyyy'
+
+                    $scope.toggleMin = function () {
+                        $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+                        $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+                    };
+
+                    $scope.toggleMin();
+
+                    $scope.open1 = function () {
+                        $scope.popup1.opened = true;
+                    };
+
+                    $scope.open2 = function () {
+                        $scope.popup2.opened = true;
+                    };
+
+                    $scope.setDate = function (year, month, day) {
+                        $scope.dt = new Date(year, month, day);
+                    };
+
+                    $scope.popup1 = {
+                        opened: false
+                    };
+
+                    $scope.popup2 = {
+                        opened: false
+                    };
+
+                    function getDayClass(data) {
+                        var date = data.date,
+                            mode = data.mode;
+                        if (mode === 'day') {
+                            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                            for (var i = 0; i < $scope.events.length; i++) {
+                                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                                if (dayToCheck === currentDay) {
+                                    return $scope.events[i].status;
+                                }
+                            }
+                        }
+
+                        return '';
+                    }
+
                     $scope.Incluir = function () {
                         $scope.value = ncmSelected;
-
-
                         NCMService.Create($scope.obj).then(function (data) {
                             SweetAlert.swal({
                                 title: "Sucesso!",
@@ -840,7 +929,7 @@ angular.module('gpca')
                                 type: "success"
                             });
                             $uibModalInstance.close();
-                        })
+                        });
                     }
 
                     $scope.cancel = function () {
@@ -863,14 +952,89 @@ angular.module('gpca')
                 scope: $scope,
                 templateUrl: 'views/modal/NCM/incluir_editar_ncm.html',
                 controller: function ($scope, $uibModalInstance, ncmSelected, NCMService) {
-                    $scope.value = ncmSelected;
+
+                    $scope.parseISOString = function (d)
+                    {
+                        var b = d.split(/\D+/);
+                        return new Date(Date.UTC(b[0], --b[1], ++b[2], b[3], b[4], b[5]));
+                    }
+
+                    $scope.dateOptions = {
+                        formatYear: 'yy',
+                        startingDay: 1
+                    };
+
+                    $scope.inlineOptions = {
+                        customClass: getDayClass,
+                        minDate: new Date(),
+                        showWeeks: true
+                    };
+
+                    $scope.format = 'dd/MM/yyyy'
+
+                    $scope.toggleMin = function () {
+                        $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+                        $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+                    };
+
+                    $scope.toggleMin();
+
+                    $scope.open1 = function () {
+                        $scope.popup1.opened = true;
+                    };
+
+                    $scope.open2 = function () {
+                        $scope.popup2.opened = true;
+                    };
+
+                    $scope.setDate = function (year, month, day) {
+                        $scope.dt = new Date(year, month, day);
+                    };
+
+                    $scope.popup1 = {
+                        opened: false
+                    };
+
+                    $scope.popup2 = {
+                        opened: false
+                    };
+
+                    function getDayClass(data) {
+                        var date = data.date,
+                            mode = data.mode;
+                        if (mode === 'day') {
+                            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                            for (var i = 0; i < $scope.events.length; i++) {
+                                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                                if (dayToCheck === currentDay) {
+                                    return $scope.events[i].status;
+                                }
+                            }
+                        }
+
+                        return '';
+                    }
+
                     $scope.obj = {};
-                    $scope.obj.descricao = ncmSelected.descricao;
-                    $scope.obj.credito = ncmSelected.credito
+                    
+                    $scope.value = ncmSelected;
+
+                    $scope.obj.codigo = ncmSelected.codigo;
+                    $scope.obj.descricao = ncmSelected.descricao
+                    $scope.obj.credito = ncmSelected.credito;
+                    $scope.obj.dataInicio = $scope.parseISOString(ncmSelected.dataInicio);
+                    $scope.obj.dataFim = $scope.parseISOString(ncmSelected.dataFim);
+                    $scope.obj.ano = ncmSelected.ano
 
                     $scope.Alterar = function () {
+                        ncmSelected.codigo = $scope.obj.codigo;
                         ncmSelected.descricao = $scope.obj.descricao;
                         ncmSelected.credito = $scope.obj.credito;
+                        ncmSelected.dataInicio = $scope.obj.dataInicio;
+                        ncmSelected.dataFim = $scope.obj.dataFim;
+                        ncmSelected.ano = $scope.obj.ano;
 
                         NCMService.Edit(ncmSelected).then(function () {
                             SweetAlert.swal({
@@ -888,7 +1052,7 @@ angular.module('gpca')
                 },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    metaSelected: function () {
+                    ncmSelected: function () {
                         return data;
                     }
                 }
@@ -913,12 +1077,14 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        SweetAlert.swal({
-                            title: "Alterado!",
-                            text: "A etapa foi " + $scope.result + " com sucesso.",
-                            type: "success"
-                        });
-
+                        NCMService.EnableDisable(data).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $scope.GetAll();
+                        })
                     } else {
                         SweetAlert.swal({
                             title: "Cancelado!",
@@ -1053,12 +1219,14 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        SweetAlert.swal({
-                            title: "Alterado!",
-                            text: "A etapa foi " + $scope.result + " com sucesso.",
-                            type: "success"
-                        });
-
+                        MetaObjetoService.EnableDisable(data).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $scope.GetAll();
+                        })
                     } else {
                         SweetAlert.swal({
                             title: "Cancelado!",
@@ -1173,12 +1341,14 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        SweetAlert.swal({
-                            title: "Alterado!",
-                            text: "A etapa foi " + $scope.result + " com sucesso.",
-                            type: "success"
-                        });
-
+                        TextoService.EnableDisable(data).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $scope.GetAll();
+                        })
                     } else {
                         SweetAlert.swal({
                             title: "Cancelado!",
