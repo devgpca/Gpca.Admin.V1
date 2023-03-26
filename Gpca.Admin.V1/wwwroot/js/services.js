@@ -526,6 +526,23 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.GetResumo = function (data) {
+            var hedrs = {
+                headers: {
+                    'RefreshToken': $localStorage.user.refreshToken
+                }
+            };
+
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetResumo?dateProccess=' + data, hedrs)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
     })
     .service('ManualService', function ($http, constants, $localStorage) {
 

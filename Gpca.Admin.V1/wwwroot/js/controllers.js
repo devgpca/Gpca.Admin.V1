@@ -1375,22 +1375,24 @@ angular.module('gpca')
             $scope.GetFiles = response[0].data;
         });
 
-        $scope.btnGerar = function (date, flagReproc) {
+        $scope.btnGerar = function (date, flagReproc, action) {
             $loading.start('load');
 
             if (date != '' || date != undefined) {
 
-                if ($scope.GetFiles.filter(a => a.mesCompetencia == date.substr(3, 7))) {
-                    $loading.finish('load');
-                    SweetAlert.swal({
-                        title: 'O período selecionado "' + date + '" já foi processado. Procure-o no grid para "Reprocessar" ou "Baixar" novamente.',
-                        type: "error",
-                        showCancelButton: false,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "OK",
-                        closeOnConfirm: false,
-                        closeOnCancel: false
-                    });
+                if (action == 'gerar') {
+                    if ($scope.GetFiles.filter(a => a.mesCompetencia == date.substr(3, 7))) {
+                        $loading.finish('load');
+                        SweetAlert.swal({
+                            title: 'O período selecionado "' + date + '" já foi processado. Procure-o no grid para "Reprocessar" ou "Baixar" novamente.',
+                            type: "error",
+                            showCancelButton: false,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "OK",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        });
+                    }
 
                 } else {
 
@@ -1419,8 +1421,50 @@ angular.module('gpca')
 
 
     })
-    .controller('ResumoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+    .controller('ResumoCtrl', function ($scope, DTOptionsBuilder, $loading, SweetAlert, $q, RelatoriosService) {
 
+        $scope.dtProcessamento = '';
+        $scope.isFiltered = false;
+
+        $scope.GerarResumo = function (data) {
+            $loading.start('load');
+
+            if (data != '' && data != undefined) {
+
+                var getResumo = RelatoriosService.GetResumo(data);
+
+                $q.all([getResumo]).then(function (response) {
+                    $scope.isFiltered = true;
+                    $scope.GetResumo = response[0].data;
+
+                    $loading.finish('load');
+                });
+            } else {
+                $loading.finish('load');
+                SweetAlert.swal("Atenção!", "Data de competência não pode ser vazio.", "warning");
+            }
+        };
+
+
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
     .controller('RelDuplicidadeCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
         $scope.dateOptions = {
@@ -1514,6 +1558,8 @@ angular.module('gpca')
             if ($scope.dataProcessamento == "") {
                 SweetAlert.swal("Atenção!", "Data de processamento não pode ser vazio.", "warning");
             } else {
+
+                $loading.start('load');
                 var json = {
                     fileName: file.nomeArquivo,
                     yearsMonthProccess: $scope.dataProcessamento
@@ -1522,13 +1568,13 @@ angular.module('gpca')
                 var result = RelatoriosService.Importar(json);
 
                 $q.all([result]).then(function (response) {
-                    //alert(response[0].message);
+                    $loading.finish('load');
                     SweetAlert.swal("Boa!", response[0].message, "success");
                 });
             }
         }
     })
-    .controller('ManualH01Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading, SweetAlert) {
+    .controller('ManualH01Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading, SweetAlert) {
         $scope.obj = { pageNumber: 1, pageSize: 10 }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
@@ -1592,8 +1638,27 @@ angular.module('gpca')
             });
         }
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
-    .controller('ManualH02Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+    .controller('ManualH02Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
         $scope.obj = { pageNumber: 1, pageSize: 10 }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
@@ -1657,8 +1722,27 @@ angular.module('gpca')
             });
         }
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
-    .controller('ManualH03Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+    .controller('ManualH03Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
         $scope.obj = { pageNumber: 1, pageSize: 10 }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
@@ -1722,8 +1806,27 @@ angular.module('gpca')
             });
         }
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
-    .controller('ManualH04Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+    .controller('ManualH04Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
         $scope.obj = { pageNumber: 1, pageSize: 10 }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
@@ -1787,8 +1890,27 @@ angular.module('gpca')
             });
         }
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
-    .controller('ManualH05Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+    .controller('ManualH05Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
         $scope.obj = { pageNumber: 1, pageSize: 10 }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
@@ -1852,5 +1974,24 @@ angular.module('gpca')
             });
         }
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
     ;

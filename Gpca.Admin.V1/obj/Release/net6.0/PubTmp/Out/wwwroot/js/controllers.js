@@ -406,20 +406,18 @@ angular.module('gpca')
             });
         };
     })
-    .controller('consorcioCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, ConsortiumService, $q) {
+    .controller('consorcioCtrl', function ($scope, DTOptionsBuilder, $uibModal, $localStorage, ConsortiumService, $q, SweetAlert) {
 
-        var GetList = ConsortiumService.GetConsorcio();
+        $scope.GetAll = function () {
+            var GetList = ConsortiumService.GetConsorcio();
 
-        $q.all([GetList]).then(function (response) {
-            $scope.getData = response[0].data;
+            $q.all([GetList]).then(function (response) {
+                $scope.getData = response[0].data;
 
-        });
+            });
+        }
 
-        $scope.consorcio = {
-            id: 0,
-            descricao: "",
-            ativo: false
-        };
+        $scope.GetAll();
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
@@ -444,42 +442,83 @@ angular.module('gpca')
 
 
         $scope.btnAdd = function () {
+
             $uibModal.open({
+                scope: $scope,
                 templateUrl: 'views/modal/consorcio/incluir_editar_consorcio.html',
-                controller: function ($scope, $uibModalInstance) {
+                controller: function ($scope, $uibModalInstance, SweetAlert, consorcioSelected, ConsortiumService) {
                     $scope.Incluir = function () {
-                        ConsortiumService.CadConsorcio($scope.consorcio);
-                        $uibModalInstance.close();;
+                        $scope.value = consorcioSelected;
+                        ConsortiumService.Create($scope.obj)
+                        SweetAlert.swal({
+                            title: "Sucesso!",
+                            text: "valores alterados com sucesso",
+                            type: "success"
+                        });
+                        $uibModalInstance.close();
+
                     }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
                 },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    fatorSelected: function () {
+                    consorcioSelected: function () {
                         return null;
                     }
                 }
-            });
+            }).result.then(function (result) {
+                $scope.GetAll();
+            })
         }
 
         $scope.editar = function (data) {
             $uibModal.open({
+                scope: $scope,
                 templateUrl: 'views/modal/consorcio/incluir_editar_consorcio.html',
-                controller: 'fatoresModalCtrl',
+                controller: function ($scope, $uibModalInstance, consorcioSelected, SweetAlert, ConsortiumService) {
+                    $scope.obj = {};
+                    $scope.value = consorcioSelected;
+                    $scope.obj.Descricao = consorcioSelected.descricao;
+
+
+                    $scope.Alterar = function () {
+                        consorcioSelected.descricao = $scope.obj.Descricao;
+                        ConsortiumService.Edit(consorcioSelected).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $uibModalInstance.dismiss('dimiss');
+                        })
+
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    fatorSelected: function () {
+                    consorcioSelected: function () {
                         return data;
                     }
                 }
-            });
+            })
+                .result.then(function (result) {
+                    $scope.GetAll();
+                });
         }
 
-        $scope.ativarDesativarConsorcio = function (data) {
-            $scope.title = data.ativo == false ? "ativar" : "desativar";
-            $scope.result = data.ativo == false ? "ativado" : "desativado";
+        $scope.ativarDesativar = function (data) {
+            $scope.title = !data.ativo ? "ativar" : "desativar";
+            $scope.result = !data.ativo ? "ativada" : "desativada";
 
             SweetAlert.swal({
-                title: "Deseja " + $scope.title + " ?",
+                title: "Deseja " + $scope.title + " " + data.descricao + " ?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -490,20 +529,14 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        $http.post(constants.UrlApi + "Fator/AtivarDesativar", fator.fa_Id, {
-                            headers: { 'Authorization': 'Bearer ' + $localStorage.token }
-                        }).then(function (response) {
+                        ConsortiumService.EnableDisable(data).then(function (data) {
                             SweetAlert.swal({
                                 title: "Alterado!",
-                                text: "O fator foi " + $scope.result + " com sucesso.",
+                                text: "valores alterados com sucesso",
                                 type: "success"
                             });
-
-                            $scope.obterFatores();
-
-                        }, function (response) {
-                            return alert("Erro: " + response.status);
-                        });
+                            $scope.GetAll();
+                        })
                     } else {
                         SweetAlert.swal({
                             title: "Cancelado!",
@@ -523,11 +556,10 @@ angular.module('gpca')
 
         $scope.consorcioList = [];
         var GetListJvs = ConsortiumJvService.GetConsorcioJVs();
-        var GetList = ConsortiumService.GetConsorcio();
 
-        $q.all([GetListJvs, GetList]).then(function (response) {
+
+        $q.all([GetListJvs]).then(function (response) {
             $scope.getData = response[0].data;
-            $scope.consorcioList = response[1].data;
 
         });
 
@@ -769,12 +801,13 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        CfopService.Edit(data).then(function (data) {
+                        CfopService.EnableDisable(data).then(function (data) {
                             SweetAlert.swal({
                                 title: "Alterado!",
-                                text: "A etapa foi " + $scope.result + " com sucesso.",
+                                text: "valores alterados com sucesso",
                                 type: "success"
                             });
+                            $scope.GetAllCfops();
                         })
                     } else {
                         SweetAlert.swal({
@@ -799,7 +832,7 @@ angular.module('gpca')
             });
         }
 
-        $scope.GetAll()
+        $scope.GetAll();
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
@@ -829,10 +862,66 @@ angular.module('gpca')
                 templateUrl: 'views/modal/NCM/incluir_editar_ncm.html',
                 controller: function ($scope, $uibModalInstance, ncmSelected, NCMService) {
 
+                    $scope.dateOptions = {
+                        formatYear: 'yy',
+                        startingDay: 1
+                    };
+
+                    $scope.inlineOptions = {
+                        customClass: getDayClass,
+                        minDate: new Date(),
+                        showWeeks: true
+                    };
+
+                    $scope.format = 'dd/MM/yyyy'
+
+                    $scope.toggleMin = function () {
+                        $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+                        $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+                    };
+
+                    $scope.toggleMin();
+
+                    $scope.open1 = function () {
+                        $scope.popup1.opened = true;
+                    };
+
+                    $scope.open2 = function () {
+                        $scope.popup2.opened = true;
+                    };
+
+                    $scope.setDate = function (year, month, day) {
+                        $scope.dt = new Date(year, month, day);
+                    };
+
+                    $scope.popup1 = {
+                        opened: false
+                    };
+
+                    $scope.popup2 = {
+                        opened: false
+                    };
+
+                    function getDayClass(data) {
+                        var date = data.date,
+                            mode = data.mode;
+                        if (mode === 'day') {
+                            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                            for (var i = 0; i < $scope.events.length; i++) {
+                                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                                if (dayToCheck === currentDay) {
+                                    return $scope.events[i].status;
+                                }
+                            }
+                        }
+
+                        return '';
+                    }
+
                     $scope.Incluir = function () {
                         $scope.value = ncmSelected;
-
-
                         NCMService.Create($scope.obj).then(function (data) {
                             SweetAlert.swal({
                                 title: "Sucesso!",
@@ -840,7 +929,7 @@ angular.module('gpca')
                                 type: "success"
                             });
                             $uibModalInstance.close();
-                        })
+                        });
                     }
 
                     $scope.cancel = function () {
@@ -863,14 +952,88 @@ angular.module('gpca')
                 scope: $scope,
                 templateUrl: 'views/modal/NCM/incluir_editar_ncm.html',
                 controller: function ($scope, $uibModalInstance, ncmSelected, NCMService) {
-                    $scope.value = ncmSelected;
+
+                    $scope.parseISOString = function (d) {
+                        var b = d.split(/\D+/);
+                        return new Date(Date.UTC(b[0], --b[1], ++b[2], b[3], b[4], b[5]));
+                    }
+
+                    $scope.dateOptions = {
+                        formatYear: 'yy',
+                        startingDay: 1
+                    };
+
+                    $scope.inlineOptions = {
+                        customClass: getDayClass,
+                        minDate: new Date(),
+                        showWeeks: true
+                    };
+
+                    $scope.format = 'dd/MM/yyyy'
+
+                    $scope.toggleMin = function () {
+                        $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+                        $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+                    };
+
+                    $scope.toggleMin();
+
+                    $scope.open1 = function () {
+                        $scope.popup1.opened = true;
+                    };
+
+                    $scope.open2 = function () {
+                        $scope.popup2.opened = true;
+                    };
+
+                    $scope.setDate = function (year, month, day) {
+                        $scope.dt = new Date(year, month, day);
+                    };
+
+                    $scope.popup1 = {
+                        opened: false
+                    };
+
+                    $scope.popup2 = {
+                        opened: false
+                    };
+
+                    function getDayClass(data) {
+                        var date = data.date,
+                            mode = data.mode;
+                        if (mode === 'day') {
+                            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                            for (var i = 0; i < $scope.events.length; i++) {
+                                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                                if (dayToCheck === currentDay) {
+                                    return $scope.events[i].status;
+                                }
+                            }
+                        }
+
+                        return '';
+                    }
+
                     $scope.obj = {};
-                    $scope.obj.descricao = ncmSelected.descricao;
-                    $scope.obj.credito = ncmSelected.credito
+
+                    $scope.value = ncmSelected;
+
+                    $scope.obj.codigo = ncmSelected.codigo;
+                    $scope.obj.descricao = ncmSelected.descricao
+                    $scope.obj.credito = ncmSelected.credito;
+                    $scope.obj.dataInicio = $scope.parseISOString(ncmSelected.dataInicio);
+                    $scope.obj.dataFim = $scope.parseISOString(ncmSelected.dataFim);
+                    $scope.obj.ano = ncmSelected.ano
 
                     $scope.Alterar = function () {
+                        ncmSelected.codigo = $scope.obj.codigo;
                         ncmSelected.descricao = $scope.obj.descricao;
                         ncmSelected.credito = $scope.obj.credito;
+                        ncmSelected.dataInicio = $scope.obj.dataInicio;
+                        ncmSelected.dataFim = $scope.obj.dataFim;
+                        ncmSelected.ano = $scope.obj.ano;
 
                         NCMService.Edit(ncmSelected).then(function () {
                             SweetAlert.swal({
@@ -888,7 +1051,7 @@ angular.module('gpca')
                 },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    metaSelected: function () {
+                    ncmSelected: function () {
                         return data;
                     }
                 }
@@ -913,12 +1076,14 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        SweetAlert.swal({
-                            title: "Alterado!",
-                            text: "A etapa foi " + $scope.result + " com sucesso.",
-                            type: "success"
-                        });
-
+                        NCMService.EnableDisable(data).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $scope.GetAll();
+                        })
                     } else {
                         SweetAlert.swal({
                             title: "Cancelado!",
@@ -1053,12 +1218,14 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        SweetAlert.swal({
-                            title: "Alterado!",
-                            text: "A etapa foi " + $scope.result + " com sucesso.",
-                            type: "success"
-                        });
-
+                        MetaObjetoService.EnableDisable(data).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $scope.GetAll();
+                        })
                     } else {
                         SweetAlert.swal({
                             title: "Cancelado!",
@@ -1069,38 +1236,29 @@ angular.module('gpca')
                 });
         }
     })
-    .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TextoService, $q) {
+    .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TextoService, $q, $loading) {
 
-        $scope.GetAll = function () {
-            var GetList = TextoService.GetList();
+        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.maxSize = 10;
+        $scope.currentPage = 1;
+        $scope.numPerPage = $scope.obj.pageSize;
+        $scope.totalRecords = 0;
 
-            $q.all([GetList]).then(function (response) {
-                $scope.textos = response[0].data;
-            });
+        $scope.GetAll = function (d) {
+            $loading.start('load');
+            TextoService.GetAllPaginate(d).then(function (data) {
+                $scope.textos = data.data;
+                $scope.totalRecords = data.totalRecords;
+                $loading.finish('load');
+            })
         }
-        // Colocar paginação na consulta
-        /*$scope.GetAll();*/
 
-        $scope.dtOptions = DTOptionsBuilder.newOptions()
-            .withDOM('<"html5buttons"B>lTfgitp')
-            .withButtons([
-                { extend: 'copy' },
-                { extend: 'csv' },
-                { extend: 'excel', title: 'ExampleFile' },
-                { extend: 'pdf', title: 'ExampleFile' },
+        $scope.GetAll($scope.obj);
 
-                {
-                    extend: 'print',
-                    customize: function (win) {
-                        $(win.document.body).addClass('white-bg');
-                        $(win.document.body).css('font-size', '10px');
-
-                        $(win.document.body).find('table')
-                            .addClass('compact')
-                            .css('font-size', 'inherit');
-                    }
-                }
-            ]);
+        $scope.pageChanged = function () {
+            $scope.obj.pageNumber = $scope.currentPage;
+            $scope.GetAll($scope.obj);
+        }
 
         $scope.incluir = function () {
             $uibModal.open({
@@ -1134,7 +1292,7 @@ angular.module('gpca')
                     $scope.obj = {};
                     $scope.value = textoSelected;
                     $scope.obj.descricao = textoSelected.descricao;
-                    $scope.obj.creditavel = textoSelected.creditavel
+                    $scope.obj.creditavel = textoSelected.creditavel.toString();
 
                     $scope.editar = function () {
                         textoSelected.descricao = $scope.obj.descricao;
@@ -1173,12 +1331,14 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        SweetAlert.swal({
-                            title: "Alterado!",
-                            text: "A etapa foi " + $scope.result + " com sucesso.",
-                            type: "success"
-                        });
-
+                        TextoService.EnableDisable(data).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Alterado!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $scope.GetAll();
+                        })
                     } else {
                         SweetAlert.swal({
                             title: "Cancelado!",
@@ -1190,34 +1350,75 @@ angular.module('gpca')
         }
 
     })
-    .controller('ConsolidadoCtrl', function ($scope, RelatoriosService, SweetAlert, $q, constants, $loading) {
+    .controller('ConsolidadoCtrl', function ($scope, RelatoriosService, DTOptionsBuilder, $q, SweetAlert, $loading) {
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+        var list = RelatoriosService.GetProcessedReports();
         $scope.dtProcessamento = '';
 
-        $scope.btnGerar = function (date) {
+        $q.all([list]).then(function (response) {
+            $scope.GetFiles = response[0].data;
+        });
+
+        $scope.btnGerar = function (date, flagReproc, action) {
             $loading.start('load');
 
-            if ($scope.dtProcessamento != '' || $scope.dtProcessamento != undefined) {
+            if (date != '' || date != undefined) {
 
-                var getExcel = RelatoriosService.CreateExcel(date);
+                if (action == 'gerar') {
+                    if ($scope.GetFiles.filter(a => a.mesCompetencia == date.substr(3, 7))) {
+                        $loading.finish('load');
+                        SweetAlert.swal({
+                            title: 'O período selecionado "' + date + '" já foi processado. Procure-o no grid para "Reprocessar" ou "Baixar" novamente.',
+                            type: "error",
+                            showCancelButton: false,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "OK",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        });
+                    }
 
-                $q.all([getExcel]).then(function (response) {
+                } else {
 
-                    const blob = response[0].data
-                    var url = window.URL.createObjectURL(blob);
-                    var a = document.createElement("a");
-                    document.body.appendChild(a);
-                    a.href = url;
-                    a.download = "Consolidação Relatórios de Gastos.xlsx";
-                    a.click();
+                    var reproc = flagReproc == 1 ? true : false;
+                    var getExcel = RelatoriosService.CreateExcel(date, reproc);
 
-                    $loading.finish('load');
-                }, function (error) {
-                    console.log(error);
-                    $loading.finish('load');
-                });
+                    $q.all([getExcel]).then(function (response) {
+
+                        const blob = response[0].data
+                        var url = window.URL.createObjectURL(blob);
+                        var a = document.createElement("a");
+                        document.body.appendChild(a);
+                        a.href = url;
+                        a.download = "Consolidação Relatórios de Gastos.xlsx";
+                        a.click();
+
+                        $loading.finish('load');
+                    }, function (error) {
+                        console.log(error);
+                        $loading.finish('load');
+                    });
+                }
             }
         }
+
+
 
     })
     .controller('ResumoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
@@ -1315,6 +1516,8 @@ angular.module('gpca')
             if ($scope.dataProcessamento == "") {
                 SweetAlert.swal("Atenção!", "Data de processamento não pode ser vazio.", "warning");
             } else {
+
+                $loading.start('load');
                 var json = {
                     fileName: file.nomeArquivo,
                     yearsMonthProccess: $scope.dataProcessamento
@@ -1323,7 +1526,7 @@ angular.module('gpca')
                 var result = RelatoriosService.Importar(json);
 
                 $q.all([result]).then(function (response) {
-                    //alert(response[0].message);
+                    $loading.finish('load');
                     SweetAlert.swal("Boa!", response[0].message, "success");
                 });
             }

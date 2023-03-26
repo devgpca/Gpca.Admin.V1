@@ -27,7 +27,7 @@
                     <input type="text" class="form-control input-sm" ng-model="dtProcessamento" placeholder="Data de processamento" style="width: 160px;" />
                 </div>
                 <div class="col-md-2">
-                    <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" style="margin-left: 25px;" ng-click="btnGerar(dtProcessamento);"><i class="fa fa-download"></i> Gerar relatório</button>
+                    <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" style="margin-left: 25px;" ng-click="btnGerar(dtProcessamento, 0, 'gerar');"><i class="fa fa-download"></i> Gerar relatório</button>
                 </div>
             </div>
             <!--</div>-->
@@ -45,8 +45,8 @@
                             <tr ng-repeat="file in GetFiles">
                                 <td>{{ file.mesCompetencia }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline btn-danger btn-rounded" type="button" style="margin-left: 60px;" ng-click="btnGerar('01/'+file.mesCompetencia, 1)"><i class="fa fa-recycle"></i> Reprocessar</button>
-                                    <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" style="margin-left: 15px;" ng-click="btnGerar('01/'+file.mesCompetencia, 0)"><i class="fa fa-download"></i> Baixar</button>
+                                    <button class="btn btn-sm btn-outline btn-danger btn-rounded" type="button" style="margin-left: 60px;" ng-click="btnGerar('01/'+file.mesCompetencia, 1, '')"><i class="fa fa-recycle"></i> Reprocessar</button>
+                                    <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" style="margin-left: 15px;" ng-click="btnGerar('01/'+file.mesCompetencia, 0, '')"><i class="fa fa-download"></i> Baixar</button>
                                 </td>
                             </tr>
                         </tbody>

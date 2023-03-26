@@ -135,8 +135,19 @@ angular.module('gpca')
             }
         };
 
-        this.CadConsorcio = function (obj) {
-            $http.post(constants.UrlRelatorioApi + 'Consorcio/Create', obj, params)
+        this.Create = function (obj) {
+            $http.post(constants.UrlRelatorioApi + 'Consorcio/Create', obj , params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.Edit = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Consorcio/Update', obj, params)
                 .then(function (response) {
                     return response;
                 }, function (error) {
@@ -151,6 +162,17 @@ angular.module('gpca')
             return $http.post(constants.UrlRelatorioApi + 'Consorcio/GetList', obj, params)
                 .then(function (response) {
                     return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Consorcio/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
                         return value;
@@ -208,7 +230,6 @@ angular.module('gpca')
         };
 
         this.Create = function (obj) {
-            obj.planilha = parseInt(obj.planilha);
             return $http.post(constants.UrlRelatorioApi + 'NCM/Create', obj, params)
                 .then(function (response) {
                     return response;
@@ -235,6 +256,17 @@ angular.module('gpca')
             return $http.post(constants.UrlRelatorioApi + 'NCM/GetList', obj, params)
                 .then(function (response) {
                     return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'NCM/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
                         return value;
@@ -283,6 +315,17 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'MetaObjeto/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
     })
     .service('TextoService', function ($http, constants, $localStorage) {
         var params = {
@@ -317,6 +360,28 @@ angular.module('gpca')
         this.GetList = function () {
             var obj = {};
             return $http.post(constants.UrlRelatorioApi + 'Texto/GetList', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Texto/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetAllPaginate = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'Texto/GetAllPaginate', obj)
                 .then(function (response) {
                     return response.data;
                 }, function (error) {
@@ -366,14 +431,26 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'cfop/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
     })
     .service('RelatoriosService', function ($http, constants, $localStorage) {
 
-        this.CreateExcel = function (date) {
+        this.CreateExcel = function (date, flagReproc) {
             var params = {
                 responseType: "blob"
             };
-            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download?dateProccess=' + date, params)
+
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download?dateProccess=' + date + "&flagReprocessa=" + flagReproc, params)
                 .then(function (response) {
                     return response;
                 }, function (error) {
@@ -432,6 +509,22 @@ angular.module('gpca')
                 link.download = 'Consolidacao Relatorios de Gastos Duplicados.xlsx';
                 link.click();
             });
+        }
+
+        this.GetProcessedReports = function () {
+            var hedrs = {
+                headers: {
+                    'RefreshToken': $localStorage.user.refreshToken
+                }
+            };
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetProcessedReports', hedrs)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
         }
     })
     .service('ManualService', function ($http, constants, $localStorage) {
