@@ -43,15 +43,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="data in getData">
+                                <tr ng-repeat="data in lst">
                                     <td>{{ data.id }}</td>
-                                    <td>{{ data.consorcio.descricao }}</td>
+                                    <td>{{ data.nomeConsorcio }}</td>
                                     <td>{{ data.jv }}</td>
                                     <td>{{ data.situacaoJV }}</td>
                                     <td>{{ data.cutback }}</td>
                                     <td>{{ data.planilha == 1 ? 'Pertrobras' : 'Demais planilhas' }}</td>
-                                    <td>{{ data.criadoEm | date }}</td>
-                                    <td>{{ data.atualizadoEm | date }}</td>
+                                    <td>{{ data.criadoEm | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                                    <td>{{ data.atualizadoEm | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
                                     <td>
                                         <i ng-show="data.ativo == true" class="fa fa-check text-navy"></i>
                                         <i ng-show="data.ativo == false" class="fa fa-times text-danger"></i>

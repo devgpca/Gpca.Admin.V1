@@ -210,9 +210,8 @@ angular.module('gpca')
                 });
         }
 
-        this.GetConsorcioJVs = function () {
-            var obj = {};
-            return $http.post(constants.UrlRelatorioApi + 'ConsorcioJv/GetList', obj, params)
+        this.GetAll = function () {
+            return $http.get(constants.UrlRelatorioApi + 'ConsorcioJv/GetAll')
                 .then(function (response) {
                     return response.data;
                 }, function (error) {
