@@ -20,6 +20,31 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
+                <div class="ibox-title bg-success">
+                    <h5><strong>Filtro</strong></h5>
+                    <div ibox-tools></div>
+                </div>
+                <div class="ibox-content">
+                    <form name="filtroForm" id="filtroForm">
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <input type="text" ng-model="obj.filtroTextoBreve.Texto" placeholder="Chave" name="Texto" id="Texto" class="form-control">
+                            </div>
+                            <div class="col-lg-1">
+                                <button class="btn btn-sm btn-warning btn-rounded" type="button" ng-click="limparFiltro()"><i class="fa fa-trash"></i> Limpar</button>
+                            </div>
+                            <div class="col-lg-1">
+                                <button class="btn btn-sm btn-primary btn-rounded" type="button" ng-click="filtrar()"><i class="fa fa-search"></i> Filtrar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
                 <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" ng-click="incluir()"><i class="fa fa-plus"></i> Novo</button>
                 <div class="ibox-title bg-success">
                     <h5>Texto - <strong>Cadastro</strong></h5>
@@ -62,6 +87,8 @@
                                 </tr>
                             </tbody>
                         </table>
+                        Mostrando {{(currentPage * numPerPage) - 9 }} até {{currentPage * numPerPage}} de {{totalRecords}} registros
+                        <ul uib-pagination total-items="totalRecords" ng-change="pageChanged()" ng-model="currentPage" max-size="maxSize" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" boundary-link-numbers="true" style="float:right"></ul>
                     </div>
                 </div>
             </div>

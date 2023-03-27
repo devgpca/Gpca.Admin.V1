@@ -554,24 +554,16 @@ angular.module('gpca')
     })
     .controller('JVCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, ConsortiumJvService, ConsortiumService, $q) {
 
-        $scope.consorcioList = [];
-        var GetListJvs = ConsortiumJvService.GetConsorcioJVs();
-
-
-        $q.all([GetListJvs]).then(function (response) {
-            $scope.getData = response[0].data;
-
-        });
-
-        $scope.consorcioJv = {
-            id: 0,
-            consorcioId: null,
-            jv: "",
-            situacao: "",
-            cutback: "",
-            planilha: null,
-            ativo: true
+        $scope.GetAll = function () {
+            ConsortiumJvService.GetAll().then(function (data) {
+                $scope.lst = data
+                console.log(data)
+                console.log($scope.lst)
+            })
         }
+
+        $scope.GetAll();
+
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
@@ -1238,7 +1230,7 @@ angular.module('gpca')
     })
     .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TextoService, $q, $loading) {
 
-        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.obj = { pageNumber: 1, pageSize: 10, "filtroTextoBreve": { Texto: "" } }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
         $scope.numPerPage = $scope.obj.pageSize;
@@ -1347,6 +1339,14 @@ angular.module('gpca')
                         });
                     }
                 });
+        }
+
+        $scope.limparFiltro = function () {
+            $scope.obj.filtroTextoBreve.Texto = "";
+            $scope.GetAll($scope.obj);
+        }
+        $scope.filtrar = function () {
+            $scope.GetAll($scope.obj);
         }
 
     })
@@ -1592,6 +1592,55 @@ angular.module('gpca')
         $scope.numPerPage = $scope.obj.pageSize;
         $scope.totalRecords = 0;
 
+        $scope.dateOptions = {
+            formatYear: 'yy',
+            maxDate: new Date(),
+            minDate: new Date(),
+            startingDay: 1
+        };
+
+        $scope.inlineOptions = {
+            customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+        };
+
+        $scope.format = 'MM/yyyy'
+
+        $scope.toggleMin = function () {
+            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+            $scope.dateOptions.datepickerMode = "month";
+            $scope.dateOptions.minMode = "month";
+        };
+
+        $scope.toggleMin();
+
+        $scope.open1 = function () {
+            $scope.popup1.opened = true;
+        };
+
+        $scope.popup1 = {
+            opened: false
+        };
+
+        function getDayClass(data) {
+            var date = data.date,
+                mode = data.mode;
+            if (mode === 'day') {
+                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                for (var i = 0; i < $scope.events.length; i++) {
+                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                    if (dayToCheck === currentDay) {
+                        return $scope.events[i].status;
+                    }
+                }
+            }
+
+            return '';
+        }
 
         $scope.ObterPlanilha = function (d) {
             $loading.start('load');
