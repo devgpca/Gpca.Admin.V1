@@ -1350,8 +1350,9 @@ angular.module('gpca')
         }
 
     })
-    .controller('ConsolidadoCtrl', function ($scope, RelatoriosService, DTOptionsBuilder, $q, SweetAlert, $loading) {
+    .controller('ConsolidadoCtrl', function ($scope, RelatoriosService, DTOptionsBuilder, $q, SweetAlert, $loading, $timeout) {
 
+        $loading.start('load');
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
             .withButtons([
@@ -1373,6 +1374,7 @@ angular.module('gpca')
 
         $q.all([list]).then(function (response) {
             $scope.GetFiles = response[0].data;
+            $loading.finish('load');
         });
 
         $scope.btnGerar = function (date, flagReproc, action) {
@@ -1381,7 +1383,7 @@ angular.module('gpca')
             if (date != '' || date != undefined) {
 
                 if (action == 'gerar') {
-                    if ($scope.GetFiles.filter(a => a.mesCompetencia == date.substr(3, 7))) {
+                    if ($scope.GetFiles.filter(a => a.mesCompetencia == date.substr(3, 7)).length > 0) {
                         $loading.finish('load');
                         SweetAlert.swal({
                             title: 'O período selecionado "' + date + '" já foi processado. Procure-o no grid para "Reprocessar" ou "Baixar" novamente.',
@@ -1392,14 +1394,22 @@ angular.module('gpca')
                             closeOnConfirm: false,
                             closeOnCancel: false
                         });
+
+                        return;
                     }
+                }
 
-                } else {
+                var reproc = flagReproc == 1 ? true : false;
+                var getExcel = RelatoriosService.CreateExcel(date, reproc);
 
-                    var reproc = flagReproc == 1 ? true : false;
-                    var getExcel = RelatoriosService.CreateExcel(date, reproc);
+                $q.all([getExcel]).then(function (response) {
 
-                    $q.all([getExcel]).then(function (response) {
+                    if (response[0] == undefined) {
+                        $timeout(function () {
+                            window.location.reload();
+                        }, 2000);
+                        
+                    } else {
 
                         const blob = response[0].data
                         var url = window.URL.createObjectURL(blob);
@@ -1410,11 +1420,12 @@ angular.module('gpca')
                         a.click();
 
                         $loading.finish('load');
-                    }, function (error) {
-                        console.log(error);
-                        $loading.finish('load');
-                    });
-                }
+                    }
+                }, function (error) {
+                    console.log(error);
+                    $loading.finish('load');
+                });
+
             }
         }
 

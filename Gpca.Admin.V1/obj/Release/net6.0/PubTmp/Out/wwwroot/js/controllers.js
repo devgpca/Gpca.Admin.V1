@@ -1350,8 +1350,9 @@ angular.module('gpca')
         }
 
     })
-    .controller('ConsolidadoCtrl', function ($scope, RelatoriosService, DTOptionsBuilder, $q, SweetAlert, $loading) {
+    .controller('ConsolidadoCtrl', function ($scope, RelatoriosService, DTOptionsBuilder, $q, SweetAlert, $loading, $timeout) {
 
+        $loading.start('load');
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
             .withButtons([
@@ -1373,6 +1374,7 @@ angular.module('gpca')
 
         $q.all([list]).then(function (response) {
             $scope.GetFiles = response[0].data;
+            $loading.finish('load');
         });
 
         $scope.btnGerar = function (date, flagReproc, action) {
@@ -1381,7 +1383,7 @@ angular.module('gpca')
             if (date != '' || date != undefined) {
 
                 if (action == 'gerar') {
-                    if ($scope.GetFiles.filter(a => a.mesCompetencia == date.substr(3, 7))) {
+                    if ($scope.GetFiles.filter(a => a.mesCompetencia == date.substr(3, 7)).length > 0) {
                         $loading.finish('load');
                         SweetAlert.swal({
                             title: 'O período selecionado "' + date + '" já foi processado. Procure-o no grid para "Reprocessar" ou "Baixar" novamente.',
@@ -1392,14 +1394,22 @@ angular.module('gpca')
                             closeOnConfirm: false,
                             closeOnCancel: false
                         });
+
+                        return;
                     }
+                }
 
-                } else {
+                var reproc = flagReproc == 1 ? true : false;
+                var getExcel = RelatoriosService.CreateExcel(date, reproc);
 
-                    var reproc = flagReproc == 1 ? true : false;
-                    var getExcel = RelatoriosService.CreateExcel(date, reproc);
+                $q.all([getExcel]).then(function (response) {
 
-                    $q.all([getExcel]).then(function (response) {
+                    if (response[0] == undefined) {
+                        $timeout(function () {
+                            window.location.reload();
+                        }, 2000);
+                        
+                    } else {
 
                         const blob = response[0].data
                         var url = window.URL.createObjectURL(blob);
@@ -1410,19 +1420,62 @@ angular.module('gpca')
                         a.click();
 
                         $loading.finish('load');
-                    }, function (error) {
-                        console.log(error);
-                        $loading.finish('load');
-                    });
-                }
+                    }
+                }, function (error) {
+                    console.log(error);
+                    $loading.finish('load');
+                });
+
             }
         }
 
 
 
     })
-    .controller('ResumoCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
+    .controller('ResumoCtrl', function ($scope, DTOptionsBuilder, $loading, SweetAlert, $q, RelatoriosService) {
 
+        $scope.dtProcessamento = '';
+        $scope.isFiltered = false;
+
+        $scope.GerarResumo = function (data) {
+            $loading.start('load');
+
+            if (data != '' && data != undefined) {
+
+                var getResumo = RelatoriosService.GetResumo(data);
+
+                $q.all([getResumo]).then(function (response) {
+                    $scope.isFiltered = true;
+                    $scope.GetResumo = response[0].data;
+
+                    $loading.finish('load');
+                });
+            } else {
+                $loading.finish('load');
+                SweetAlert.swal("Atenção!", "Data de competência não pode ser vazio.", "warning");
+            }
+        };
+
+
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
     .controller('RelDuplicidadeCtrl', function ($scope, $uibModal, SweetAlert, $localStorage, RelatoriosService) {
         $scope.dateOptions = {
@@ -1532,7 +1585,7 @@ angular.module('gpca')
             }
         }
     })
-    .controller('ManualH01Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading, SweetAlert) {
+    .controller('ManualH01Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading, SweetAlert) {
         $scope.obj = { pageNumber: 1, pageSize: 10 }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
@@ -1596,8 +1649,27 @@ angular.module('gpca')
             });
         }
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
-    .controller('ManualH02Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+    .controller('ManualH02Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
         $scope.obj = { pageNumber: 1, pageSize: 10 }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
@@ -1661,8 +1733,27 @@ angular.module('gpca')
             });
         }
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
-    .controller('ManualH03Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+    .controller('ManualH03Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
         $scope.obj = { pageNumber: 1, pageSize: 10 }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
@@ -1726,8 +1817,27 @@ angular.module('gpca')
             });
         }
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
-    .controller('ManualH04Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+    .controller('ManualH04Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
         $scope.obj = { pageNumber: 1, pageSize: 10 }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
@@ -1791,8 +1901,27 @@ angular.module('gpca')
             });
         }
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
-    .controller('ManualH05Ctrl', function ($scope, $uibModal, SweetAlert, $localStorage, ManualService, $q, $http, $loading) {
+    .controller('ManualH05Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
         $scope.obj = { pageNumber: 1, pageSize: 10 }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
@@ -1856,5 +1985,24 @@ angular.module('gpca')
             });
         }
 
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
     })
     ;
