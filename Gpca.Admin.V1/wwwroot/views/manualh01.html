@@ -28,7 +28,17 @@
                     <form name="filtroForm" id="filtroForm">
                         <div class="row">
                             <div class="col-lg-2">
-                                <input type="datetime" class="form-control" placeholder="Mês da conferencia" ng-model="data" uib-datepicker-popup="{{format}}" ng-readonly="true" close-text="Fechar" current-text="Hoje" clear-text="Limpar" is-open="popup1.opened" datepicker-options="dateOptions" ng-click="open1()">
+                                <input type="datetime" class="form-control" placeholder="Mês da conferencia" ng-model="obj.filtroManual.MesCompetencia" uib-datepicker-popup="{{format}}" ng-readonly="true" close-text="Fechar" current-text="Hoje" clear-text="Limpar" is-open="popup1.opened" datepicker-options="dateOptions" ng-click="open1()">
+                            </div>
+                            <div class="col-lg-3">
+                                <select class="form-control" ng-model="obj.filtroManual.Credito" id="credito" name="credito" ng-options="credito for credito in creditos">
+                                    <option value="">(Vazio)</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <select class=" form-control" id="tipoCredito" name="tipoCredito" ng-model="obj.filtroManual.TipoItem" ng-options="tipoCredito for tipoCredito in tiposCredito">
+                                    <option value="">(Vazio)</option>
+                                </select>
                             </div>
                             <div class="col-lg-1">
                                 <button class="btn btn-sm btn-warning btn-rounded" type="button" ng-click="limparFiltro()"><i class="fa fa-trash"></i> Limpar</button>

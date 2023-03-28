@@ -188,7 +188,6 @@ angular.module('gpca')
         };
 
         this.CreateJv = function (obj) {
-            obj.planilha = parseInt(obj.planilha);
             return $http.post(constants.UrlRelatorioApi + 'ConsorcioJv/Create', obj, params)
                 .then(function (response) {
                     return response;
@@ -214,6 +213,17 @@ angular.module('gpca')
             return $http.get(constants.UrlRelatorioApi + 'ConsorcioJv/GetAll')
                 .then(function (response) {
                     return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ConsorcioJv/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
                 }, function (error) {
                     angular.forEach(error.data, function (value, index) {
                         return value;
