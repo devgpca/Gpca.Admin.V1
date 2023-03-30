@@ -554,24 +554,21 @@ angular.module('gpca')
     })
     .controller('JVCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, ConsortiumJvService, ConsortiumService, $q) {
 
-        $scope.consorcioList = [];
-        var GetListJvs = ConsortiumJvService.GetConsorcioJVs();
-
-
-        $q.all([GetListJvs]).then(function (response) {
-            $scope.getData = response[0].data;
-
-        });
-
-        $scope.consorcioJv = {
-            id: 0,
-            consorcioId: null,
-            jv: "",
-            situacao: "",
-            cutback: "",
-            planilha: null,
-            ativo: true
+        $scope.GetAll = function () {
+            ConsortiumJvService.GetAll().then(function (data) {
+                $scope.lst = data
+            });
         }
+
+        $scope.GetListConsorcio = function () {
+            ConsortiumService.GetConsorcio().then(function (data) {
+                $scope.lstConsorcio = data.data
+            })
+        }
+
+        $scope.GetAll();
+        $scope.GetListConsorcio();
+
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
@@ -599,46 +596,90 @@ angular.module('gpca')
             $uibModal.open({
                 scope: $scope,
                 templateUrl: 'views/modal/consorcio/incluir_editar_consorcioJV.html',
-                controller: function ($scope, $uibModalInstance) {
-                    $scope.IncluirJv = function () {
-                        ConsortiumJvService.CreateJv($scope.consorcioJv);
-                        $uibModalInstance.close();
+                controller: function ($scope, $uibModalInstance, jvSelected) {
+                    $scope.Incluir = function () {
+                        $scope.obj.Planilha = parseInt($scope.obj.Planilha);
+                        ConsortiumJvService.CreateJv($scope.obj).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $uibModalInstance.close();
+                        })
                     }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
                 },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    fatorSelected: function () {
+                    jvSelected: function () {
                         return null;
                     }
                 }
-            });
+            })
+                .result.then(function (result) {
+                    $scope.GetAll();
+                });
         }
 
         $scope.editar = function (data) {
             $uibModal.open({
                 scope: $scope,
                 templateUrl: 'views/modal/consorcio/incluir_editar_consorcioJV.html',
-                controller: function ($scope, $uibModalInstance) {
-                    $scope.IncluirJv = function () {
-                        ConsortiumJvService.EditJv($scope.consorcioJv);
+                controller: function ($scope, $uibModalInstance, jvSelected) {
+                    $scope.obj = {};
+                    $scope.value = jvSelected;
+                    
+                    $scope.obj.ConsorcioId = jvSelected.consorcioId;
+                    $scope.obj.JV = jvSelected.jv;
+                    $scope.obj.SituacaoJV = jvSelected.situacaoJV;
+                    $scope.obj.Cutback = jvSelected.cutback;
+                    $scope.obj.Planilha = jvSelected.planilha.toString();
+
+                    $scope.Alterar = function () {
+                        jvSelected.consorcioId = $scope.obj.ConsorcioId
+                        jvSelected.jv = $scope.obj.JV;
+                        jvSelected.situacaoJV = $scope.obj.SituacaoJV;
+                        jvSelected.cutback = $scope.obj.Cutback;
+                        jvSelected.planilha = $scope.obj.Planilha;
+
+                        ConsortiumJvService.EditJv(jvSelected).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "valores alterados com sucesso",
+                                type: "success"
+                            });
+                            $uibModalInstance.close();
+                        })
                         $uibModalInstance.close();
                     }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+
                 },
                 windowClass: "animated fadeIn",
                 resolve: {
-                    dataSelected: function () {
+                    jvSelected: function () {
                         return data;
                     }
                 }
-            });
+            })
+                .result.then(function (result) {
+                    $scope.GetAll();
+                });
         }
 
-        $scope.ativarDesativarJV = function (data) {
-            $scope.title = data.ativo == false ? "ativar" : "desativar";
-            $scope.result = data.ativo == false ? "ativado" : "desativado";
+        $scope.ativarDesativar = function (data) {
+            $scope.title = !data.ativo ? "ativar" : "desativar";
+            $scope.result = !data.ativo ? "ativada" : "desativada";
 
             SweetAlert.swal({
-                title: "Deseja " + $scope.title + " ?",
+                title: "Deseja " + $scope.title + " " + data.jv + " ?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -649,18 +690,14 @@ angular.module('gpca')
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        $http.post(constants.UrlApi + "Fator/AtivarDesativar", fator.fa_Id, {
-                            headers: { 'Authorization': 'Bearer ' + $localStorage.token }
-                        }).then(function (response) {
+                        ConsortiumJvService.EnableDisable(data).then(function (data) {
                             SweetAlert.swal({
                                 title: "Alterado!",
-                                text: "O fator foi " + $scope.result + " com sucesso.",
+                                text: "valores alterados com sucesso",
                                 type: "success"
                             });
-
-                        }, function (response) {
-                            return alert("Erro: " + response.status);
-                        });
+                            $scope.GetAll();
+                        })
                     } else {
                         SweetAlert.swal({
                             title: "Cancelado!",
@@ -1238,7 +1275,7 @@ angular.module('gpca')
     })
     .controller('textoCtrl', function ($scope, DTOptionsBuilder, $uibModal, SweetAlert, $localStorage, TextoService, $q, $loading) {
 
-        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.obj = { pageNumber: 1, pageSize: 10, "filtroTextoBreve": { Texto: "" } }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
         $scope.numPerPage = $scope.obj.pageSize;
@@ -1347,6 +1384,14 @@ angular.module('gpca')
                         });
                     }
                 });
+        }
+
+        $scope.limparFiltro = function () {
+            $scope.obj.filtroTextoBreve.Texto = "";
+            $scope.GetAll($scope.obj);
+        }
+        $scope.filtrar = function () {
+            $scope.GetAll($scope.obj);
         }
 
     })
@@ -1586,12 +1631,64 @@ angular.module('gpca')
         }
     })
     .controller('ManualH01Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading, SweetAlert) {
-        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.obj = { pageNumber: 1, pageSize: 10, "filtroManual": { MesCompetencia: new Date(), Credito: "", TipoItem: "" } }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
         $scope.numPerPage = $scope.obj.pageSize;
         $scope.totalRecords = 0;
 
+        $scope.creditos = ["Creditável", "Não Creditável"];
+        $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
+
+        $scope.dateOptions = {
+            formatYear: 'yy',
+            maxDate: new Date(),
+            minDate: new Date(),
+            startingDay: 1
+        };
+
+        $scope.inlineOptions = {
+            customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+        };
+
+        $scope.format = 'MM/yyyy'
+
+        $scope.toggleMin = function () {
+            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+            $scope.dateOptions.datepickerMode = "month";
+            $scope.dateOptions.minMode = "month";
+        };
+
+        $scope.toggleMin();
+
+        $scope.open1 = function () {
+            $scope.popup1.opened = true;
+        };
+
+        $scope.popup1 = {
+            opened: false
+        };
+
+        function getDayClass(data) {
+            var date = data.date,
+                mode = data.mode;
+            if (mode === 'day') {
+                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                for (var i = 0; i < $scope.events.length; i++) {
+                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                    if (dayToCheck === currentDay) {
+                        return $scope.events[i].status;
+                    }
+                }
+            }
+
+            return '';
+        }
 
         $scope.ObterPlanilha = function (d) {
             $loading.start('load');
@@ -1615,8 +1712,6 @@ angular.module('gpca')
                 templateUrl: 'views/modal/Manual/editar_manuais.html',
                 controller: function ($scope, $uibModalInstance, manualSelected) {
 
-                    $scope.creditos = ["Creditável", "Não Creditável"];
-                    $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
                     $scope.obj = {};
                     $scope.obj.Creditos = manualSelected.creditos;
                     $scope.obj.TipoItem = manualSelected.tipoItem
@@ -1668,14 +1763,77 @@ angular.module('gpca')
                     }
                 }
             ]);
+
+        $scope.limparFiltro = function () {
+            $scope.obj.filtroManual.MesCompetencia = new Date();
+            $scope.obj.filtroManual.Credito = ""
+            $scope.obj.filtroManual.TipoItem = ""
+            $scope.GetAll($scope.obj);
+        }
+        $scope.filtrar = function () {
+            
+            $scope.ObterPlanilha($scope.obj);
+        }
     })
     .controller('ManualH02Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
-        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.obj = { pageNumber: 1, pageSize: 10, "filtroManual": { MesCompetencia: new Date(), Credito: "", TipoItem: "" } }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
         $scope.numPerPage = $scope.obj.pageSize;
         $scope.totalRecords = 0;
 
+        $scope.creditos = ["Creditável", "Não Creditável"];
+        $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
+
+        $scope.dateOptions = {
+            formatYear: 'yy',
+            maxDate: new Date(),
+            minDate: new Date(),
+            startingDay: 1
+        };
+
+        $scope.inlineOptions = {
+            customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+        };
+
+        $scope.format = 'MM/yyyy'
+
+        $scope.toggleMin = function () {
+            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+            $scope.dateOptions.datepickerMode = "month";
+            $scope.dateOptions.minMode = "month";
+        };
+
+        $scope.toggleMin();
+
+        $scope.open1 = function () {
+            $scope.popup1.opened = true;
+        };
+
+        $scope.popup1 = {
+            opened: false
+        };
+
+        function getDayClass(data) {
+            var date = data.date,
+                mode = data.mode;
+            if (mode === 'day') {
+                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                for (var i = 0; i < $scope.events.length; i++) {
+                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                    if (dayToCheck === currentDay) {
+                        return $scope.events[i].status;
+                    }
+                }
+            }
+
+            return '';
+        }
 
         $scope.ObterPlanilha = function (d) {
             $loading.start('load');
@@ -1752,14 +1910,77 @@ angular.module('gpca')
                     }
                 }
             ]);
+
+        $scope.limparFiltro = function () {
+            $scope.obj.filtroManual.MesCompetencia = new Date();
+            $scope.obj.filtroManual.Credito = ""
+            $scope.obj.filtroManual.TipoItem = ""
+            $scope.GetAll($scope.obj);
+        }
+        $scope.filtrar = function () {
+
+            $scope.ObterPlanilha($scope.obj);
+        }
     })
     .controller('ManualH03Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
-        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.obj = { pageNumber: 1, pageSize: 10, "filtroManual": { MesCompetencia: new Date(), Credito: "", TipoItem: "" } }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
         $scope.numPerPage = $scope.obj.pageSize;
         $scope.totalRecords = 0;
 
+        $scope.creditos = ["Creditável", "Não Creditável"];
+        $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
+
+        $scope.dateOptions = {
+            formatYear: 'yy',
+            maxDate: new Date(),
+            minDate: new Date(),
+            startingDay: 1
+        };
+
+        $scope.inlineOptions = {
+            customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+        };
+
+        $scope.format = 'MM/yyyy'
+
+        $scope.toggleMin = function () {
+            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+            $scope.dateOptions.datepickerMode = "month";
+            $scope.dateOptions.minMode = "month";
+        };
+
+        $scope.toggleMin();
+
+        $scope.open1 = function () {
+            $scope.popup1.opened = true;
+        };
+
+        $scope.popup1 = {
+            opened: false
+        };
+
+        function getDayClass(data) {
+            var date = data.date,
+                mode = data.mode;
+            if (mode === 'day') {
+                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                for (var i = 0; i < $scope.events.length; i++) {
+                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                    if (dayToCheck === currentDay) {
+                        return $scope.events[i].status;
+                    }
+                }
+            }
+
+            return '';
+        }
 
         $scope.ObterPlanilha = function (d) {
             $loading.start('load');
@@ -1836,14 +2057,77 @@ angular.module('gpca')
                     }
                 }
             ]);
+
+        $scope.limparFiltro = function () {
+            $scope.obj.filtroManual.MesCompetencia = new Date();
+            $scope.obj.filtroManual.Credito = ""
+            $scope.obj.filtroManual.TipoItem = ""
+            $scope.GetAll($scope.obj);
+        }
+        $scope.filtrar = function () {
+
+            $scope.ObterPlanilha($scope.obj);
+        }
     })
     .controller('ManualH04Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
-        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.obj = { pageNumber: 1, pageSize: 10, "filtroManual": { MesCompetencia: new Date(), Credito: "", TipoItem: "" } }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
         $scope.numPerPage = $scope.obj.pageSize;
         $scope.totalRecords = 0;
 
+        $scope.creditos = ["Creditável", "Não Creditável"];
+        $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
+
+        $scope.dateOptions = {
+            formatYear: 'yy',
+            maxDate: new Date(),
+            minDate: new Date(),
+            startingDay: 1
+        };
+
+        $scope.inlineOptions = {
+            customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+        };
+
+        $scope.format = 'MM/yyyy'
+
+        $scope.toggleMin = function () {
+            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+            $scope.dateOptions.datepickerMode = "month";
+            $scope.dateOptions.minMode = "month";
+        };
+
+        $scope.toggleMin();
+
+        $scope.open1 = function () {
+            $scope.popup1.opened = true;
+        };
+
+        $scope.popup1 = {
+            opened: false
+        };
+
+        function getDayClass(data) {
+            var date = data.date,
+                mode = data.mode;
+            if (mode === 'day') {
+                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                for (var i = 0; i < $scope.events.length; i++) {
+                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                    if (dayToCheck === currentDay) {
+                        return $scope.events[i].status;
+                    }
+                }
+            }
+
+            return '';
+        }
 
         $scope.ObterPlanilha = function (d) {
             $loading.start('load');
@@ -1920,14 +2204,77 @@ angular.module('gpca')
                     }
                 }
             ]);
+
+        $scope.limparFiltro = function () {
+            $scope.obj.filtroManual.MesCompetencia = new Date();
+            $scope.obj.filtroManual.Credito = ""
+            $scope.obj.filtroManual.TipoItem = ""
+            $scope.GetAll($scope.obj);
+        }
+        $scope.filtrar = function () {
+
+            $scope.ObterPlanilha($scope.obj);
+        }
     })
     .controller('ManualH05Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading) {
-        $scope.obj = { pageNumber: 1, pageSize: 10 }
+        $scope.obj = { pageNumber: 1, pageSize: 10, "filtroManual": { MesCompetencia: new Date(), Credito: "", TipoItem: "" } }
         $scope.maxSize = 10;
         $scope.currentPage = 1;
         $scope.numPerPage = $scope.obj.pageSize;
         $scope.totalRecords = 0;
 
+        $scope.creditos = ["Creditável", "Não Creditável"];
+        $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
+
+        $scope.dateOptions = {
+            formatYear: 'yy',
+            maxDate: new Date(),
+            minDate: new Date(),
+            startingDay: 1
+        };
+
+        $scope.inlineOptions = {
+            customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+        };
+
+        $scope.format = 'MM/yyyy'
+
+        $scope.toggleMin = function () {
+            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+            $scope.dateOptions.datepickerMode = "month";
+            $scope.dateOptions.minMode = "month";
+        };
+
+        $scope.toggleMin();
+
+        $scope.open1 = function () {
+            $scope.popup1.opened = true;
+        };
+
+        $scope.popup1 = {
+            opened: false
+        };
+
+        function getDayClass(data) {
+            var date = data.date,
+                mode = data.mode;
+            if (mode === 'day') {
+                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                for (var i = 0; i < $scope.events.length; i++) {
+                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                    if (dayToCheck === currentDay) {
+                        return $scope.events[i].status;
+                    }
+                }
+            }
+
+            return '';
+        }
 
         $scope.ObterPlanilha = function (d) {
             $loading.start('load');
@@ -2004,5 +2351,16 @@ angular.module('gpca')
                     }
                 }
             ]);
+
+        $scope.limparFiltro = function () {
+            $scope.obj.filtroManual.MesCompetencia = new Date();
+            $scope.obj.filtroManual.Credito = ""
+            $scope.obj.filtroManual.TipoItem = ""
+            $scope.GetAll($scope.obj);
+        }
+        $scope.filtrar = function () {
+
+            $scope.ObterPlanilha($scope.obj);
+        }
     })
     ;

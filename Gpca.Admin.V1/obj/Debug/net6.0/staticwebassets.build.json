@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "NgT5YidpSdDa36Df5g5pTH2PaXT2Ib1pZUXG3KQqk64=",
+  "Hash": "e2PXik59JpQRfLna6gxjvba0G2Ii7KfydK05LyWzUqM=",
   "Source": "Gpca.Admin.V1",
   "BasePath": "_content/Gpca.Admin.V1",
   "Mode": "Default",
@@ -26384,6 +26384,23 @@
       "OriginalItemSpec": "wwwroot\\views\\modal\\Texto\\incluir_editar_texto.html"
     },
     {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Usuario\\editar_usuarios.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/modal/Usuario/editar_usuarios.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\modal\\Usuario\\editar_usuarios.html"
+    },
+    {
       "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\NCM.html",
       "SourceId": "Gpca.Admin.V1",
       "SourceType": "Discovered",
@@ -26450,6 +26467,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\views\\texto.html"
+    },
+    {
+      "Identity": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\usuarios.html",
+      "SourceId": "Gpca.Admin.V1",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\",
+      "BasePath": "_content/Gpca.Admin.V1",
+      "RelativePath": "views/usuarios.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\views\\usuarios.html"
     }
   ]
 }
