@@ -1,5 +1,5 @@
 angular.module('gpca')
-    .service('AuthService', function ($http, constants, toaster, $timeout, $localStorage) {
+    .service('AuthService', function ($http, constants, toaster, $timeout, $localStorage, $loading) {
 
         var pars = {
             headers: {
@@ -106,6 +106,8 @@ angular.module('gpca')
                         }, 5000);
                     }
                     else {
+                        $localStorage.error = response.data.message;
+
                         toaster.pop({
                             type: 'error',
                             title: 'Error',
@@ -115,6 +117,7 @@ angular.module('gpca')
                         });
                     }
                 }, function (error) {
+                    $loading.finish('load');
                     angular.forEach(error.data, function (value, index) {
                         toaster.pop({
                             type: 'error',
@@ -745,6 +748,38 @@ angular.module('gpca')
 
         this.EditH05 = function (obj) {
             return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/EditH05Async', obj)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+    })
+    .service('UsuarioService', function ($http, constants, $localStorage) {
+
+        var params = { headers: { 'RefreshToken': '' } };
+
+        this.GetUsers = function () {
+            var obj = {};
+            params.headers.RefreshToken = $localStorage.user.refreshToken;
+
+            return $http.post(constants.UrlAuthApi + 'User/GetUserAll', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EditUser = function (obj) {
+            params.headers.RefreshToken = $localStorage.user.refreshToken;
+
+            return $http.post(constants.UrlAuthApi + 'User/EditUser', obj, params)
                 .then(function (response) {
                     return response.data;
                 }, function (error) {

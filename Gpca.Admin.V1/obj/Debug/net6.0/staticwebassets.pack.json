@@ -6205,6 +6205,10 @@
       "PackagePath": "staticwebassets\\views\\modal\\Texto\\incluir_editar_texto.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Usuario\\editar_usuarios.html",
+      "PackagePath": "staticwebassets\\views\\modal\\Usuario\\editar_usuarios.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\modal_base.html",
       "PackagePath": "staticwebassets\\views\\modal\\modal_base.html"
     },
@@ -6219,6 +6223,10 @@
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\texto.html",
       "PackagePath": "staticwebassets\\views\\texto.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\usuarios.html",
+      "PackagePath": "staticwebassets\\views\\usuarios.html"
     },
     {
       "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.Gpca.Admin.V1.Microsoft.AspNetCore.StaticWebAssets.props",

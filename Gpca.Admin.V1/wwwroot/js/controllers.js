@@ -347,7 +347,7 @@ angular.module('gpca')
             $loading.finish('load');
         }
     })
-    .controller('RegisterCtrl', function ($scope, toaster, AuthService) {
+    .controller('RegisterCtrl', function ($scope, toaster, $loading, AuthService, $q, $timeout) {
 
         $scope.user = {
             CpfCnpj: "",
@@ -365,8 +365,9 @@ angular.module('gpca')
         ]
 
         $scope.RedefinirUsuario = function (user) {
+            $loading.start('load');
             AuthService.RedefinirSenha(user);
-        };
+        }
 
         $scope.CriarUsuario = function (user) {
             AuthService.cadastrar(user);
@@ -2639,5 +2640,127 @@ angular.module('gpca')
 
             $scope.ObterPlanilha($scope.obj);
         }
+    })
+    .controller('UsuariosCtrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, UsuarioService, $q, $http, $loading, $timeout) {
+
+        $loading.start('load');
+        var listUsers = UsuarioService.GetUsers();
+
+        $q.all([listUsers]).then(function (response) {
+            $scope.GetUsuarios = response[0].data;
+            $loading.finish('load');
+        });
+
+
+        $scope.editar = function (data) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Usuario/editar_usuarios.html',
+                controller: function ($scope, $uibModalInstance, usuarioSelected, $timeout) {
+
+                    $scope.obj = {};
+                    $scope.obj.cpfCnpj = usuarioSelected.cpfCnpj;
+                    $scope.obj.nome = usuarioSelected.nome;
+                    $scope.obj.email = usuarioSelected.email;
+                    $scope.obj.status = usuarioSelected.status == 'Ativo' ? true : false;
+                    $scope.alterar = function () {
+
+                        usuarioSelected = $scope.obj;
+                        usuarioSelected.status = $scope.obj.status.toString();
+                        console.log("usuario: " + JSON.stringify(usuarioSelected));
+
+                        UsuarioService.EditUser(usuarioSelected).then(function (response) {
+
+                            if (response.success) {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "Sucesso!",
+                                    text: response.message,
+                                    type: "success"
+                                });
+
+
+                                $timeout(function () {
+                                    window.location.reload();
+                                }, 2000);
+                            } else {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "Erro!",
+                                    text: response.message,
+                                    type: "error"
+                                });
+                            }
+                        }, function (error) {
+
+                        });
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    usuarioSelected: function () {
+                        return data;
+                    }
+                }
+            });
+        }
+
+        $scope.addUsuario = function (obj) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Usuario/editar_usuarios.html',
+                controller: function ($scope, $uibModalInstance) {
+
+                    $scope.usuario = obj;
+                    $scope.alterar = function () {
+
+                        UsuarioService.CreateUser(obj).then(function () {
+                            $uibModalInstance.dismiss('dimiss');
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "Usuário alterado com sucesso!",
+                                type: "success"
+                            });
+                        })
+
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    usuarioSelected: function () {
+                        return obj;
+                    }
+                }
+            });
+        }
+
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
     })
     ;
