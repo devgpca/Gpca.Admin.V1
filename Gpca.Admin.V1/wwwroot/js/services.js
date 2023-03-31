@@ -552,7 +552,89 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.GetAll = function () {
+            var hedrs = {
+                headers: {
+                    'RefreshToken': $localStorage.user.refreshToken
+                }
+            };
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoUpload/GetList', hedrs)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
     })
+
+    .service('ArquivoService', function ($http, constants, $localStorage) {
+        var params = {
+            headers: {
+                'RefreshToken': $localStorage.user.refreshToken
+            }
+        };
+
+        this.GetAll = function () {
+            var hedrs = {
+                headers: {
+                    'RefreshToken': $localStorage.user.refreshToken
+                }
+            };
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoUpload/GetList', hedrs)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.Create = function (files) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoUpload/Create', files, {
+                transformRequest: angular.identity,
+                headers: { 'Content-Type': undefined }
+            })
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.EnableDisable = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoUpload/EnableDisable', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.LiberarTodos = function (mesCompetencia) {
+            var hedrs = {
+                headers: {
+                    'RefreshToken': $localStorage.user.refreshToken
+                }
+            };
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoUpload/LiberarTodos/' + mesCompetencia, hedrs)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })
+
     .service('ManualService', function ($http, constants, $localStorage) {
 
         var params = {
