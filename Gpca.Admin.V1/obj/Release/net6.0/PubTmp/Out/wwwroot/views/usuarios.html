@@ -44,8 +44,8 @@
                                     <td>{{usu.nome}}</td>
                                     <td>{{usu.cpfCnpj}}</td>
                                     <td>{{usu.email}}</td>
-                                    <td>{{usu.criadoEm}}</td>
-                                    <td>{{usu.atualizadoEm}}</td>
+                                    <td>{{usu.criadoEm | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                                    <td>{{usu.atualizadoEm | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
                                     <td ng-class="{'bg-primary': usu.status == 'Ativo', 'bg-danger' : usu.status == 'Inativo'}">{{ usu.status }}</td>
                                     <td><button class="btn btn-sm btn-outline btn-primary btn-rounded" type="button" ng-click="editar(usu)"><i class="fa fa-edit"></i> Alterar</button></td>
                                 </tr>
