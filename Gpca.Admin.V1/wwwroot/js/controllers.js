@@ -1638,7 +1638,7 @@ angular.module('gpca')
             ArquivoService.GetAll().then(function (data) {
                 $scope.lst = data;
                 $loading.finish('load');
-            })
+            });
         }
 
         $scope.GetAll();
@@ -1867,6 +1867,7 @@ angular.module('gpca')
         }
 
         $scope.upload = function () {
+
             var formData = new FormData();
 
             for (var i = 0; i < document.getElementById('files').files.length; i++) {
@@ -1897,6 +1898,7 @@ angular.module('gpca')
                         })
 
                     } else {
+                        $loading.finish('load');
                         SweetAlert.swal({
                             title: "Cancelado!",
                             text: "Você cancelou a alteração do registro",
@@ -1905,8 +1907,21 @@ angular.module('gpca')
                     }
                 });
 
-            
+
         }
+
+        $scope.importar = function (file) {
+            $loading.start('load');
+            ArquivoService.Importar(file.id).then(function (response) {
+
+                file.importado = response.importado;
+
+                $loading.finish('load');
+            }, function (error) {
+                $loading.finish('load');
+                console.log("Erro Importaão-GetAll: " + error);
+            });
+        };
     })
     .controller('ManualH01Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading, SweetAlert) {
         $scope.obj = { pageNumber: 1, pageSize: 10, "filtroManual": { MesCompetencia: new Date(), Credito: "", TipoItem: "" } }

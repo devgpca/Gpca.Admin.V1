@@ -572,7 +572,6 @@ angular.module('gpca')
                 });
         }
     })
-
     .service('ArquivoService', function ($http, constants, $localStorage) {
         var params = {
             headers: {
@@ -597,7 +596,7 @@ angular.module('gpca')
         }
 
         this.Create = function (files) {
-            return $http.post(constants.UrlRelatorioApi + 'ArquivoUpload/Create', files, {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoUpload/Upload', files, {
                 transformRequest: angular.identity,
                 headers: { 'Content-Type': undefined }
             })
@@ -636,8 +635,23 @@ angular.module('gpca')
                     });
                 });
         }
-    })
 
+        this.Importar = function (id) {
+            var hedrs = {
+                headers: {
+                    'RefreshToken': $localStorage.user.refreshToken
+                }
+            };
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoUpload/ImportarArquivo/' + id, hedrs)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })
     .service('ManualService', function ($http, constants, $localStorage) {
 
         var params = {
