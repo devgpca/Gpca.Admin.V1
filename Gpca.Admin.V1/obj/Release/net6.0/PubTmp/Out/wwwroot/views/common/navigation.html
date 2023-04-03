@@ -32,6 +32,7 @@
                     <li ui-sref-active="active"><a ui-sref="relatorios.resumo">Resumo</a></li>
                     <li ui-sref-active="active"><a ui-sref="relatorios.importacao">Importação</a></li>
                     <li ui-sref-active="active"><a ui-sref="relatorios.duplicidade">Duplicidade</a></li>
+                    <li ui-sref-active="active"><a ui-sref="relatorios.importacao2">Importação</a></li>
                 </ul>
             </li>
             <li ng-class="{active: $state.includes('correcao')}">
@@ -42,6 +43,12 @@
                     <li ui-sref-active="active"><a ui-sref="correcao.manualH03">H03</a></li>
                     <li ui-sref-active="active"><a ui-sref="correcao.manualH04">H04</a></li>
                     <li ui-sref-active="active"><a ui-sref="correcao.manualH05">H05</a></li>
+                </ul>
+            </li>
+            <li ng-class="{active: $state.includes('administracao')}">
+                <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Administração</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('administracao')}">
+                    <li ui-sref-active="active"><a ui-sref="administracao.usuarios">Usuários</a></li>
                 </ul>
             </li>
         </ul>

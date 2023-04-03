@@ -6145,6 +6145,10 @@
       "PackagePath": "staticwebassets\\views\\forgot_password.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\importacao-bkp.html",
+      "PackagePath": "staticwebassets\\views\\importacao-bkp.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\importacao.html",
       "PackagePath": "staticwebassets\\views\\importacao.html"
     },
@@ -6189,6 +6193,10 @@
       "PackagePath": "staticwebassets\\views\\modal\\Consorcio\\incluir_editar_consorcioJV.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Importacao\\editar_arquivo.html",
+      "PackagePath": "staticwebassets\\views\\modal\\Importacao\\editar_arquivo.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Manual\\editar_manuais.html",
       "PackagePath": "staticwebassets\\views\\modal\\Manual\\editar_manuais.html"
     },
@@ -6205,6 +6213,10 @@
       "PackagePath": "staticwebassets\\views\\modal\\Texto\\incluir_editar_texto.html"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\Usuario\\editar_usuarios.html",
+      "PackagePath": "staticwebassets\\views\\modal\\Usuario\\editar_usuarios.html"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\modal\\modal_base.html",
       "PackagePath": "staticwebassets\\views\\modal\\modal_base.html"
     },
@@ -6219,6 +6231,10 @@
     {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\texto.html",
       "PackagePath": "staticwebassets\\views\\texto.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\views\\usuarios.html",
+      "PackagePath": "staticwebassets\\views\\usuarios.html"
     },
     {
       "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.Gpca.Admin.V1.Microsoft.AspNetCore.StaticWebAssets.props",

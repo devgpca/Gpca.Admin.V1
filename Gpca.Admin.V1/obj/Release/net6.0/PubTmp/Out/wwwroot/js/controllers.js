@@ -347,7 +347,7 @@ angular.module('gpca')
             $loading.finish('load');
         }
     })
-    .controller('RegisterCtrl', function ($scope, toaster, AuthService) {
+    .controller('RegisterCtrl', function ($scope, toaster, $loading, AuthService, $q, $timeout) {
 
         $scope.user = {
             CpfCnpj: "",
@@ -365,8 +365,9 @@ angular.module('gpca')
         ]
 
         $scope.RedefinirUsuario = function (user) {
+            $loading.start('load');
             AuthService.RedefinirSenha(user);
-        };
+        }
 
         $scope.CriarUsuario = function (user) {
             AuthService.cadastrar(user);
@@ -632,7 +633,7 @@ angular.module('gpca')
                 controller: function ($scope, $uibModalInstance, jvSelected) {
                     $scope.obj = {};
                     $scope.value = jvSelected;
-                    
+
                     $scope.obj.ConsorcioId = jvSelected.consorcioId;
                     $scope.obj.JV = jvSelected.jv;
                     $scope.obj.SituacaoJV = jvSelected.situacaoJV;
@@ -1453,7 +1454,7 @@ angular.module('gpca')
                         $timeout(function () {
                             window.location.reload();
                         }, 2000);
-                        
+
                     } else {
 
                         const blob = response[0].data
@@ -1630,6 +1631,298 @@ angular.module('gpca')
             }
         }
     })
+    .controller('Importacao2Ctrl', function ($scope, DTOptionsBuilder, $loading, SweetAlert, $localStorage, ArquivoService, $uibModal) {
+
+        $scope.GetAll = function () {
+            $loading.start('load');
+            ArquivoService.GetAll().then(function (data) {
+                $scope.lst = data;
+                $loading.finish('load');
+            });
+        }
+
+        $scope.GetAll();
+
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
+        $scope.liberar = function (obj) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Importacao/editar_arquivo.html',
+                controller: function ($scope, $uibModalInstance, selected) {
+                    $scope.value = selected;
+
+                    $scope.obj = {};
+
+                    $scope.dateOptions = {
+                        formatYear: 'yy',
+                        maxDate: new Date(),
+                        minDate: new Date(),
+                        startingDay: 1
+                    };
+
+                    $scope.inlineOptions = {
+                        customClass: getDayClass,
+                        minDate: new Date(),
+                        showWeeks: true
+                    };
+
+                    $scope.format = 'MM/yyyy'
+
+                    $scope.toggleMin = function () {
+                        $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+                        $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+                        $scope.dateOptions.datepickerMode = "month";
+                        $scope.dateOptions.minMode = "month";
+                    };
+
+                    $scope.toggleMin();
+
+                    $scope.open1 = function () {
+                        $scope.popup1.opened = true;
+                    };
+
+                    $scope.popup1 = {
+                        opened: false
+                    };
+
+                    function getDayClass(data) {
+                        var date = data.date,
+                            mode = data.mode;
+                        if (mode === 'day') {
+                            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                            for (var i = 0; i < $scope.events.length; i++) {
+                                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                                if (dayToCheck === currentDay) {
+                                    return $scope.events[i].status;
+                                }
+                            }
+                        }
+
+                        return '';
+                    }
+
+                    $scope.Alterar = function () {
+                        if ($scope.obj.MesCompetencia == undefined || $scope.obj.MesCompetencia == null) {
+                            SweetAlert.swal({
+                                title: "Atenção",
+                                text: "Preencha o mês da competência para liberar",
+                                type: "warning"
+                            });
+                        }
+                        else {
+
+                            selected.mesCompentencia = $scope.obj.MesCompetencia.toLocaleDateString().substring(3, 10);
+
+                            ArquivoService.EnableDisable(selected).then(function () {
+                                $scope.GetAll();
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "Sucesso!",
+                                    text: "valores alterados com sucesso",
+                                    type: "success"
+                                });
+                            })
+                        }
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    selected: function () {
+                        return obj;
+                    }
+                }
+            });
+        }
+
+        $scope.liberarTodos = function () {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Importacao/editar_arquivo.html',
+                controller: function ($scope, $uibModalInstance, selected) {
+
+                    $scope.value = selected;
+                    $scope.obj = {};
+
+                    $scope.dateOptions = {
+                        formatYear: 'yy',
+                        maxDate: new Date(),
+                        minDate: new Date(),
+                        startingDay: 1
+                    };
+
+                    $scope.inlineOptions = {
+                        customClass: getDayClass,
+                        minDate: new Date(),
+                        showWeeks: true
+                    };
+
+                    $scope.format = 'MM/yyyy'
+
+                    $scope.toggleMin = function () {
+                        $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+                        $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+                        $scope.dateOptions.datepickerMode = "month";
+                        $scope.dateOptions.minMode = "month";
+                    };
+
+                    $scope.toggleMin();
+
+                    $scope.open1 = function () {
+                        $scope.popup1.opened = true;
+                    };
+
+                    $scope.popup1 = {
+                        opened: false
+                    };
+
+                    function getDayClass(data) {
+                        var date = data.date,
+                            mode = data.mode;
+                        if (mode === 'day') {
+                            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                            for (var i = 0; i < $scope.events.length; i++) {
+                                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                                if (dayToCheck === currentDay) {
+                                    return $scope.events[i].status;
+                                }
+                            }
+                        }
+
+                        return '';
+                    }
+
+                    $scope.AlterarTodos = function () {
+                        SweetAlert.swal({
+                            title: "Deseja liberar todos os arquivos de uma vez?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Sim, liberar!",
+                            cancelButtonText: "Não, cancelar!",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    ArquivoService.LiberarTodos($scope.obj.MesCompetencia.toLocaleDateString().substring(3, 10).replace('/', '%2F')).then(function (data) {
+                                        $uibModalInstance.dismiss('dimiss');
+                                        SweetAlert.swal({
+                                            title: "Liberado!",
+                                            text: "Os arquivos foram liberados com sucesso!",
+                                            type: "success"
+                                        });
+
+                                        $scope.GetAll();
+                                    })
+
+                                } else {
+                                    SweetAlert.swal({
+                                        title: "Cancelado!",
+                                        text: "Você cancelou a alteração do registro",
+                                        type: "error"
+                                    });
+                                }
+                            });
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    selected: function () {
+                        return 1;
+                    }
+                }
+            });
+        }
+
+        $scope.upload = function () {
+
+            var formData = new FormData();
+
+            for (var i = 0; i < document.getElementById('files').files.length; i++) {
+                formData.append('files', document.getElementById('files').files[i]);
+            }
+
+
+            SweetAlert.swal({
+                title: "Deseja fazer o upload dos arquivos?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Sim!",
+                cancelButtonText: "Não!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        ArquivoService.Create(formData).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Arquivos enviados!",
+                                text: "Os arquivos enviados com sucesso!",
+                                type: "success"
+                            });
+
+                            $scope.GetAll();
+                        })
+
+                    } else {
+                        $loading.finish('load');
+                        SweetAlert.swal({
+                            title: "Cancelado!",
+                            text: "Você cancelou a alteração do registro",
+                            type: "error"
+                        });
+                    }
+                });
+
+
+        }
+
+        $scope.importar = function (file) {
+            $loading.start('load');
+            ArquivoService.Importar(file.id).then(function (response) {
+
+                file.importado = response.importado;
+
+                $loading.finish('load');
+            }, function (error) {
+                $loading.finish('load');
+                console.log("Erro Importaão-GetAll: " + error);
+            });
+        };
+    })
     .controller('ManualH01Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading, SweetAlert) {
         $scope.obj = { pageNumber: 1, pageSize: 10, "filtroManual": { MesCompetencia: new Date(), Credito: "", TipoItem: "" } }
         $scope.maxSize = 10;
@@ -1771,7 +2064,7 @@ angular.module('gpca')
             $scope.GetAll($scope.obj);
         }
         $scope.filtrar = function () {
-            
+
             $scope.ObterPlanilha($scope.obj);
         }
     })
@@ -2362,5 +2655,127 @@ angular.module('gpca')
 
             $scope.ObterPlanilha($scope.obj);
         }
+    })
+    .controller('UsuariosCtrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, UsuarioService, $q, $http, $loading, $timeout) {
+
+        $loading.start('load');
+        var listUsers = UsuarioService.GetUsers();
+
+        $q.all([listUsers]).then(function (response) {
+            $scope.GetUsuarios = response[0].data;
+            $loading.finish('load');
+        });
+
+
+        $scope.editar = function (data) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Usuario/editar_usuarios.html',
+                controller: function ($scope, $uibModalInstance, usuarioSelected, $timeout) {
+
+                    $scope.obj = {};
+                    $scope.obj.cpfCnpj = usuarioSelected.cpfCnpj;
+                    $scope.obj.nome = usuarioSelected.nome;
+                    $scope.obj.email = usuarioSelected.email;
+                    $scope.obj.status = usuarioSelected.status == 'Ativo' ? true : false;
+                    $scope.alterar = function () {
+
+                        usuarioSelected = $scope.obj;
+                        usuarioSelected.status = $scope.obj.status.toString();
+                        console.log("usuario: " + JSON.stringify(usuarioSelected));
+
+                        UsuarioService.EditUser(usuarioSelected).then(function (response) {
+
+                            if (response.success) {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "Sucesso!",
+                                    text: response.message,
+                                    type: "success"
+                                });
+
+
+                                $timeout(function () {
+                                    window.location.reload();
+                                }, 2000);
+                            } else {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "Erro!",
+                                    text: response.message,
+                                    type: "error"
+                                });
+                            }
+                        }, function (error) {
+
+                        });
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    usuarioSelected: function () {
+                        return data;
+                    }
+                }
+            });
+        }
+
+        $scope.addUsuario = function (obj) {
+            $uibModal.open({
+                scope: $scope,
+                templateUrl: 'views/modal/Usuario/editar_usuarios.html',
+                controller: function ($scope, $uibModalInstance) {
+
+                    $scope.usuario = obj;
+                    $scope.alterar = function () {
+
+                        UsuarioService.CreateUser(obj).then(function () {
+                            $uibModalInstance.dismiss('dimiss');
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                text: "Usuário alterado com sucesso!",
+                                type: "success"
+                            });
+                        })
+
+                    }
+
+                    $scope.cancel = function () {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                },
+                windowClass: "animated fadeIn",
+                resolve: {
+                    usuarioSelected: function () {
+                        return obj;
+                    }
+                }
+            });
+        }
+
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+            .withDOM('<"html5buttons"B>lTfgitp')
+            .withButtons([
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]);
+
     })
     ;
