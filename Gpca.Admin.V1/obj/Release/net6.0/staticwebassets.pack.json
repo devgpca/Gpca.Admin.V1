@@ -6053,6 +6053,510 @@
       "PackagePath": "staticwebassets\\js\\ui-router\\angular-ui-router.min.js"
     },
     {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\bower.json",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\bower.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\amd.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\amd.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\app.css",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\app.css"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\bubble.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\bubble.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\charts.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\charts.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\charts.template.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\charts.template.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\commonjs.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\commonjs.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\dataset-override.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\dataset-override.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\scatter.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\scatter.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\stacked-bars.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\stacked-bars.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\tables.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\tables.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\tabs.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\tabs.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\ticks.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\ticks.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\examples\\xy.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\examples\\xy.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\package.json",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\package.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\29-tabs.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\29-tabs.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\29-tabs.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\29-tabs.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\51-pie-update-colours.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\51-pie-update-colours.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\51-pie-update-colours.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\51-pie-update-colours.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\54-not-enough-colours.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\54-not-enough-colours.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\54-not-enough-colours.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\54-not-enough-colours.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\57-hex-colours.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\57-hex-colours.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\57-hex-colours.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\57-hex-colours.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\bubble.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\bubble.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\bubble.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\bubble.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\charts.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\charts.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\charts.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\charts.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\configure-line-chart.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\configure-line-chart.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\configure-line-chart.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\configure-line-chart.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\custom-directive.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\custom-directive.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\custom-directive.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\custom-directive.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\dataset-override.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\dataset-override.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\dataset-override.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\dataset-override.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\horizontal-bar-chart.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\horizontal-bar-chart.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\horizontal-bar-chart.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\horizontal-bar-chart.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\options-override.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\options-override.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\options-override.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\options-override.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\scatter.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\scatter.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\fixtures\\scatter.png",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\fixtures\\scatter.png"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\test\\index.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\test\\index.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\.bower.json",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\.bower.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\bower.json",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\bower.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\composer.json",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\composer.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\package.json",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\package.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\AnimationCallbacks\\progress-bar.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\AnimationCallbacks\\progress-bar.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\bar-horizontal.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\bar-horizontal.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\bar-multi-axis.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\bar-multi-axis.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\bar-stacked.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\bar-stacked.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\bar.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\bar.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\bubble.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\bubble.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\combo-bar-line.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\combo-bar-line.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\data_label_combo-bar-line.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\data_label_combo-bar-line.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\different-point-sizes.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\different-point-sizes.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\doughnut.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\doughnut.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-cubicInterpolationMode.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-cubicInterpolationMode.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-customTooltips.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-customTooltips.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-legend.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-legend.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-logarithmic.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-logarithmic.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-multi-axis.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-multi-axis.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-multiline-labels.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-multiline-labels.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-non-numeric-y.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-non-numeric-y.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-skip-points.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-skip-points.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-stacked-area.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-stacked-area.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-stepped.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-stepped.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-x-axis-filter.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line-x-axis-filter.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\line.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\pie-customTooltips.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\pie-customTooltips.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\pie.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\pie.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\polar-area.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\polar-area.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\radar-skip-points.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\radar-skip-points.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\radar.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\radar.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\scatter-logX.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\scatter-logX.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\scatter-multi-axis.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\scatter-multi-axis.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\scatter.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\scatter.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\timeScale\\combo-time-scale.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\timeScale\\combo-time-scale.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\timeScale\\line-time-point-data.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\timeScale\\line-time-point-data.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\timeScale\\line-time-scale.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\timeScale\\line-time-scale.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\tooltip-hooks.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\bower_components\\chart.js\\samples\\tooltip-hooks.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular-chart.js\\tmp\\gradient.html",
+      "PackagePath": "staticwebassets\\node_modules\\angular-chart.js\\tmp\\gradient.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular\\angular-csp.css",
+      "PackagePath": "staticwebassets\\node_modules\\angular\\angular-csp.css"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular\\bower.json",
+      "PackagePath": "staticwebassets\\node_modules\\angular\\bower.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\angular\\package.json",
+      "PackagePath": "staticwebassets\\node_modules\\angular\\package.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\bower.json",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\bower.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\composer.json",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\composer.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\package.json",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\package.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\AnimationCallbacks\\progress-bar.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\AnimationCallbacks\\progress-bar.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\bar-horizontal.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\bar-horizontal.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\bar-multi-axis.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\bar-multi-axis.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\bar-stacked.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\bar-stacked.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\bar.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\bar.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\bubble.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\bubble.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\combo-bar-line.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\combo-bar-line.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\data_label_combo-bar-line.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\data_label_combo-bar-line.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\different-point-sizes.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\different-point-sizes.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\doughnut.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\doughnut.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line-cubicInterpolationMode.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line-cubicInterpolationMode.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line-customTooltips.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line-customTooltips.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line-legend.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line-legend.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line-logarithmic.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line-logarithmic.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line-multi-axis.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line-multi-axis.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line-multiline-labels.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line-multiline-labels.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line-non-numeric-y.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line-non-numeric-y.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line-skip-points.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line-skip-points.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line-stacked-area.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line-stacked-area.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line-stepped.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line-stepped.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line-x-axis-filter.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line-x-axis-filter.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\line.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\line.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\pie-customTooltips.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\pie-customTooltips.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\pie.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\pie.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\polar-area.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\polar-area.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\radar-skip-points.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\radar-skip-points.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\radar.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\radar.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\scatter-logX.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\scatter-logX.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\scatter-multi-axis.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\scatter-multi-axis.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\scatter.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\scatter.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\timeScale\\combo-time-scale.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\timeScale\\combo-time-scale.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\timeScale\\line-time-point-data.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\timeScale\\line-time-point-data.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\timeScale\\line-time-scale.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\timeScale\\line-time-scale.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chart.js\\samples\\tooltip-hooks.html",
+      "PackagePath": "staticwebassets\\node_modules\\chart.js\\samples\\tooltip-hooks.html"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chartjs-color-string\\package.json",
+      "PackagePath": "staticwebassets\\node_modules\\chartjs-color-string\\package.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\chartjs-color\\package.json",
+      "PackagePath": "staticwebassets\\node_modules\\chartjs-color\\package.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\color-convert\\node_modules\\color-name\\.eslintrc.json",
+      "PackagePath": "staticwebassets\\node_modules\\color-convert\\node_modules\\color-name\\.eslintrc.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\color-convert\\node_modules\\color-name\\package.json",
+      "PackagePath": "staticwebassets\\node_modules\\color-convert\\node_modules\\color-name\\package.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\color-convert\\package.json",
+      "PackagePath": "staticwebassets\\node_modules\\color-convert\\package.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\color-name\\package.json",
+      "PackagePath": "staticwebassets\\node_modules\\color-name\\package.json"
+    },
+    {
+      "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\node_modules\\moment\\package.json",
+      "PackagePath": "staticwebassets\\node_modules\\moment\\package.json"
+    },
+    {
       "Id": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\wwwroot\\resources\\sms_frases.json",
       "PackagePath": "staticwebassets\\resources\\sms_frases.json"
     },

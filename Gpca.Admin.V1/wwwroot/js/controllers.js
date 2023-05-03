@@ -1,293 +1,436 @@
 angular.module('gpca')
-    .controller('MainCtrl', function ($scope, constants, $localStorage) {
+    .controller('MainCtrl', function ($http, constants, $interval, $localStorage, SweetAlert) {
 
-        this.countries = [
-            { name: 'Amsterdam' },
-            { name: 'Washington' },
-            { name: 'Sydney' },
-            { name: 'Cairo' },
-            { name: 'Beijing' }];
 
-        this.getLocation = function (val) {
-            return $http.get('//maps.googleapis.com/maps/api/geocode/json', {
-                params: {
-                    address: val,
-                    sensor: false
-                }
-            }).then(function (response) {
-                return response.data.results.map(function (item) {
-                    return item.formatted_address;
-                });
-            });
-        };
+        // valida session ----------------------------------------------------------------
 
-        /**
-         * daterange - Used as initial model for data range picker in Advanced form view
-         */
-        this.daterange = { startDate: null, endDate: null };
+        var stopId = 0;
+        stopId = $interval(function () {
+            if ($localStorage.user != undefined) {
 
-        /**
-         * slideInterval - Interval for bootstrap Carousel, in milliseconds:
-         */
-        this.slideInterval = 5000;
+                var body = {
+                    'RefreshToken': $localStorage.user.refreshToken
+                };
 
-        /**
-         * tags - Used as advanced forms view in input tag control
-         */
+                $http.post(constants.UrlAuthApi + 'Auth/ValidateSession', body)
+                    .then(function (response) {
+                        if (!response.data.success) {
+                            SweetAlert.swal({
+                                title: "Ops!",
+                                type: "error",
+                                text: "Sua sessão expirou. Faça o login novamente."
+                            },
+                                function (isConfirm) {
+                                    if (isConfirm) {
+                                        $interval.cancel(stopId);
+                                        $localStorage.$reset();
+                                        window.location = "#/Login";
+                                    }
+                                });
+                        }
+                    }, function (error) {
+                        angular.forEach(error.data, function (value, index) {
+                            value;
+                        });
+                    });
+            } else {
+                $interval.cancel(stopId);
+            }
+        }, 90000); // 15min
 
-        this.tags = [
-            { text: 'Amsterdam' },
-            { text: 'Washington' },
-            { text: 'Sydney' },
-            { text: 'Cairo' },
-            { text: 'Beijing' }
-        ];
+        // -------------------------------------------------------------------------------
 
-        /**
-         * states - Data used in Advanced Form view for Chosen plugin
-         */
-        this.states = [
-            'Alabama',
-            'Alaska',
-            'Arizona',
-            'Arkansas',
-            'California',
-            'Colorado',
-            'Connecticut',
-            'Delaware',
-            'Florida',
-            'Georgia',
-            'Hawaii',
-            'Idaho',
-            'Illinois',
-            'Indiana',
-            'Iowa',
-            'Kansas',
-            'Kentucky',
-            'Louisiana',
-            'Maine',
-            'Maryland',
-            'Massachusetts',
-            'Michigan',
-            'Minnesota',
-            'Mississippi',
-            'Missouri',
-            'Montana',
-            'Nebraska',
-            'Nevada',
-            'New Hampshire',
-            'New Jersey',
-            'New Mexico',
-            'New York',
-            'North Carolina',
-            'North Dakota',
-            'Ohio',
-            'Oklahoma',
-            'Oregon',
-            'Pennsylvania',
-            'Rhode Island',
-            'South Carolina',
-            'South Dakota',
-            'Tennessee',
-            'Texas',
-            'Utah',
-            'Vermont',
-            'Virginia',
-            'Washington',
-            'West Virginia',
-            'Wisconsin',
-            'Wyoming'
-        ];
+    })
+    .controller('DashboardCtrl', function ($scope, DashboardService, RelatoriosService, $loading, $q) {
 
-        /**
-         * check's - Few variables for checkbox input used in iCheck plugin. Only for demo purpose
-         */
-        this.checkOne = true;
-        this.checkTwo = true;
-        this.checkThree = true;
-        this.checkFour = true;
+        // Filtros ---------------------------------------------------------------------------------------
 
-        /**
-         * knobs - Few variables for knob plugin used in Advanced Plugins view
-         */
-        this.knobOne = 75;
-        this.knobTwo = 25;
-        this.knobThree = 50;
+        $scope.selectedPeriodo = "";
+        $scope.itemSelectType = "";
+        $scope.tab = 1;
 
-        /**
-         * Variables used for Ui Elements view
-         */
-        this.bigTotalItems = 175;
-        this.bigCurrentPage = 1;
-        this.maxSize = 5;
-        this.singleModel = false;
-        this.radioModel = 'Middle';
-        this.checkModel = {
-            left: false,
-            middle: true,
-            right: false
-        };
+        RelatoriosService.GetProcessedReports().then(function (response) {
+            var data = response.data;
+            $scope.lstPeriodo = data;
+        });
 
-        /**
-         * groups - used for Collapse panels in Tabs and Panels view
-         */
-        this.groups = [
-            {
-                title: 'Dynamic Group Header - 1',
-                content: 'Dynamic Group Body - 1'
+        // -----------------------------------------------------------------------------------------------
+
+        // CHART-BAR.JS
+
+        const options = { style: 'currency', currency: 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 3 }
+        const formatter = new Intl.NumberFormat('pt-BR', options)
+
+        $scope.options = {
+            legend: {
+                display: true
             },
-            {
-                title: 'Dynamic Group Header - 2',
-                content: 'Dynamic Group Body - 2'
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        // Include a dollar sign in the ticks
+                        callback: function (value, index, values) {
+                            return formatter.format(value.toString());
+                        }
+                    }
+                }]
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        return tooltipItem.xLabel + ": " + formatter.format(tooltipItem.yLabel);
+                    },
+                },
             }
+        };
+        $scope.colors = ['#45b7cd', '#ff6384', '#ff8e72', '#8690dd', '#7560e9'];
+        $scope.labels = ['JV184', 'JV214', 'JV93', 'JV94', 'JV200', 'JV201', 'JV202'];
+        $scope.chSeries = ['01-Imobilizado', '02-Bens', '03-Servicos', '06-Locacao', '08-Locacao'];
+
+        $scope.data = [
+            [65, 59, 80, 81, 56, 55, 40],
+            [28, 48, 40, 19, 86, 27, 90],
+            [12, 59, 80, 81, 56, 55, 40],
+            [44, 48, 40, 19, 86, 27, 75],
+            [55, 48, 29, 11, 48, 87, '81.45']
         ];
 
-        /**
-         * alerts - used for dynamic alerts in Notifications and Tooltips view
-         */
-        this.alerts = [
-            { type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.' },
-            { type: 'success', msg: 'Well done! You successfully read this important alert message.' },
-            { type: 'info', msg: 'OK, You are done a great job man.' }
-        ];
 
-        /**
-         * addAlert, closeAlert  - used to manage alerts in Notifications and Tooltips view
-         */
-        this.addAlert = function () {
-            this.alerts.push({ msg: 'Another alert!' });
+
+        // END CHART ----------------------------------------------------------------------------
+
+        // CHART-LINE.JS ------------------------------------------------------------------------
+
+        $scope.options2 = {
+            legend: {
+                display: true
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        // Include a dollar sign in the ticks
+                        callback: function (value, index, values) {
+                            return formatter.format(value.toString());
+                        }
+                    }
+                }]
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        return formatter.format(tooltipItem.yLabel);
+                    },
+                },
+            }
         };
+        $scope.colors2 = ['#bfbcbb', '#ff6384', '#ff8e72'];
+        $scope.chSeries2 = ['Todos', 'Creditáveis', 'Não Creditáveis'];
+        $scope.labels2 = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        $scope.data2 = [];
 
-        this.closeAlert = function (index) {
-            this.alerts.splice(index, 1);
+        DashboardService.GetDahsLine().then(function (response) {
+            var data = response.data;
+
+            angular.forEach(data.ambos, function (value, key) {
+                if ($scope.data2[0] != undefined) {
+                    $scope.data2[0].push(value.volumeTotal);
+                } else {
+                    $scope.data2.push([value.volumeTotal]);
+                }
+            });
+
+            angular.forEach(data.creditaveis, function (value, key) {
+                if ($scope.data2[1] != undefined) {
+                    $scope.data2[1].push(value.volumeTotal);
+                } else {
+                    $scope.data2.push([value.volumeTotal]);
+                }
+            });
+
+            angular.forEach(data.naoCreditaveis, function (value, key) {
+                if ($scope.data2[2] != undefined) {
+                    $scope.data2[2].push(value.volumeTotal);
+                } else {
+                    $scope.data2.push([value.volumeTotal]);
+                }
+            });
+        });
+
+        // data3
+        $scope.options3 = {
+            legend: {
+                display: true
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        // Include a dollar sign in the ticks
+                        callback: function (value, index, values) {
+                            return formatter.format(value.toString());
+                        }
+                    }
+                }]
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        return formatter.format(tooltipItem.yLabel);
+                    },
+                },
+            }
         };
+        $scope.colors3 = ['#bfbcbb', '#ff6384', '#ff8e72', '#97bbcd', '#fdb45c', '#949fb1', '#fa8e90'];
+        $scope.chSeries3 = ['Vazio', '01 - imobilizado', '02 - Bens', '02 - Bens - importação', '03 - Serviços', '06 - Locação', '08 - Locação'];
+        $scope.labels3 = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        $scope.data3 = [];
 
-        /**
-         * randomStacked - used for progress bar (stacked type) in Badges adn Labels view
-         */
-        this.randomStacked = function () {
-            this.stacked = [];
-            var types = ['success', 'info', 'warning', 'danger'];
+        DashboardService.GetDahsLineItemtype().then(function (response) {
+            var data = response.data;
 
-            for (var i = 0, n = Math.floor((Math.random() * 4) + 1); i < n; i++) {
-                var index = Math.floor((Math.random() * 4));
-                this.stacked.push({
-                    value: Math.floor((Math.random() * 30) + 1),
-                    type: types[index]
+            angular.forEach(data.ambos, function (value, key) {
+
+                if (value.tipoItem == '' || value.tipoItem == null) {
+                    if ($scope.data3[0] != undefined) {
+                        $scope.data3[0].push(value.volumeTotal);
+                    } else {
+                        $scope.data3.push([value.volumeTotal]);
+                    }
+                } else if (value.tipoItem == '01 - imobilizado') {
+                    if ($scope.data3[1] != undefined) {
+                        $scope.data3[1].push(value.volumeTotal);
+                    } else {
+                        $scope.data3.push([value.volumeTotal]);
+                    }
+                } else if (value.tipoItem == '02 - Bens') {
+                    if ($scope.data3[2] != undefined) {
+                        $scope.data3[2].push(value.volumeTotal);
+                    } else {
+                        $scope.data3.push([value.volumeTotal]);
+                    }
+                } else if (value.tipoItem == '02 - Bens - importação') {
+                    if ($scope.data3[3] != undefined) {
+                        $scope.data3[3].push(value.volumeTotal);
+                    } else {
+                        $scope.data3.push([value.volumeTotal]);
+                    }
+                } else if (value.tipoItem == '03 - Serviços') {
+                    if ($scope.data3[4] != undefined) {
+                        $scope.data3[4].push(value.volumeTotal);
+                    } else {
+                        $scope.data3.push([value.volumeTotal]);
+                    }
+                } else if (value.tipoItem == '06 - Locação') {
+                    if ($scope.data3[5] != undefined) {
+                        $scope.data3[5].push(value.volumeTotal);
+                    } else {
+                        $scope.data3.push([value.volumeTotal]);
+                    }
+                } else if (value.tipoItem == '08 - Locação') {
+                    if ($scope.data3[6] != undefined) {
+                        $scope.data3[6].push(value.volumeTotal);
+                    } else {
+                        $scope.data3.push([value.volumeTotal]);
+                    }
+                }
+
+
+
+                //if ($scope.data3[key] != undefined) {
+                //    $scope.data3[key].push(value.volumeTotal);
+                //} else {
+                //    $scope.data3.push([value.volumeTotal]);
+                //}
+            });
+        });
+
+        // END CHART ----------------------------------------------------------------------------
+
+
+        // CHART-DOUGHNUT.JS --------------------------------------------------------------------
+
+        $scope.montaDoughnuts = function () {
+
+            $scope.options4 = {
+                responsive: true,
+                legend: {
+                    display: false
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return data.labels[tooltipItem.index] + ': ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
+                        },
+                    },
+                },
+                title: {
+                    display: true,
+                    text: 'Valores das compras por CFOP'
+                }
+            };
+
+            $scope.options5 = {
+                responsive: true,
+                legend: {
+                    display: true
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return data.labels[tooltipItem.index] + ': ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
+                        },
+                    },
+                },
+                title: {
+                    display: false,
+                    text: 'Valores das compras por Natureza do Crédito'
+                }
+            };
+
+            $scope.options6 = {
+                responsive: true,
+                legend: {
+                    display: true
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return data.labels[tooltipItem.index] + ': ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
+                        },
+                    },
+                },
+                title: {
+                    display: true,
+                    text: 'Valores das compras por Consórcios'
+                }
+            };
+
+            $scope.options7 = {
+                responsive: true,
+                legend: {
+                    display: true
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return data.labels[tooltipItem.index] + ': ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
+                        },
+                    },
+                },
+                title: {
+                    display: true,
+                    text: 'Valores das compras por JVs'
+                }
+            };
+
+            $scope.labels4 = [];
+            $scope.data4 = [];
+
+            $scope.labels5 = [];
+            $scope.data5 = [];
+
+            $scope.labels6 = [];
+            $scope.data6 = [];
+
+            $scope.labels7 = [];
+            $scope.data7 = [];
+
+            var periodo = '01/' + $scope.selectedPeriodo;
+            var GetDashs = DashboardService.GetDashDoughnuts(periodo);
+
+            
+            $q.all([GetDashs]).then(function (response) {
+                var data = response[0].data;
+
+                angular.forEach(data.cfoPs, function (Value, Key) {
+                    $scope.labels4.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                    $scope.data4.push(Value.volumeTotal);
                 });
-            }
-        };
-        /**
-         * initial run for random stacked value
-         */
-        this.randomStacked();
 
-        /**
-         * summernoteText - used for Summernote plugin
-         */
-        this.summernoteText = ['<h3>Hello Jonathan! </h3>',
-            '<p>dummy text of the printing and typesetting industry. <strong>Lorem Ipsum has been the dustrys</strong> standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more',
-            'recently with</p>'].join('');
+                angular.forEach(data.tipoItems, function (Value, Key) {
+                    $scope.labels5.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                    $scope.data5.push(Value.volumeTotal);
+                });
 
-        /**
-         * General variables for Peity Charts
-         * used in many view so this is in Main controller
-         */
-        this.BarChart = {
-            data: [5, 3, 9, 6, 5, 9, 7, 3, 5, 2, 4, 7, 3, 2, 7, 9, 6, 4, 5, 7, 3, 2, 1, 0, 9, 5, 6, 8, 3, 2, 1],
-            options: {
-                fill: ["#1ab394", "#d7d7d7"],
-                width: 100
-            }
-        };
+                angular.forEach(data.consorcios, function (Value, Key) {
+                    $scope.labels6.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                    $scope.data6.push(Value.volumeTotal);
+                });
 
-        this.BarChart2 = {
-            data: [5, 3, 9, 6, 5, 9, 7, 3, 5, 2],
-            options: {
-                fill: ["#1ab394", "#d7d7d7"]
-            }
-        };
+                angular.forEach(data.jVs, function (Value, Key) {
+                    $scope.labels7.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                    $scope.data7.push(Value.volumeTotal);
 
-        this.BarChart3 = {
-            data: [5, 3, 2, -1, -3, -2, 2, 3, 5, 2],
-            options: {
-                fill: ["#1ab394", "#d7d7d7"]
-            }
-        };
+                    $loading.finish('load');
+                });
 
-        this.LineChart = {
-            data: [5, 9, 7, 3, 5, 2, 5, 3, 9, 6, 5, 9, 4, 7, 3, 2, 9, 8, 7, 4, 5, 1, 2, 9, 5, 4, 7],
-            options: {
-                fill: '#1ab394',
-                stroke: '#169c81',
-                width: 64
-            }
-        };
+                
+            });
+        }
 
-        this.LineChart2 = {
-            data: [3, 2, 9, 8, 47, 4, 5, 1, 2, 9, 5, 4, 7],
-            options: {
-                fill: '#1ab394',
-                stroke: '#169c81',
-                width: 64
-            }
-        };
+        // END CHART ----------------------------------------------------------------------------
 
-        this.LineChart3 = {
-            data: [5, 3, 2, -1, -3, -2, 2, 3, 5, 2],
-            options: {
-                fill: '#1ab394',
-                stroke: '#169c81',
-                width: 64
-            }
-        };
 
-        this.LineChart4 = {
-            data: [5, 3, 9, 6, 5, 9, 7, 3, 5, 2],
-            options: {
-                fill: '#1ab394',
-                stroke: '#169c81',
-                width: 64
-            }
-        };
+        // Volume Total -------------------------------------------------------------------------
 
-        this.PieChart = {
-            data: [1, 5],
-            options: {
-                fill: ["#1ab394", "#d7d7d7"]
-            }
-        };
+        DashboardService.GetDahsTotal().then(function (response) {
+            var data = response.data;
+            $scope.volumeTotal = data.volumeTotal;
+        });
 
-        this.PieChart2 = {
-            data: [226, 360],
-            options: {
-                fill: ["#1ab394", "#d7d7d7"]
+        // --------------------------------------------------------------------------------------
+
+        // Volume Total Mensal ------------------------------------------------------------------
+
+        $scope.GetTotalMensal = function () {
+            var data = '01/' + $scope.selectedPeriodo;
+            DashboardService.GetDahsTotalMensal(data).then(function (response) {
+                var data = response.data;
+
+                $scope.volumeTotalMensalCreditavel = data.volumeTotalCreditavel;
+                $scope.volumeTotalMensalNaoCreditavel = data.volumeTotalNaoCreditavel;
+            });
+        }
+
+        // --------------------------------------------------------------------------------------
+
+        $scope.chosenTab = function (tab) {
+            $loading.start('load');
+
+            $scope.tab = tab;
+            $scope.selectedPeriodo = $scope.lstPeriodo[0].mesCompetencia;
+            if (tab == 2 && $scope.selectedPeriodo != "") {
+                $scope.montaDoughnuts();
+                $scope.GetTotalMensal();
             }
-        };
-        this.PieChart3 = {
-            data: [0.52, 1.561],
-            options: {
-                fill: ["#1ab394", "#d7d7d7"]
-            }
-        };
-        this.PieChart4 = {
-            data: [1, 4],
-            options: {
-                fill: ["#1ab394", "#d7d7d7"]
-            }
-        };
-        this.PieChart5 = {
-            data: [226, 134],
-            options: {
-                fill: ["#1ab394", "#d7d7d7"]
-            }
-        };
-        this.PieChart6 = {
-            data: [0.52, 1.041],
-            options: {
-                fill: ["#1ab394", "#d7d7d7"]
-            }
-        };
+        }
+
+        $scope.seletedDate = function () {
+            $loading.start('load');
+
+            $scope.montaDoughnuts();
+            $scope.GetTotalMensal();
+        }
+
     })
     .controller('LoginCtrl', function ($scope, toaster, AuthService, $loading, $localStorage) {
         $onInit = function () {

@@ -804,3 +804,79 @@ angular.module('gpca')
         }
 
     })
+    .service('DashboardService', function ($http, constants, $localStorage) {
+
+        this.GetDahsLine = function () {
+            var params = { headers: { 'RefreshToken': $localStorage.user.refreshToken } };
+            var obj = {};
+
+            return $http.post(constants.UrlRelatorioApi + 'Dashboard/GetDashLine', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetDahsLineItemtype = function () {
+            var params = { headers: { 'RefreshToken': $localStorage.user.refreshToken } };
+            var obj = {};
+
+            return $http.post(constants.UrlRelatorioApi + 'Dashboard/GetDashLineItemType', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetDahsTotal = function () {
+            var params = { headers: { 'RefreshToken': $localStorage.user.refreshToken } };
+            var obj = {};
+
+            return $http.post(constants.UrlRelatorioApi + 'Dashboard/GetTotal', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetDahsTotalMensal = function (data) {
+            var params = { headers: { 'RefreshToken': $localStorage.user.refreshToken } };
+            var obj = {
+                dataCompetencia: data
+            };
+
+            return $http.post(constants.UrlRelatorioApi + 'Dashboard/GetTotalMensal', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
+        this.GetDashDoughnuts = function (data) {
+            var params = { headers: { 'RefreshToken': $localStorage.user.refreshToken } };
+            var obj = {
+                dataCompetencia: data
+            };
+
+            return $http.post(constants.UrlRelatorioApi + 'Dashboard/GetDashDoughnuts', obj, params)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+    })

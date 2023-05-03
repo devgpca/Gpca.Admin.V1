@@ -13,7 +13,8 @@
         'ui.utils',
         'oitozero.ngSweetAlert',
         'ivh.treeview',
-        'darthwade.loading'
+        'darthwade.loading',
+        'chart.js'
     ])
         .config(function (ivhTreeviewOptionsProvider) {
         ivhTreeviewOptionsProvider.set({
