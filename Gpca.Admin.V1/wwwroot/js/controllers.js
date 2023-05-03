@@ -1596,7 +1596,7 @@ angular.module('gpca')
                     if (response[0] == undefined) {
                         $timeout(function () {
                             window.location.reload();
-                        }, 2000);
+                        }, 10000);
 
                     } else {
 
@@ -1680,7 +1680,7 @@ angular.module('gpca')
             showWeeks: true
         };
 
-        $scope.format = 'MMMM'
+        $scope.format = 'MM/yyyy'
 
         $scope.toggleMin = function () {
             $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
@@ -1779,7 +1779,14 @@ angular.module('gpca')
         $scope.GetAll = function () {
             $loading.start('load');
             ArquivoService.GetAll().then(function (data) {
-                $scope.lst = data;
+                $scope.lstImportados = data.filter(function (x) {
+                    return x.importado == true;
+                })
+
+                $scope.lst = data.filter(function (x) {
+                    return x.importado == false;
+                })
+
                 $loading.finish('load');
             });
         }
@@ -1788,6 +1795,7 @@ angular.module('gpca')
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
+            .withOption('order', [0, 'desc'])
             .withButtons([
                 { extend: 'copy' },
                 { extend: 'csv' },
@@ -2026,17 +2034,17 @@ angular.module('gpca')
                 confirmButtonText: "Sim!",
                 cancelButtonText: "Não!",
                 closeOnConfirm: false,
-                closeOnCancel: false
+                closeOnCancel: false,
+                showLoaderOnConfirm: true
             },
                 function (isConfirm) {
                     if (isConfirm) {
+                        SweetAlert.swal({
+                            title: "Arquivos enviados!",
+                            text: "Os arquivos enviados com sucesso!",
+                            type: "success"
+                        });
                         ArquivoService.Create(formData).then(function (data) {
-                            SweetAlert.swal({
-                                title: "Arquivos enviados!",
-                                text: "Os arquivos enviados com sucesso!",
-                                type: "success"
-                            });
-
                             $scope.GetAll();
                         })
 
@@ -2065,6 +2073,37 @@ angular.module('gpca')
                 console.log("Erro Importaão-GetAll: " + error);
             });
         };
+
+        $scope.excluir = function (data) {
+            SweetAlert.swal({
+                title: "Deseja excluir o arquivo" + data.nomeArquivo + " ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Sim, excluir!",
+                cancelButtonText: "Não, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        ArquivoService.Delete(data).then(function (data) {
+                            SweetAlert.swal({
+                                title: "Excluído!",
+                                text: "o arquivo foi excluido com sucesso",
+                                type: "success"
+                            });
+                            $scope.GetAll();
+                        })
+                    } else {
+                        SweetAlert.swal({
+                            title: "Cancelado!",
+                            text: "Você cancelou a alteração do registro",
+                            type: "error"
+                        });
+                    }
+                });
+        }
     })
     .controller('ManualH01Ctrl', function ($scope, $uibModal, SweetAlert, DTOptionsBuilder, ManualService, $q, $http, $loading, SweetAlert) {
         $scope.obj = { pageNumber: 1, pageSize: 10, "filtroManual": { MesCompetencia: new Date(), Credito: "", TipoItem: "" } }
