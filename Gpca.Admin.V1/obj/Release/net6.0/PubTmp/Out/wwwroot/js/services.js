@@ -139,7 +139,7 @@ angular.module('gpca')
         };
 
         this.Create = function (obj) {
-            $http.post(constants.UrlRelatorioApi + 'Consorcio/Create', obj , params)
+            $http.post(constants.UrlRelatorioApi + 'Consorcio/Create', obj, params)
                 .then(function (response) {
                     return response;
                 }, function (error) {
@@ -651,6 +651,18 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.Delete = function (obj) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoUpload/Delete', obj, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        }
+
     })
     .service('ManualService', function ($http, constants, $localStorage) {
 
