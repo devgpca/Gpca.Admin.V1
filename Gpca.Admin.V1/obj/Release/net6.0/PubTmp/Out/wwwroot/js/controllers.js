@@ -43,7 +43,7 @@ angular.module('gpca')
     })
     .controller('DashboardCtrl', function ($scope, DashboardService, RelatoriosService, $loading, $q) {
 
-        // Filtros ---------------------------------------------------------------------------------------
+        // Filtros -------------------------------------------------------------------------------
 
         $scope.selectedPeriodo = "";
         $scope.itemSelectType = "";
@@ -54,9 +54,9 @@ angular.module('gpca')
             $scope.lstPeriodo = data;
         });
 
-        // -----------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------
 
-        // CHART-BAR.JS
+        // CHART-BAR.JS - exemplo ----------------------------------------------------------------
 
         const options = { style: 'currency', currency: 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 3 }
         const formatter = new Intl.NumberFormat('pt-BR', options)
@@ -97,151 +97,149 @@ angular.module('gpca')
 
 
 
-        // END CHART ----------------------------------------------------------------------------
+        // END CHART-BAR.JS ---------------------------------------------------------------------
 
         // CHART-LINE.JS ------------------------------------------------------------------------
 
-        $scope.options2 = {
-            legend: {
-                display: true
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        // Include a dollar sign in the ticks
-                        callback: function (value, index, values) {
-                            return formatter.format(value.toString());
+        $scope.montaDashsLine = function () {
+            $loading.start('load');
+
+            $scope.options2 = {
+                legend: {
+                    display: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            // Include a dollar sign in the ticks
+                            callback: function (value, index, values) {
+                                return formatter.format(value.toString());
+                            }
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return formatter.format(tooltipItem.yLabel);
+                        },
+                    },
+                }
+            };
+            $scope.colors2 = ['#bfbcbb', '#ff6384', '#ff8e72'];
+            $scope.chSeries2 = ['Todos', 'Creditáveis', 'Não Creditáveis'];
+            $scope.labels2 = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            $scope.data2 = [];
+
+            DashboardService.GetDahsLine().then(function (response) {
+                var data = response.data;
+
+                angular.forEach(data.ambos, function (value, key) {
+                    if ($scope.data2[0] != undefined) {
+                        $scope.data2[0].push(value.volumeTotal);
+                    } else {
+                        $scope.data2.push([value.volumeTotal]);
+                    }
+                });
+
+                angular.forEach(data.creditaveis, function (value, key) {
+                    if ($scope.data2[1] != undefined) {
+                        $scope.data2[1].push(value.volumeTotal);
+                    } else {
+                        $scope.data2.push([value.volumeTotal]);
+                    }
+                });
+
+                angular.forEach(data.naoCreditaveis, function (value, key) {
+                    if ($scope.data2[2] != undefined) {
+                        $scope.data2[2].push(value.volumeTotal);
+                    } else {
+                        $scope.data2.push([value.volumeTotal]);
+                    }
+                });
+            });
+
+            // data3
+            $scope.options3 = {
+                legend: {
+                    display: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            // Include a dollar sign in the ticks
+                            callback: function (value, index, values) {
+                                return formatter.format(value.toString());
+                            }
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return formatter.format(tooltipItem.yLabel);
+                        },
+                    },
+                }
+            };
+            $scope.colors3 = ['#bfbcbb', '#ff6384', '#ff8e72', '#97bbcd', '#fdb45c', '#949fb1', '#fa8e90'];
+            $scope.chSeries3 = ['Vazio', '01 - imobilizado', '02 - Bens', '02 - Bens - importação', '03 - Serviços', '06 - Locação', '08 - Locação'];
+            $scope.labels3 = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            $scope.data3 = [];
+
+            DashboardService.GetDahsLineItemtype().then(function (response) {
+                var data = response.data;
+
+                angular.forEach(data.ambos, function (value, key) {
+
+                    if (value.tipoItem == '' || value.tipoItem == null) {
+                        if ($scope.data3[0] != undefined) {
+                            $scope.data3[0].push(value.volumeTotal);
+                        } else {
+                            $scope.data3.push([value.volumeTotal]);
+                        }
+                    } else if (value.tipoItem == '01 - imobilizado') {
+                        if ($scope.data3[1] != undefined) {
+                            $scope.data3[1].push(value.volumeTotal);
+                        } else {
+                            $scope.data3.push([value.volumeTotal]);
+                        }
+                    } else if (value.tipoItem == '02 - Bens') {
+                        if ($scope.data3[2] != undefined) {
+                            $scope.data3[2].push(value.volumeTotal);
+                        } else {
+                            $scope.data3.push([value.volumeTotal]);
+                        }
+                    } else if (value.tipoItem == '02 - Bens - importação') {
+                        if ($scope.data3[3] != undefined) {
+                            $scope.data3[3].push(value.volumeTotal);
+                        } else {
+                            $scope.data3.push([value.volumeTotal]);
+                        }
+                    } else if (value.tipoItem == '03 - Serviços') {
+                        if ($scope.data3[4] != undefined) {
+                            $scope.data3[4].push(value.volumeTotal);
+                        } else {
+                            $scope.data3.push([value.volumeTotal]);
+                        }
+                    } else if (value.tipoItem == '06 - Locação') {
+                        if ($scope.data3[5] != undefined) {
+                            $scope.data3[5].push(value.volumeTotal);
+                        } else {
+                            $scope.data3.push([value.volumeTotal]);
+                        }
+                    } else if (value.tipoItem == '08 - Locação') {
+                        if ($scope.data3[6] != undefined) {
+                            $scope.data3[6].push(value.volumeTotal);
+                        } else {
+                            $scope.data3.push([value.volumeTotal]);
                         }
                     }
-                }]
-            },
-            tooltips: {
-                callbacks: {
-                    label: function (tooltipItem, data) {
-                        return formatter.format(tooltipItem.yLabel);
-                    },
-                },
-            }
-        };
-        $scope.colors2 = ['#bfbcbb', '#ff6384', '#ff8e72'];
-        $scope.chSeries2 = ['Todos', 'Creditáveis', 'Não Creditáveis'];
-        $scope.labels2 = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        $scope.data2 = [];
 
-        DashboardService.GetDahsLine().then(function (response) {
-            var data = response.data;
-
-            angular.forEach(data.ambos, function (value, key) {
-                if ($scope.data2[0] != undefined) {
-                    $scope.data2[0].push(value.volumeTotal);
-                } else {
-                    $scope.data2.push([value.volumeTotal]);
-                }
+                    $loading.finish('load');
+                });
             });
-
-            angular.forEach(data.creditaveis, function (value, key) {
-                if ($scope.data2[1] != undefined) {
-                    $scope.data2[1].push(value.volumeTotal);
-                } else {
-                    $scope.data2.push([value.volumeTotal]);
-                }
-            });
-
-            angular.forEach(data.naoCreditaveis, function (value, key) {
-                if ($scope.data2[2] != undefined) {
-                    $scope.data2[2].push(value.volumeTotal);
-                } else {
-                    $scope.data2.push([value.volumeTotal]);
-                }
-            });
-        });
-
-        // data3
-        $scope.options3 = {
-            legend: {
-                display: true
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        // Include a dollar sign in the ticks
-                        callback: function (value, index, values) {
-                            return formatter.format(value.toString());
-                        }
-                    }
-                }]
-            },
-            tooltips: {
-                callbacks: {
-                    label: function (tooltipItem, data) {
-                        return formatter.format(tooltipItem.yLabel);
-                    },
-                },
-            }
-        };
-        $scope.colors3 = ['#bfbcbb', '#ff6384', '#ff8e72', '#97bbcd', '#fdb45c', '#949fb1', '#fa8e90'];
-        $scope.chSeries3 = ['Vazio', '01 - imobilizado', '02 - Bens', '02 - Bens - importação', '03 - Serviços', '06 - Locação', '08 - Locação'];
-        $scope.labels3 = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        $scope.data3 = [];
-
-        DashboardService.GetDahsLineItemtype().then(function (response) {
-            var data = response.data;
-
-            angular.forEach(data.ambos, function (value, key) {
-
-                if (value.tipoItem == '' || value.tipoItem == null) {
-                    if ($scope.data3[0] != undefined) {
-                        $scope.data3[0].push(value.volumeTotal);
-                    } else {
-                        $scope.data3.push([value.volumeTotal]);
-                    }
-                } else if (value.tipoItem == '01 - imobilizado') {
-                    if ($scope.data3[1] != undefined) {
-                        $scope.data3[1].push(value.volumeTotal);
-                    } else {
-                        $scope.data3.push([value.volumeTotal]);
-                    }
-                } else if (value.tipoItem == '02 - Bens') {
-                    if ($scope.data3[2] != undefined) {
-                        $scope.data3[2].push(value.volumeTotal);
-                    } else {
-                        $scope.data3.push([value.volumeTotal]);
-                    }
-                } else if (value.tipoItem == '02 - Bens - importação') {
-                    if ($scope.data3[3] != undefined) {
-                        $scope.data3[3].push(value.volumeTotal);
-                    } else {
-                        $scope.data3.push([value.volumeTotal]);
-                    }
-                } else if (value.tipoItem == '03 - Serviços') {
-                    if ($scope.data3[4] != undefined) {
-                        $scope.data3[4].push(value.volumeTotal);
-                    } else {
-                        $scope.data3.push([value.volumeTotal]);
-                    }
-                } else if (value.tipoItem == '06 - Locação') {
-                    if ($scope.data3[5] != undefined) {
-                        $scope.data3[5].push(value.volumeTotal);
-                    } else {
-                        $scope.data3.push([value.volumeTotal]);
-                    }
-                } else if (value.tipoItem == '08 - Locação') {
-                    if ($scope.data3[6] != undefined) {
-                        $scope.data3[6].push(value.volumeTotal);
-                    } else {
-                        $scope.data3.push([value.volumeTotal]);
-                    }
-                }
-
-
-
-                //if ($scope.data3[key] != undefined) {
-                //    $scope.data3[key].push(value.volumeTotal);
-                //} else {
-                //    $scope.data3.push([value.volumeTotal]);
-                //}
-            });
-        });
+        }
 
         // END CHART ----------------------------------------------------------------------------
 
@@ -263,7 +261,7 @@ angular.module('gpca')
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItem, data) {
-                            return data.labels[tooltipItem.index] + ': ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
+                            return data.labels[tooltipItem.index] + ' : ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
                         },
                     },
                 },
@@ -286,7 +284,7 @@ angular.module('gpca')
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItem, data) {
-                            return data.labels[tooltipItem.index] + ': ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
+                            return data.labels[tooltipItem.index] + ' : ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
                         },
                     },
                 },
@@ -309,7 +307,7 @@ angular.module('gpca')
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItem, data) {
-                            return data.labels[tooltipItem.index] + ': ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
+                            return data.labels[tooltipItem.index] + ' : ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
                         },
                     },
                 },
@@ -332,13 +330,59 @@ angular.module('gpca')
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItem, data) {
-                            return data.labels[tooltipItem.index] + ': ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
+                            return data.labels[tooltipItem.index] + ' : ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
                         },
                     },
                 },
                 title: {
                     display: true,
                     text: 'Valores das compras por JVs'
+                }
+            };
+
+            $scope.options8 = {
+                responsive: true,
+                legend: {
+                    display: false
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return data.labels[tooltipItem.index] + ' : ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
+                        },
+                    },
+                },
+                title: {
+                    display: true,
+                    text: 'Valores das compras por Fornecedores'
+                }
+            };
+
+            $scope.options9 = {
+                responsive: true,
+                legend: {
+                    display: false
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return data.labels[tooltipItem.index] + ' : ' + formatter.format(data.datasets[0].data[tooltipItem.index]);
+                        },
+                    },
+                },
+                title: {
+                    display: true,
+                    text: 'Valores das compras por Meta Objetos'
                 }
             };
 
@@ -353,6 +397,12 @@ angular.module('gpca')
 
             $scope.labels7 = [];
             $scope.data7 = [];
+
+            $scope.labels8 = [];
+            $scope.data8 = [];
+
+            $scope.labels9 = [];
+            $scope.data9 = [];
 
             var periodo = '01/' + $scope.selectedPeriodo;
             var GetDashs = DashboardService.GetDashDoughnuts(periodo);
@@ -379,6 +429,16 @@ angular.module('gpca')
                 angular.forEach(data.jVs, function (Value, Key) {
                     $scope.labels7.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
                     $scope.data7.push(Value.volumeTotal);
+                });
+
+                angular.forEach(data.fornecedores, function (Value, Key) {
+                    $scope.labels8.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                    $scope.data8.push(Value.volumeTotal);
+                });
+
+                angular.forEach(data.metaObjetos, function (Value, Key) {
+                    $scope.labels9.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                    $scope.data9.push(Value.volumeTotal);
 
                     $loading.finish('load');
                 });
@@ -413,6 +473,8 @@ angular.module('gpca')
 
         // --------------------------------------------------------------------------------------
 
+        $scope.montaDashsLine();
+
         $scope.chosenTab = function (tab) {
             $loading.start('load');
 
@@ -421,6 +483,8 @@ angular.module('gpca')
             if (tab == 2 && $scope.selectedPeriodo != "") {
                 $scope.montaDoughnuts();
                 $scope.GetTotalMensal();
+            } else {
+                $scope.montaDashsLine();
             }
         }
 
