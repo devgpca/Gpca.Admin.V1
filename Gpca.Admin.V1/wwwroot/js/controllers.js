@@ -1,9 +1,10 @@
 angular.module('gpca')
-    .controller('MainCtrl', function ($http, constants, $interval, $localStorage, SweetAlert) {
+    .controller('MainCtrl', function ($scope, $http, constants, $interval, $localStorage, SweetAlert) {
 
 
         // valida session ----------------------------------------------------------------
 
+        $scope.SessionExpired = false;
         var stopId = 0;
         stopId = $interval(function () {
             if ($localStorage.user != undefined) {
@@ -15,6 +16,7 @@ angular.module('gpca')
                 $http.post(constants.UrlAuthApi + 'Auth/ValidateSession', body)
                     .then(function (response) {
                         if (!response.data.success) {
+                            $scope.SessionExpired = true;
                             SweetAlert.swal({
                                 title: "Ops!",
                                 type: "error",
@@ -38,13 +40,19 @@ angular.module('gpca')
             }
         }, 90000); // 15min
 
+        if ($scope.SessionExpired) {
+            window.location = "#/Login";
+        }
+
         // -------------------------------------------------------------------------------
 
     })
-    .controller('DashboardCtrl', function ($scope, DashboardService, RelatoriosService, $loading, $q) {
+    .controller('DashboardCtrl', function ($scope, DashboardService, RelatoriosService, $loading, $q, SweetAlert) {
 
         // Filtros -------------------------------------------------------------------------------
 
+        $scope.lstPeriodoAnual = [];
+        $scope.selectedPeriodoAno = "";
         $scope.selectedPeriodo = "";
         $scope.itemSelectType = "";
         $scope.tab = 1;
@@ -52,6 +60,18 @@ angular.module('gpca')
         RelatoriosService.GetProcessedReports().then(function (response) {
             var data = response.data;
             $scope.lstPeriodo = data;
+
+            var txt = "";
+            angular.forEach(data, function (value, key) {
+                if (txt != value.mesCompetencia.substr(3, 4)) {
+                    txt = value.mesCompetencia.substr(3, 4);
+                    $scope.lstPeriodoAnual.push({ ano: txt });
+                }
+            });
+
+            $scope.selectedPeriodoAno = $scope.lstPeriodoAnual[$scope.lstPeriodoAnual.length - 1].ano;
+            $scope.montaDashsLine();
+            $scope.montaTotalAnual();
         });
 
         // ---------------------------------------------------------------------------------------
@@ -131,32 +151,36 @@ angular.module('gpca')
             $scope.labels2 = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
             $scope.data2 = [];
 
-            DashboardService.GetDahsLine().then(function (response) {
+            DashboardService.GetDahsLine($scope.selectedPeriodoAno).then(function (response) {
                 var data = response.data;
 
-                angular.forEach(data.ambos, function (value, key) {
-                    if ($scope.data2[0] != undefined) {
-                        $scope.data2[0].push(value.volumeTotal);
-                    } else {
-                        $scope.data2.push([value.volumeTotal]);
-                    }
-                });
+                if (data != null) {
+                    angular.forEach(data.ambos, function (value, key) {
+                        if ($scope.data2[0] != undefined) {
+                            $scope.data2[0].push(value.volumeTotal);
+                        } else {
+                            $scope.data2.push([value.volumeTotal]);
+                        }
+                    });
 
-                angular.forEach(data.creditaveis, function (value, key) {
-                    if ($scope.data2[1] != undefined) {
-                        $scope.data2[1].push(value.volumeTotal);
-                    } else {
-                        $scope.data2.push([value.volumeTotal]);
-                    }
-                });
+                    angular.forEach(data.creditaveis, function (value, key) {
+                        if ($scope.data2[1] != undefined) {
+                            $scope.data2[1].push(value.volumeTotal);
+                        } else {
+                            $scope.data2.push([value.volumeTotal]);
+                        }
+                    });
 
-                angular.forEach(data.naoCreditaveis, function (value, key) {
-                    if ($scope.data2[2] != undefined) {
-                        $scope.data2[2].push(value.volumeTotal);
-                    } else {
-                        $scope.data2.push([value.volumeTotal]);
-                    }
-                });
+                    angular.forEach(data.naoCreditaveis, function (value, key) {
+                        if ($scope.data2[2] != undefined) {
+                            $scope.data2[2].push(value.volumeTotal);
+                        } else {
+                            $scope.data2.push([value.volumeTotal]);
+                        }
+                    });
+                }
+
+                $loading.finish('load');
             });
 
             // data3
@@ -187,57 +211,61 @@ angular.module('gpca')
             $scope.labels3 = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
             $scope.data3 = [];
 
-            DashboardService.GetDahsLineItemtype().then(function (response) {
+            DashboardService.GetDahsLineItemtype($scope.selectedPeriodoAno).then(function (response) {
                 var data = response.data;
 
-                angular.forEach(data.ambos, function (value, key) {
+                if (data != null) {
+                    angular.forEach(data.ambos, function (value, key) {
 
-                    if (value.tipoItem == '' || value.tipoItem == null) {
-                        if ($scope.data3[0] != undefined) {
-                            $scope.data3[0].push(value.volumeTotal);
-                        } else {
-                            $scope.data3.push([value.volumeTotal]);
+                        if (value.tipoItem == '' || value.tipoItem == null) {
+                            if ($scope.data3[0] != undefined) {
+                                $scope.data3[0].push(value.volumeTotal);
+                            } else {
+                                $scope.data3.push([value.volumeTotal]);
+                            }
+                        } else if (value.tipoItem == '01 - imobilizado') {
+                            if ($scope.data3[1] != undefined) {
+                                $scope.data3[1].push(value.volumeTotal);
+                            } else {
+                                $scope.data3.push([value.volumeTotal]);
+                            }
+                        } else if (value.tipoItem == '02 - Bens') {
+                            if ($scope.data3[2] != undefined) {
+                                $scope.data3[2].push(value.volumeTotal);
+                            } else {
+                                $scope.data3.push([value.volumeTotal]);
+                            }
+                        } else if (value.tipoItem == '02 - Bens - importação') {
+                            if ($scope.data3[3] != undefined) {
+                                $scope.data3[3].push(value.volumeTotal);
+                            } else {
+                                $scope.data3.push([value.volumeTotal]);
+                            }
+                        } else if (value.tipoItem == '03 - Serviços') {
+                            if ($scope.data3[4] != undefined) {
+                                $scope.data3[4].push(value.volumeTotal);
+                            } else {
+                                $scope.data3.push([value.volumeTotal]);
+                            }
+                        } else if (value.tipoItem == '06 - Locação') {
+                            if ($scope.data3[5] != undefined) {
+                                $scope.data3[5].push(value.volumeTotal);
+                            } else {
+                                $scope.data3.push([value.volumeTotal]);
+                            }
+                        } else if (value.tipoItem == '08 - Locação') {
+                            if ($scope.data3[6] != undefined) {
+                                $scope.data3[6].push(value.volumeTotal);
+                            } else {
+                                $scope.data3.push([value.volumeTotal]);
+                            }
                         }
-                    } else if (value.tipoItem == '01 - imobilizado') {
-                        if ($scope.data3[1] != undefined) {
-                            $scope.data3[1].push(value.volumeTotal);
-                        } else {
-                            $scope.data3.push([value.volumeTotal]);
-                        }
-                    } else if (value.tipoItem == '02 - Bens') {
-                        if ($scope.data3[2] != undefined) {
-                            $scope.data3[2].push(value.volumeTotal);
-                        } else {
-                            $scope.data3.push([value.volumeTotal]);
-                        }
-                    } else if (value.tipoItem == '02 - Bens - importação') {
-                        if ($scope.data3[3] != undefined) {
-                            $scope.data3[3].push(value.volumeTotal);
-                        } else {
-                            $scope.data3.push([value.volumeTotal]);
-                        }
-                    } else if (value.tipoItem == '03 - Serviços') {
-                        if ($scope.data3[4] != undefined) {
-                            $scope.data3[4].push(value.volumeTotal);
-                        } else {
-                            $scope.data3.push([value.volumeTotal]);
-                        }
-                    } else if (value.tipoItem == '06 - Locação') {
-                        if ($scope.data3[5] != undefined) {
-                            $scope.data3[5].push(value.volumeTotal);
-                        } else {
-                            $scope.data3.push([value.volumeTotal]);
-                        }
-                    } else if (value.tipoItem == '08 - Locação') {
-                        if ($scope.data3[6] != undefined) {
-                            $scope.data3[6].push(value.volumeTotal);
-                        } else {
-                            $scope.data3.push([value.volumeTotal]);
-                        }
-                    }
 
-                    $loading.finish('load');
-                });
+                        $loading.finish('load');
+                    });
+                }
+
+                $loading.finish('load');
             });
         }
 
@@ -251,7 +279,7 @@ angular.module('gpca')
             $scope.options4 = {
                 responsive: true,
                 legend: {
-                    display: false
+                    display: true
                 },
                 plugins: {
                     legend: {
@@ -289,7 +317,7 @@ angular.module('gpca')
                     },
                 },
                 title: {
-                    display: false,
+                    display: true,
                     text: 'Valores das compras por Natureza do Crédito'
                 }
             };
@@ -343,11 +371,14 @@ angular.module('gpca')
             $scope.options8 = {
                 responsive: true,
                 legend: {
-                    display: false
+                    display: true
                 },
                 plugins: {
                     legend: {
-                        position: 'top',
+                        position: 'left',
+                        labels: {
+                            align: 'start '
+                        }
                     }
                 },
                 tooltips: {
@@ -366,7 +397,7 @@ angular.module('gpca')
             $scope.options9 = {
                 responsive: true,
                 legend: {
-                    display: false
+                    display: true
                 },
                 plugins: {
                     legend: {
@@ -407,43 +438,47 @@ angular.module('gpca')
             var periodo = '01/' + $scope.selectedPeriodo;
             var GetDashs = DashboardService.GetDashDoughnuts(periodo);
 
-            
+
             $q.all([GetDashs]).then(function (response) {
                 var data = response[0].data;
 
-                angular.forEach(data.cfoPs, function (Value, Key) {
-                    $scope.labels4.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
-                    $scope.data4.push(Value.volumeTotal);
-                });
+                if (data != null) {
+                    angular.forEach(data.cfoPs, function (Value, Key) {
+                        $scope.labels4.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.data4.push(Value.volumeTotal);
+                    });
 
-                angular.forEach(data.tipoItems, function (Value, Key) {
-                    $scope.labels5.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
-                    $scope.data5.push(Value.volumeTotal);
-                });
+                    angular.forEach(data.tipoItems, function (Value, Key) {
+                        $scope.labels5.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.data5.push(Value.volumeTotal);
+                    });
 
-                angular.forEach(data.consorcios, function (Value, Key) {
-                    $scope.labels6.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
-                    $scope.data6.push(Value.volumeTotal);
-                });
+                    angular.forEach(data.consorcios, function (Value, Key) {
+                        $scope.labels6.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.data6.push(Value.volumeTotal);
+                    });
 
-                angular.forEach(data.jVs, function (Value, Key) {
-                    $scope.labels7.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
-                    $scope.data7.push(Value.volumeTotal);
-                });
+                    angular.forEach(data.jVs, function (Value, Key) {
+                        $scope.labels7.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.data7.push(Value.volumeTotal);
+                    });
 
-                angular.forEach(data.fornecedores, function (Value, Key) {
-                    $scope.labels8.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
-                    $scope.data8.push(Value.volumeTotal);
-                });
+                    angular.forEach(data.fornecedores, function (Value, Key) {
+                        $scope.labels8.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.data8.push(Value.volumeTotal);
+                    });
 
-                angular.forEach(data.metaObjetos, function (Value, Key) {
-                    $scope.labels9.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
-                    $scope.data9.push(Value.volumeTotal);
+                    angular.forEach(data.metaObjetos, function (Value, Key) {
+                        $scope.labels9.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.data9.push(Value.volumeTotal);
 
+                        $loading.finish('load');
+                    });
+                } else {
                     $loading.finish('load');
-                });
+                }
 
-                
+
             });
         }
 
@@ -452,39 +487,52 @@ angular.module('gpca')
 
         // Volume Total -------------------------------------------------------------------------
 
-        DashboardService.GetDahsTotal().then(function (response) {
-            var data = response.data;
-            $scope.volumeTotal = data.volumeTotal;
-        });
-
+        $scope.montaTotalAnual = function () {
+            DashboardService.GetDahsTotal($scope.selectedPeriodoAno).then(function (response) {
+                var data = response.data;
+                if (data != null) {
+                    $scope.volumeTotal = data.volumeTotal;
+                    $loading.finish('load');
+                }
+            });
+        }
         // --------------------------------------------------------------------------------------
 
         // Volume Total Mensal ------------------------------------------------------------------
 
         $scope.GetTotalMensal = function () {
-            var data = '01/' + $scope.selectedPeriodo;
-            DashboardService.GetDahsTotalMensal(data).then(function (response) {
+            var periodo = '01/' + $scope.selectedPeriodo;
+            DashboardService.GetDahsTotalMensal(periodo).then(function (response) {
                 var data = response.data;
 
-                $scope.volumeTotalMensalCreditavel = data.volumeTotalCreditavel;
-                $scope.volumeTotalMensalNaoCreditavel = data.volumeTotalNaoCreditavel;
+                if (data != null) {
+                    $scope.volumeTotalMensalCreditavel = data.volumeTotalCreditavel;
+                    $scope.volumeTotalMensalNaoCreditavel = data.volumeTotalNaoCreditavel;
+                }
             });
         }
 
         // --------------------------------------------------------------------------------------
 
-        $scope.montaDashsLine();
-
         $scope.chosenTab = function (tab) {
-            $loading.start('load');
+            if ($scope.lstPeriodo.length > 0) {
+                $loading.start('load');
 
-            $scope.tab = tab;
-            $scope.selectedPeriodo = $scope.lstPeriodo[0].mesCompetencia;
-            if (tab == 2 && $scope.selectedPeriodo != "") {
-                $scope.montaDoughnuts();
-                $scope.GetTotalMensal();
+                $scope.tab = tab;
+
+                $scope.selectedPeriodo = $scope.lstPeriodo[0].mesCompetencia;
+                if (tab == 2 && $scope.selectedPeriodo != "") {
+                    $scope.montaDoughnuts();
+                    $scope.GetTotalMensal();
+                } else {
+                    $scope.montaDashsLine();
+                }
             } else {
-                $scope.montaDashsLine();
+                SweetAlert.swal({
+                    title: "Atenção!",
+                    type: "warning",
+                    text: "Nenhum dado mensal a ser exibido."
+                });
             }
         }
 
@@ -493,6 +541,13 @@ angular.module('gpca')
 
             $scope.montaDoughnuts();
             $scope.GetTotalMensal();
+        }
+
+        $scope.seletedYear = function () {
+            $loading.start('load');
+
+            $scope.montaDashsLine();
+            $scope.montaTotalAnual();
         }
 
     })
