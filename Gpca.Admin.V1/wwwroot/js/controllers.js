@@ -49,6 +49,8 @@ angular.module('gpca')
     })
     .controller('DashboardCtrl', function ($scope, DashboardService, RelatoriosService, $loading, $q, SweetAlert) {
 
+        $loading.start('load');
+
         // Filtros -------------------------------------------------------------------------------
 
         $scope.lstPeriodoAnual = [];
@@ -279,11 +281,12 @@ angular.module('gpca')
             $scope.options4 = {
                 responsive: true,
                 legend: {
-                    display: true
-                },
-                plugins: {
-                    legend: {
-                        position: 'top',
+                    display: true,
+                    position: 'top',
+                    maxWidth: 10,
+                    labels: {
+                        boxWidth: 10,
+                        padding: 10
                     }
                 },
                 tooltips: {
@@ -302,11 +305,12 @@ angular.module('gpca')
             $scope.options5 = {
                 responsive: true,
                 legend: {
-                    display: true
-                },
-                plugins: {
-                    legend: {
-                        position: 'top',
+                    display: true,
+                    position: 'top',
+                    maxWidth: 10,
+                    labels: {
+                        boxWidth: 10,
+                        padding: 10
                     }
                 },
                 tooltips: {
@@ -325,11 +329,12 @@ angular.module('gpca')
             $scope.options6 = {
                 responsive: true,
                 legend: {
-                    display: true
-                },
-                plugins: {
-                    legend: {
-                        position: 'top',
+                    display: true,
+                    position: 'top',
+                    maxWidth: 10,
+                    labels: {
+                        boxWidth: 10,
+                        padding: 10
                     }
                 },
                 tooltips: {
@@ -348,11 +353,12 @@ angular.module('gpca')
             $scope.options7 = {
                 responsive: true,
                 legend: {
-                    display: true
-                },
-                plugins: {
-                    legend: {
-                        position: 'top',
+                    display: true,
+                    position: 'top',
+                    maxWidth: 10,
+                    labels: {
+                        boxWidth: 10,
+                        padding: 10
                     }
                 },
                 tooltips: {
@@ -371,13 +377,15 @@ angular.module('gpca')
             $scope.options8 = {
                 responsive: true,
                 legend: {
-                    display: true
-                },
-                plugins: {
-                    legend: {
-                        position: 'left',
-                        labels: {
-                            align: 'start '
+                    display: true,
+                    position: 'top',
+                    maxWidth: 10,
+                    labels: {
+                        boxWidth: 10,
+                        padding: 10,
+                        color: 'darkred',
+                        font: {
+                            size: 6
                         }
                     }
                 },
@@ -394,14 +402,15 @@ angular.module('gpca')
                 }
             };
 
-            $scope.options9 = {
+            $scope.options9 =  {
                 responsive: true,
                 legend: {
-                    display: true
-                },
-                plugins: {
-                    legend: {
-                        position: 'top',
+                    display: true,
+                    position: 'top',
+                    maxWidth: 10,
+                    labels: {
+                        boxWidth: 10,
+                        padding: 10
                     }
                 },
                 tooltips: {
@@ -444,32 +453,32 @@ angular.module('gpca')
 
                 if (data != null) {
                     angular.forEach(data.cfoPs, function (Value, Key) {
-                        $scope.labels4.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.labels4.push((Value.descricao == "" || Value.descricao == null) ? 'Vazio' : Value.descricao);
                         $scope.data4.push(Value.volumeTotal);
                     });
 
                     angular.forEach(data.tipoItems, function (Value, Key) {
-                        $scope.labels5.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.labels5.push((Value.descricao == "" || Value.descricao == null) ? 'Vazio' : Value.descricao);
                         $scope.data5.push(Value.volumeTotal);
                     });
 
                     angular.forEach(data.consorcios, function (Value, Key) {
-                        $scope.labels6.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.labels6.push((Value.descricao == "" || Value.descricao == null) ? 'Vazio' : Value.descricao);
                         $scope.data6.push(Value.volumeTotal);
                     });
 
                     angular.forEach(data.jVs, function (Value, Key) {
-                        $scope.labels7.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.labels7.push((Value.descricao == "" || Value.descricao == null) ? 'Vazio' : Value.descricao);
                         $scope.data7.push(Value.volumeTotal);
                     });
 
                     angular.forEach(data.fornecedores, function (Value, Key) {
-                        $scope.labels8.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.labels8.push((Value.descricao == "" || Value.descricao == null) ? 'Vazio' : Value.descricao);
                         $scope.data8.push(Value.volumeTotal);
                     });
 
                     angular.forEach(data.metaObjetos, function (Value, Key) {
-                        $scope.labels9.push(Value.descricao == "" ? 'Vazio' : Value.descricao);
+                        $scope.labels9.push((Value.descricao == "" || Value.descricao == null)? 'Vazio' : Value.descricao);
                         $scope.data9.push(Value.volumeTotal);
 
                         $loading.finish('load');

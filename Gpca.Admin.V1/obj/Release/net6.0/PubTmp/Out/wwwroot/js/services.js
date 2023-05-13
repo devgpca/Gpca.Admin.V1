@@ -818,9 +818,11 @@ angular.module('gpca')
     })
     .service('DashboardService', function ($http, constants, $localStorage) {
 
-        this.GetDahsLine = function () {
+        this.GetDahsLine = function (year) {
             var params = { headers: { 'RefreshToken': $localStorage.user.refreshToken } };
-            var obj = {};
+            var obj = {
+                anoCompetencia: year
+            };
 
             return $http.post(constants.UrlRelatorioApi + 'Dashboard/GetDashLine', obj, params)
                 .then(function (response) {
@@ -832,9 +834,11 @@ angular.module('gpca')
                 });
         }
 
-        this.GetDahsLineItemtype = function () {
+        this.GetDahsLineItemtype = function (year) {
             var params = { headers: { 'RefreshToken': $localStorage.user.refreshToken } };
-            var obj = {};
+            var obj = {
+                anoCompetencia: year
+            };
 
             return $http.post(constants.UrlRelatorioApi + 'Dashboard/GetDashLineItemType', obj, params)
                 .then(function (response) {
@@ -846,9 +850,11 @@ angular.module('gpca')
                 });
         }
 
-        this.GetDahsTotal = function () {
+        this.GetDahsTotal = function (year) {
             var params = { headers: { 'RefreshToken': $localStorage.user.refreshToken } };
-            var obj = {};
+            var obj = {
+                anoCompetencia: year
+            };
 
             return $http.post(constants.UrlRelatorioApi + 'Dashboard/GetTotal', obj, params)
                 .then(function (response) {
