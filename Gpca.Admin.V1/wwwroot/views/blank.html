@@ -23,7 +23,8 @@
                     </select>
                 </li>
                 <li ng-show="tab == 2" style="float: right !important;">
-                    <select class="form-control" ng-model="selectedPeriodo" ng-options="p.mesCompetencia as p.mesCompetencia for p in lstPeriodo" ng-change="seletedDate();">
+                    <select class="form-control" ng-model="selectedPeriodo" ng-options="p.mesCompetencia as p.mesCompetencia for p in lstPeriodo" 
+                            ng-change="seletedDate();" onfocus="this.size=5;" onblur="this.size=1;" onchange="this.size=1; this.blur();">
                         <!--<option value="">Selecione o per&iacute;odo</option>-->
                     </select>
                 </li>

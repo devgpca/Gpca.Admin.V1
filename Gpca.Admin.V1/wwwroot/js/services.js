@@ -459,7 +459,13 @@ angular.module('gpca')
 
         this.CreateExcel = function (date, flagReproc) {
             var params = {
-                responseType: "blob"
+                responseType: "blob",
+                timeout: 300000,
+                headers: {
+                    "Access-Control-Allow-Headers": "Content-Type",
+                    "Access-Control-Allow-Origin": constants.UrlRelatorioApi,
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+                }
             };
 
             return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download?dateProccess=' + date + "&flagReprocessa=" + flagReproc, params)
@@ -626,7 +632,7 @@ angular.module('gpca')
                     'RefreshToken': $localStorage.user.refreshToken
                 }
             };
-            return $http.get(constants.UrlRelatorioApi + 'ArquivoUpload/LiberarTodos/' + mesCompetencia, hedrs)
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoUpload/LiberarTodos?mesCompetencia=' + mesCompetencia, hedrs)
                 .then(function (response) {
                     return response.data;
                 }, function (error) {

@@ -1672,6 +1672,7 @@ angular.module('gpca')
         $loading.start('load');
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
+            .withOption('order', [])
             .withButtons([
                 {
                     extend: 'print',
@@ -1720,15 +1721,10 @@ angular.module('gpca')
                 var getExcel = RelatoriosService.CreateExcel(date, reproc);
 
                 $q.all([getExcel]).then(function (response) {
+    
+                    if (response[0] != undefined) {
 
-                    if (response[0] == undefined) {
-                        $timeout(function () {
-                            window.location.reload();
-                        }, 10000);
-
-                    } else {
-
-                        const blob = response[0].data
+                        const blob = response[0].data;
                         var url = window.URL.createObjectURL(blob);
                         var a = document.createElement("a");
                         document.body.appendChild(a);
@@ -1737,6 +1733,17 @@ angular.module('gpca')
                         a.click();
 
                         $loading.finish('load');
+                    } else {
+                        //$timeout(function () {
+                        //    window.location.reload();
+                        //}, 10000);
+
+                        $loading.finish('load');
+                        SweetAlert.swal({
+                            title: "Atenção!",
+                            type: "warning",
+                            text: "Algo deu errado na sua solicitação. Tente novamente mais tarde ou entre em contato com o suporte."
+                        });
                     }
                 }, function (error) {
                     console.log(error);
@@ -1762,8 +1769,12 @@ angular.module('gpca')
                 var getResumo = RelatoriosService.GetResumo(data);
 
                 $q.all([getResumo]).then(function (response) {
-                    $scope.isFiltered = true;
-                    $scope.GetResumo = response[0].data;
+                    if (response[0].success) {
+                        $scope.isFiltered = true;
+                        $scope.GetResumo = response[0].data;
+                    } else {
+                        SweetAlert.swal("Erro!", response[0].message, "error");
+                    }
 
                     $loading.finish('load');
                 });
