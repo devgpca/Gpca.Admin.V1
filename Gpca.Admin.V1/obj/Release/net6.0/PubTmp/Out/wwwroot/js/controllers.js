@@ -402,7 +402,7 @@ angular.module('gpca')
                 }
             };
 
-            $scope.options9 =  {
+            $scope.options9 = {
                 responsive: true,
                 legend: {
                     display: true,
@@ -478,7 +478,7 @@ angular.module('gpca')
                     });
 
                     angular.forEach(data.metaObjetos, function (Value, Key) {
-                        $scope.labels9.push((Value.descricao == "" || Value.descricao == null)? 'Vazio' : Value.descricao);
+                        $scope.labels9.push((Value.descricao == "" || Value.descricao == null) ? 'Vazio' : Value.descricao);
                         $scope.data9.push(Value.volumeTotal);
 
                         $loading.finish('load');
@@ -1721,7 +1721,7 @@ angular.module('gpca')
                 var getExcel = RelatoriosService.CreateExcel(date, reproc);
 
                 $q.all([getExcel]).then(function (response) {
-    
+
                     if (response[0] != undefined) {
 
                         const blob = response[0].data;
@@ -1760,6 +1760,14 @@ angular.module('gpca')
 
         $scope.dtProcessamento = '';
         $scope.isFiltered = false;
+        $scope.sumImobilizado = 0;
+        $scope.sumBens = 0;
+        $scope.sumServicos = 0;
+        $scope.sumLocacao_06 = 0;
+        $scope.sumLocacao_08 = 0;
+        $scope.sumImobilizadoImp = 0;
+        $scope.sumBensImp = 0;
+        $scope.sumTotalBase = 0;
 
         $scope.GerarResumo = function (data) {
             $loading.start('load');
@@ -1771,7 +1779,46 @@ angular.module('gpca')
                 $q.all([getResumo]).then(function (response) {
                     if (response[0].success) {
                         $scope.isFiltered = true;
-                        $scope.GetResumo = response[0].data;
+                        var data = response[0].data;
+
+                        angular.forEach(data, function (value) {
+
+                            // totalizadores
+                            $scope.sumImobilizado += parseFloat(value.imobilizado);
+                            $scope.sumBens += parseFloat(value.bens);
+                            $scope.sumServicos += parseFloat(value.servicos);
+                            $scope.sumLocacao_06 += parseFloat(value.locacao_06);
+                            $scope.sumLocacao_08 += parseFloat(value.locacao_08);
+                            $scope.sumImobilizadoImp += parseFloat(value.imobilizadoImportacao);
+                            $scope.sumBensImp += parseFloat(value.bensImportacao);
+                            $scope.sumTotalBase += parseFloat(value.totalBase);
+
+                            // coversão de valores
+                            value.imobilizado = parseFloat(value.imobilizado);
+                            value.bens = parseFloat(value.bens);
+                            value.servicos = parseFloat(value.servicos);
+                            value.locacao_06 = parseFloat(value.locacao_06);
+                            value.locacao_08 = parseFloat(value.locacao_08);
+                            value.imobilizadoImportacao = parseFloat(value.imobilizadoImportacao);
+                            value.bensImportacao = parseFloat(value.bensImportacao);
+                            value.totalBase = parseFloat(value.totalBase);
+                        });
+
+                        data.push({
+                            "consorcio": "",
+                            "jv": "",
+                            "situacaoJV": "Totalizadores: ",
+                            "imobilizado": $scope.sumImobilizado,
+                            "bens": $scope.sumBens,
+                            "servicos": $scope.sumServicos,
+                            "locacao_06": $scope.sumLocacao_06,
+                            "locacao_08": $scope.sumLocacao_08,
+                            "imobilizadoImportacao": $scope.sumImobilizadoImp,
+                            "bensImportacao": $scope.sumBensImp,
+                            "totalBase": $scope.sumTotalBase
+                        });
+                        $scope.GetResumo = data;
+
                     } else {
                         SweetAlert.swal("Erro!", response[0].message, "error");
                     }
@@ -1787,9 +1834,18 @@ angular.module('gpca')
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withDOM('<"html5buttons"B>lTfgitp')
+            .withDisplayLength(25)
+            .withOption('order', [])
+            .withOption('fnRowCallback',
+                function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                    if (aData[2] == "Totalizadores:") {
+                        nRow.attributes.class.value = "ng-scope row-dt-totals";
+                    }
+                    return nRow;
+                })
             .withButtons([
                 { extend: 'copy' },
-                { extend: 'csv' },
+                { extend: 'csv', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
                 { extend: 'excel', title: 'Resumo_Creditos_' + $scope.dtProcessamento },
 
                 {
@@ -2204,12 +2260,24 @@ angular.module('gpca')
             $loading.start('load');
             ArquivoService.Importar(file.id).then(function (response) {
 
-                file.importado = response.importado;
-
+                file.importado = response.data.importado;
                 $loading.finish('load');
+
+                if (!file.importado) {
+                    SweetAlert.swal({
+                        title: "Erro!",
+                        type: "error",
+                        text: "Ocorreu um erro na importação do arquivo. Entre em contato com o suporte para maiores informações."
+                    });
+                }
+
             }, function (error) {
                 $loading.finish('load');
-                console.log("Erro Importaão-GetAll: " + error);
+                SweetAlert.swal({
+                    title: "Erro!",
+                    type: "error",
+                    text: "Ocorreu um erro na importação do arquivo. Entre em contato com o suporte para maiores informações."
+                });
             });
         };
 

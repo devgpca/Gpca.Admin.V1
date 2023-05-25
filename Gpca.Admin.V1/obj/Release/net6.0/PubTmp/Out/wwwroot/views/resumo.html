@@ -58,14 +58,14 @@
                                 <td>{{ item.consorcio }}</td>
                                 <td>{{ item.jv }}</td>
                                 <td>{{ item.situacaoJV }}</td>
-                                <td>{{ item.imobilizado }}</td>
-                                <td>{{ item.bens }}</td>
-                                <td>{{ item.servicos }}</td>
-                                <td>{{ item.locacao_06 }}</td>
-                                <td>{{ item.locacao_08 }}</td>
-                                <td>{{ item.imobilizadoImportacao }}</td>
-                                <td>{{ item.bensImportacao }}</td>
-                                <td>{{ item.totalBase }}</td>
+                                <td>{{ item.imobilizado | currency }}</td>
+                                <td>{{ item.bens | currency }}</td>
+                                <td>{{ item.servicos | currency }}</td>
+                                <td>{{ item.locacao_06 | currency }}</td>
+                                <td>{{ item.locacao_08 | currency }}</td>
+                                <td>{{ item.imobilizadoImportacao | currency }}</td>
+                                <td>{{ item.bensImportacao | currency }}</td>
+                                <td>{{ item.totalBase | currency }}</td>
                             </tr>
                         </tbody>
                     </table>

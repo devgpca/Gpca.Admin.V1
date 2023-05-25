@@ -19,14 +19,15 @@
                 <li ng-class="{'active': tab == 2}" style="border-radius: 5px !important;"><a href="" ng-click="chosenTab(2);">Mensal</a></li>
                 <li ng-show="tab == 1" style="float: right !important;">
                     <select class="form-control" ng-model="selectedPeriodoAno" ng-options="p.ano as p.ano for p in lstPeriodoAnual" ng-change="seletedYear();">
-                        <!--<option value="">Selecione o per&iacute;odo</option>-->
                     </select>
                 </li>
                 <li ng-show="tab == 2" style="float: right !important;">
-                    <select class="form-control" ng-model="selectedPeriodo" ng-options="p.mesCompetencia as p.mesCompetencia for p in lstPeriodo" 
-                            ng-change="seletedDate();" onfocus="this.size=5;" onblur="this.size=1;" onchange="this.size=1; this.blur();">
-                        <!--<option value="">Selecione o per&iacute;odo</option>-->
-                    </select>
+                    <div style="width: 100%; z-index: 20000; position: absolute;">
+                        <select class="form-control" ng-model="selectedPeriodo" ng-options="p.mesCompetencia as p.mesCompetencia for p in lstPeriodo"
+                                ng-change="seletedDate();" onfocus="this.size=10;" onblur="this.size=1;" onchange="this.size=1; this.blur();" 
+                                style="float: right !important; width: auto;">
+                        </select>
+                    </div>
                 </li>
             </ul>
         </div>
