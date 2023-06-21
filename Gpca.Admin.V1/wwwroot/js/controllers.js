@@ -4,7 +4,8 @@ angular.module('gpca')
 
         // valida session ----------------------------------------------------------------
 
-        $scope.SessionExpired = false;
+        var SessionExpired = false;
+        SessionExpired = $localStorage.user.authenticated;
         var stopId = 0;
         stopId = $interval(function () {
             if ($localStorage.user != undefined) {
@@ -24,6 +25,7 @@ angular.module('gpca')
                             },
                                 function (isConfirm) {
                                     if (isConfirm) {
+                                        SessionExpired = false;
                                         $interval.cancel(stopId);
                                         $localStorage.$reset();
                                         window.location = "#/Login";
@@ -40,7 +42,7 @@ angular.module('gpca')
             }
         }, 90000); // 15min
 
-        if ($scope.SessionExpired) {
+        if (!SessionExpired) {
             window.location = "#/Login";
         }
 
@@ -1575,9 +1577,19 @@ angular.module('gpca')
                 templateUrl: 'views/modal/Texto/incluir_editar_texto.html',
                 controller: function ($scope, $uibModalInstance, TextoService) {
                     $scope.IncluirJv = function () {
-                        $scope.value = textoSelected;
-                        TextoService.Create($scope.obj);
-                        $uibModalInstance.close();
+                        $scope.value = null;
+                        var texto = {
+                            descricao: $scope.obj.descricao,
+                            creditavel: $scope.obj.creditavel == "false" ? false : true
+                        }
+                        TextoService.Create(texto).then(function (response) {
+                            $uibModalInstance.close();
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                type: "success",
+                                text: response.data.message
+                            });
+                        });
                     }
 
                     $scope.cancel = function () {
@@ -1599,16 +1611,23 @@ angular.module('gpca')
                 templateUrl: 'views/modal/Texto/incluir_editar_texto.html',
                 controller: function ($scope, $uibModalInstance, textoSelected, TextoService) {
                     $scope.obj = {};
-                    $scope.value = textoSelected;
+                    $scope.value = data;
                     $scope.obj.descricao = textoSelected.descricao;
                     $scope.obj.creditavel = textoSelected.creditavel.toString();
 
-                    $scope.editar = function () {
+                    $scope.editarJv = function () {
                         textoSelected.descricao = $scope.obj.descricao;
                         textoSelected.creditavel = $scope.obj.creditavel;
 
-                        TextoService.Edit(textoSelected);
-                        $uibModalInstance.dismiss('dimiss');
+                        TextoService.Edit(textoSelected).then(function (response) {
+                            $uibModalInstance.dismiss('dimiss');
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                type: "success",
+                                text: response.data.message
+                            });
+                        });
+                        
                     }
 
                     $scope.cancel = function () {
@@ -1646,7 +1665,7 @@ angular.module('gpca')
                                 text: "valores alterados com sucesso",
                                 type: "success"
                             });
-                            $scope.GetAll();
+                            $scope.GetAll($scope.obj);
                         })
                     } else {
                         SweetAlert.swal({
@@ -1688,72 +1707,70 @@ angular.module('gpca')
             ]);
 
         var list = RelatoriosService.GetProcessedReports();
+        var listPeriodo = RelatoriosService.GetImportedFiles();
         $scope.dtProcessamento = '';
 
-        $q.all([list]).then(function (response) {
+        $q.all([list, listPeriodo]).then(function (response) {
             $scope.GetFiles = response[0].data;
+            $scope.lstPeriodo = response[1].data;
             $loading.finish('load');
         });
 
         $scope.btnGerar = function (date, flagReproc, action) {
             $loading.start('load');
 
-            if (date != '' || date != undefined) {
-
+            if (date == '') {
                 if (action == 'gerar') {
-                    if ($scope.GetFiles.filter(a => a.mesCompetencia == date.substr(3, 7)).length > 0) {
-                        $loading.finish('load');
-                        SweetAlert.swal({
-                            title: 'O período selecionado "' + date + '" já foi processado. Procure-o no grid para "Reprocessar" ou "Baixar" novamente.',
-                            type: "error",
-                            showCancelButton: false,
-                            confirmButtonColor: "#DD6B55",
-                            confirmButtonText: "OK",
-                            closeOnConfirm: false,
-                            closeOnCancel: false
-                        });
-
-                        return;
-                    }
-                }
-
-                var reproc = flagReproc == 1 ? true : false;
-                var getExcel = RelatoriosService.CreateExcel(date, reproc);
-
-                $q.all([getExcel]).then(function (response) {
-
-                    if (response[0] != undefined) {
-
-                        const blob = response[0].data;
-                        var url = window.URL.createObjectURL(blob);
-                        var a = document.createElement("a");
-                        document.body.appendChild(a);
-                        a.href = url;
-                        a.download = "Consolidação Relatórios de Gastos.xlsx";
-                        a.click();
-
-                        $loading.finish('load');
-                    } else {
-                        //$timeout(function () {
-                        //    window.location.reload();
-                        //}, 10000);
-
-                        $loading.finish('load');
-                        SweetAlert.swal({
-                            title: "Atenção!",
-                            type: "warning",
-                            text: "Algo deu errado na sua solicitação. Tente novamente mais tarde ou entre em contato com o suporte."
-                        });
-                    }
-                }, function (error) {
-                    console.log(error);
                     $loading.finish('load');
-                });
+                    SweetAlert.swal({
+                        title: 'Selecione um mês de competência válido.',
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "OK",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    });
 
+                    return;
+                }
             }
+
+            //date = '01/' + date;
+            var reproc = flagReproc == 1 ? true : false;
+            var getExcel = RelatoriosService.CreateExcel(date, reproc);
+
+            $q.all([getExcel]).then(function (response) {
+
+                if (response[0] != undefined) {
+
+                    const blob = response[0].data;
+                    var url = window.URL.createObjectURL(blob);
+                    var a = document.createElement("a");
+                    document.body.appendChild(a);
+                    a.href = url;
+                    a.download = "Consolidação Relatórios de Gastos.xlsx";
+                    a.click();
+
+                    $loading.finish('load');
+                } else {
+                    //$timeout(function () {
+                    //    window.location.reload();
+                    //}, 10000);
+
+                    $loading.finish('load');
+                    SweetAlert.swal({
+                        title: "Atenção!",
+                        type: "warning",
+                        text: "Algo deu errado na sua solicitação. Tente novamente mais tarde ou entre em contato com o suporte."
+                    });
+                }
+            }, function (error) {
+                console.log(error);
+                $loading.finish('load');
+            });
+
         }
-
-
 
     })
     .controller('ResumoCtrl', function ($scope, DTOptionsBuilder, $loading, SweetAlert, $q, RelatoriosService) {

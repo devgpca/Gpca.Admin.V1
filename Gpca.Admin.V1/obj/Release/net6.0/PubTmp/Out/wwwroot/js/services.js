@@ -577,6 +577,22 @@ angular.module('gpca')
                     });
                 });
         }
+
+        this.GetImportedFiles = function () {
+            var hedrs = {
+                headers: {
+                    'RefreshToken': $localStorage.user.refreshToken
+                }
+            };
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/GetImportedFilesAsync', hedrs)
+                .then(function (response) {
+                    return response.data;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+        };
     })
     .service('ArquivoService', function ($http, constants, $localStorage) {
         var params = {
