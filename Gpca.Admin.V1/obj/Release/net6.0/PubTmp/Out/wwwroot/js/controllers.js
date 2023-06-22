@@ -4,7 +4,8 @@ angular.module('gpca')
 
         // valida session ----------------------------------------------------------------
 
-        $scope.SessionExpired = false;
+        var userAuthenticated = false;
+        userAuthenticated = $localStorage.user?.authenticated ?? false;
         var stopId = 0;
         stopId = $interval(function () {
             if ($localStorage.user != undefined) {
@@ -16,7 +17,9 @@ angular.module('gpca')
                 $http.post(constants.UrlAuthApi + 'Auth/ValidateSession', body)
                     .then(function (response) {
                         if (!response.data.success) {
-                            $scope.SessionExpired = true;
+
+                            $localStorage.user.authenticated = false;
+
                             SweetAlert.swal({
                                 title: "Ops!",
                                 type: "error",
@@ -24,8 +27,8 @@ angular.module('gpca')
                             },
                                 function (isConfirm) {
                                     if (isConfirm) {
-                                        $interval.cancel(stopId);
                                         $localStorage.$reset();
+                                        $interval.cancel(stopId);                      
                                         window.location = "#/Login";
                                     }
                                 });
@@ -40,7 +43,7 @@ angular.module('gpca')
             }
         }, 90000); // 15min
 
-        if ($scope.SessionExpired) {
+        if (!userAuthenticated) {
             window.location = "#/Login";
         }
 
@@ -1575,9 +1578,19 @@ angular.module('gpca')
                 templateUrl: 'views/modal/Texto/incluir_editar_texto.html',
                 controller: function ($scope, $uibModalInstance, TextoService) {
                     $scope.IncluirJv = function () {
-                        $scope.value = textoSelected;
-                        TextoService.Create($scope.obj);
-                        $uibModalInstance.close();
+                        $scope.value = null;
+                        var texto = {
+                            descricao: $scope.obj.descricao,
+                            creditavel: $scope.obj.creditavel == "false" ? false : true
+                        }
+                        TextoService.Create(texto).then(function (response) {
+                            $uibModalInstance.close();
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                type: "success",
+                                text: response.data.message
+                            });
+                        });
                     }
 
                     $scope.cancel = function () {
@@ -1599,16 +1612,23 @@ angular.module('gpca')
                 templateUrl: 'views/modal/Texto/incluir_editar_texto.html',
                 controller: function ($scope, $uibModalInstance, textoSelected, TextoService) {
                     $scope.obj = {};
-                    $scope.value = textoSelected;
+                    $scope.value = data;
                     $scope.obj.descricao = textoSelected.descricao;
                     $scope.obj.creditavel = textoSelected.creditavel.toString();
 
-                    $scope.editar = function () {
+                    $scope.editarJv = function () {
                         textoSelected.descricao = $scope.obj.descricao;
                         textoSelected.creditavel = $scope.obj.creditavel;
 
-                        TextoService.Edit(textoSelected);
-                        $uibModalInstance.dismiss('dimiss');
+                        TextoService.Edit(textoSelected).then(function (response) {
+                            $uibModalInstance.dismiss('dimiss');
+                            SweetAlert.swal({
+                                title: "Sucesso!",
+                                type: "success",
+                                text: response.data.message
+                            });
+                        });
+                        
                     }
 
                     $scope.cancel = function () {
@@ -1646,7 +1666,7 @@ angular.module('gpca')
                                 text: "valores alterados com sucesso",
                                 type: "success"
                             });
-                            $scope.GetAll();
+                            $scope.GetAll($scope.obj);
                         })
                     } else {
                         SweetAlert.swal({

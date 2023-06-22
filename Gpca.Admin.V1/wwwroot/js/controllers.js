@@ -4,8 +4,8 @@ angular.module('gpca')
 
         // valida session ----------------------------------------------------------------
 
-        var SessionExpired = false;
-        SessionExpired = $localStorage.user.authenticated;
+        var userAuthenticated = false;
+        userAuthenticated = $localStorage.user?.authenticated ?? false;
         var stopId = 0;
         stopId = $interval(function () {
             if ($localStorage.user != undefined) {
@@ -17,7 +17,9 @@ angular.module('gpca')
                 $http.post(constants.UrlAuthApi + 'Auth/ValidateSession', body)
                     .then(function (response) {
                         if (!response.data.success) {
-                            $scope.SessionExpired = true;
+
+                            $localStorage.user.authenticated = false;
+
                             SweetAlert.swal({
                                 title: "Ops!",
                                 type: "error",
@@ -25,9 +27,8 @@ angular.module('gpca')
                             },
                                 function (isConfirm) {
                                     if (isConfirm) {
-                                        SessionExpired = false;
-                                        $interval.cancel(stopId);
                                         $localStorage.$reset();
+                                        $interval.cancel(stopId);                      
                                         window.location = "#/Login";
                                     }
                                 });
@@ -42,7 +43,7 @@ angular.module('gpca')
             }
         }, 90000); // 15min
 
-        if (!SessionExpired) {
+        if (!userAuthenticated) {
             window.location = "#/Login";
         }
 

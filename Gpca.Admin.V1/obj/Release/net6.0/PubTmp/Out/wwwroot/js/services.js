@@ -347,7 +347,6 @@ angular.module('gpca')
         };
 
         this.Create = function (obj) {
-            obj.planilha = parseInt(obj.planilha);
             return $http.post(constants.UrlRelatorioApi + 'Texto/Create', obj, params)
                 .then(function (response) {
                     return response;
