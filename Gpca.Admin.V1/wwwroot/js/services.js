@@ -616,8 +616,8 @@ angular.module('gpca')
                 });
         }
 
-        this.Create = function (files) {
-            return $http.post(constants.UrlRelatorioApi + 'ArquivoUpload/Upload', files, {
+        this.Create = function (files, date) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoUpload/Upload?mesCompetencia=' + date, files, {
                 transformRequest: angular.identity,
                 headers: { 'Content-Type': undefined }
             })

@@ -1,51 +1,59 @@
 angular.module('gpca')
     .controller('MainCtrl', function ($scope, $http, constants, $interval, $localStorage, SweetAlert) {
 
-
         // valida session ----------------------------------------------------------------
 
-        var userAuthenticated = false;
-        userAuthenticated = $localStorage.user?.authenticated ?? false;
+        var ValidaSessionUsuario = function () {
+            var body = {
+                'RefreshToken': $localStorage.user.refreshToken
+            };
+
+            $http.post(constants.UrlAuthApi + 'Auth/ValidateSession', body)
+                .then(function (response) {
+                    if (response.data.success) {
+                        $localStorage.userAuthenticated = true;
+                    } else {
+
+                        $localStorage.$reset();
+                        $localStorage.userAuthenticated = false;
+
+                        SweetAlert.swal({
+                            title: "Ops!",
+                            type: "error",
+                            text: "Sua sessão expirou. Faça o login novamente."
+                        },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    $interval.cancel(stopId);
+                                    window.location = "#/Login";
+                                }
+                            });
+                    }
+                }, function (error) {
+                    $localStorage.$reset();
+                    angular.forEach(error.data, function (value, index) {
+                        value;
+                    });
+                });
+        }
+
+
+        if ($localStorage.user != undefined) {
+            ValidaSessionUsuario();
+        } else {
+            window.location = "#/Login";
+        }
+
         var stopId = 0;
         stopId = $interval(function () {
             if ($localStorage.user != undefined) {
 
-                var body = {
-                    'RefreshToken': $localStorage.user.refreshToken
-                };
-
-                $http.post(constants.UrlAuthApi + 'Auth/ValidateSession', body)
-                    .then(function (response) {
-                        if (!response.data.success) {
-
-                            $localStorage.user.authenticated = false;
-
-                            SweetAlert.swal({
-                                title: "Ops!",
-                                type: "error",
-                                text: "Sua sessão expirou. Faça o login novamente."
-                            },
-                                function (isConfirm) {
-                                    if (isConfirm) {
-                                        $localStorage.$reset();
-                                        $interval.cancel(stopId);                      
-                                        window.location = "#/Login";
-                                    }
-                                });
-                        }
-                    }, function (error) {
-                        angular.forEach(error.data, function (value, index) {
-                            value;
-                        });
-                    });
+                ValidaSessionUsuario();
             } else {
                 $interval.cancel(stopId);
             }
-        }, 90000); // 15min
-
-        if (!userAuthenticated) {
-            window.location = "#/Login";
-        }
+        }, 300000); // 5min
+        
 
         // -------------------------------------------------------------------------------
 
@@ -566,6 +574,7 @@ angular.module('gpca')
     .controller('LoginCtrl', function ($scope, toaster, AuthService, $loading, $localStorage) {
         $onInit = function () {
             $scope.tipo = "PF";
+            $localStorage.$reset();
         };
 
         $scope.verificaCpfCnpj = function () {
@@ -2029,98 +2038,15 @@ angular.module('gpca')
             ]);
 
         $scope.liberar = function (obj) {
-            $uibModal.open({
-                scope: $scope,
-                templateUrl: 'views/modal/Importacao/editar_arquivo.html',
-                controller: function ($scope, $uibModalInstance, selected) {
-                    $scope.value = selected;
 
-                    $scope.obj = {};
-
-                    $scope.dateOptions = {
-                        formatYear: 'yy',
-                        maxDate: new Date(),
-                        minDate: new Date(),
-                        startingDay: 1
-                    };
-
-                    $scope.inlineOptions = {
-                        customClass: getDayClass,
-                        minDate: new Date(),
-                        showWeeks: true
-                    };
-
-                    $scope.format = 'MM/yyyy'
-
-                    $scope.toggleMin = function () {
-                        $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
-                        $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
-                        $scope.dateOptions.datepickerMode = "month";
-                        $scope.dateOptions.minMode = "month";
-                    };
-
-                    $scope.toggleMin();
-
-                    $scope.open1 = function () {
-                        $scope.popup1.opened = true;
-                    };
-
-                    $scope.popup1 = {
-                        opened: false
-                    };
-
-                    function getDayClass(data) {
-                        var date = data.date,
-                            mode = data.mode;
-                        if (mode === 'day') {
-                            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
-
-                            for (var i = 0; i < $scope.events.length; i++) {
-                                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
-
-                                if (dayToCheck === currentDay) {
-                                    return $scope.events[i].status;
-                                }
-                            }
-                        }
-
-                        return '';
-                    }
-
-                    $scope.Alterar = function () {
-                        if ($scope.obj.MesCompetencia == undefined || $scope.obj.MesCompetencia == null) {
-                            SweetAlert.swal({
-                                title: "Atenção",
-                                text: "Preencha o mês da competência para liberar",
-                                type: "warning"
-                            });
-                        }
-                        else {
-
-                            selected.mesCompentencia = $scope.obj.MesCompetencia.toLocaleDateString().substring(3, 10);
-
-                            ArquivoService.EnableDisable(selected).then(function () {
-                                $scope.GetAll();
-                                $uibModalInstance.dismiss('dimiss');
-                                SweetAlert.swal({
-                                    title: "Sucesso!",
-                                    text: "valores alterados com sucesso",
-                                    type: "success"
-                                });
-                            })
-                        }
-                    }
-
-                    $scope.cancel = function () {
-                        $uibModalInstance.dismiss('cancel');
-                    };
-                },
-                windowClass: "animated fadeIn",
-                resolve: {
-                    selected: function () {
-                        return obj;
-                    }
-                }
+            ArquivoService.EnableDisable(obj).then(function () {
+                $scope.GetAll();
+                $uibModalInstance.dismiss('dimiss');
+                SweetAlert.swal({
+                    title: "Sucesso!",
+                    text: "valores alterados com sucesso",
+                    type: "success"
+                });
             });
         }
 
@@ -2246,26 +2172,112 @@ angular.module('gpca')
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "Sim!",
                 cancelButtonText: "Não!",
-                closeOnConfirm: false,
+                closeOnConfirm: true,
                 closeOnCancel: false,
                 showLoaderOnConfirm: true
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        SweetAlert.swal({
-                            title: "Arquivos enviados!",
-                            text: "Os arquivos enviados com sucesso!",
-                            type: "success"
+
+                        $uibModal.open({
+                            scope: $scope,
+                            templateUrl: 'views/modal/Importacao/editar_arquivo.html',
+                            controller: function ($scope, $uibModalInstance, selected) {
+                                $scope.value = selected;
+
+                                $scope.obj = {};
+
+                                $scope.dateOptions = {
+                                    formatYear: 'yy',
+                                    maxDate: new Date(),
+                                    minDate: new Date(),
+                                    startingDay: 1
+                                };
+
+                                $scope.inlineOptions = {
+                                    customClass: getDayClass,
+                                    minDate: new Date(),
+                                    showWeeks: true
+                                };
+
+                                $scope.format = 'MM/yyyy'
+
+                                $scope.toggleMin = function () {
+                                    $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+                                    $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+                                    $scope.dateOptions.datepickerMode = "month";
+                                    $scope.dateOptions.minMode = "month";
+                                };
+
+                                $scope.toggleMin();
+
+                                $scope.open1 = function () {
+                                    $scope.popup1.opened = true;
+                                };
+
+                                $scope.popup1 = {
+                                    opened: false
+                                };
+
+                                function getDayClass(data) {
+                                    var date = data.date,
+                                        mode = data.mode;
+                                    if (mode === 'day') {
+                                        var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                                        for (var i = 0; i < $scope.events.length; i++) {
+                                            var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                                            if (dayToCheck === currentDay) {
+                                                return $scope.events[i].status;
+                                            }
+                                        }
+                                    }
+
+                                    return '';
+                                }
+
+                                $scope.Alterar = function () {
+                                    if ($scope.obj.MesCompetencia == undefined || $scope.obj.MesCompetencia == null) {
+                                        SweetAlert.swal({
+                                            title: "Atenção",
+                                            text: "Preencha o mês da competência para liberar",
+                                            type: "warning"
+                                        });
+                                    }
+                                    else {
+
+                                        var mesCompentencia = $scope.obj.MesCompetencia.toLocaleDateString().substring(3, 10);
+
+                                        ArquivoService.Create(formData, mesCompentencia).then(function (data) {
+                                            $uibModalInstance.dismiss('dimiss');
+                                            SweetAlert.swal({
+                                                title: "Arquivos enviados!",
+                                                text: "Os arquivos foram enviados com sucesso!",
+                                                type: "success"
+                                            });
+                                            $scope.GetAll();
+                                        });
+                                    }
+                                }
+
+                                $scope.cancel = function () {
+                                    $uibModalInstance.dismiss('cancel');
+                                };
+                            },
+                            windowClass: "animated fadeIn",
+                            resolve: {
+                                selected: function () {
+                                    return;
+                                }
+                            }
                         });
-                        ArquivoService.Create(formData).then(function (data) {
-                            $scope.GetAll();
-                        })
 
                     } else {
                         $loading.finish('load');
                         SweetAlert.swal({
                             title: "Cancelado!",
-                            text: "Você cancelou a alteração do registro",
+                            text: "Solicitação cancelada!",
                             type: "error"
                         });
                     }
@@ -2278,15 +2290,25 @@ angular.module('gpca')
             $loading.start('load');
             ArquivoService.Importar(file.id).then(function (response) {
 
-                file.importado = response.data.importado;
+                var data = response.data;
                 $loading.finish('load');
 
-                if (!file.importado) {
+                if (!response.success) {
+                    file.importado = false;
                     SweetAlert.swal({
                         title: "Erro!",
                         type: "error",
                         text: "Ocorreu um erro na importação do arquivo. Entre em contato com o suporte para maiores informações."
                     });
+                } else {
+                    file.importado = data.importado;
+                    SweetAlert.swal({
+                        title: "Sucesso!",
+                        type: "success",
+                        text: response.message
+                    });
+
+                    $scope.GetAll();
                 }
 
             }, function (error) {
