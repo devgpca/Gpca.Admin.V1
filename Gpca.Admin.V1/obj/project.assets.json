@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\Gpca.Admin.V1.csproj",
+      "projectUniqueName": "C:\\Dev\\Pessoal\\PCA-Novo\\Gpca.Admin.V1\\Gpca.Admin.V1\\Gpca.Admin.V1.csproj",
       "projectName": "Gpca.Admin.V1",
-      "projectPath": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\Gpca.Admin.V1.csproj",
+      "projectPath": "C:\\Dev\\Pessoal\\PCA-Novo\\Gpca.Admin.V1\\Gpca.Admin.V1\\Gpca.Admin.V1.csproj",
       "packagesPath": "C:\\Users\\thiag\\.nuget\\packages\\",
-      "outputPath": "C:\\Dev\\Pessoal\\Gpca.Admin.V1\\Gpca.Admin.V1\\obj\\",
+      "outputPath": "C:\\Dev\\Pessoal\\PCA-Novo\\Gpca.Admin.V1\\Gpca.Admin.V1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -31,8 +31,7 @@
         "net6.0"
       ],
       "sources": {
-        "https://api.nuget.org/v3/index.json": {},
-        "https://pkgs.dev.azure.com/icatu/_packaging/Icatu/nuget/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {

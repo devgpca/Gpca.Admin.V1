@@ -53,7 +53,7 @@ angular.module('gpca')
                 $interval.cancel(stopId);
             }
         }, 300000); // 5min
-        
+
 
         // -------------------------------------------------------------------------------
 
@@ -577,6 +577,12 @@ angular.module('gpca')
             $localStorage.$reset();
         };
 
+        $scope.user = {
+            CpfCnpj: '',
+            Senha: '',
+            codigoAcesso: ''
+        }
+
         $scope.verificaCpfCnpj = function () {
             $loading.start('load');
 
@@ -601,9 +607,9 @@ angular.module('gpca')
         $scope.tipos = [
             { tipo: "PF", nome: "Pessoa Fisica" },
             { tipo: "PJ", nome: "Pessoa Juridica" }
-        ]
+        ];
+
         $scope.autenticar = function (user) {
-            $loading.start('load');
 
             if ($scope.loginForm.$error.cpf != undefined && $scope.tipo == "PF") {
                 toaster.pop({
@@ -624,10 +630,9 @@ angular.module('gpca')
                 });
             }
             else {
-                AuthService.logar(user);
+                $scope.loginForm.$removeControl(this);
+                AuthService.logar(user);                
             }
-
-            $loading.finish('load');
         }
     })
     .controller('RegisterCtrl', function ($scope, toaster, $loading, AuthService, $q, $timeout) {
@@ -1627,17 +1632,39 @@ angular.module('gpca')
 
                     $scope.editarJv = function () {
                         textoSelected.descricao = $scope.obj.descricao;
-                        textoSelected.creditavel = $scope.obj.creditavel;
+                        textoSelected.creditavel = $scope.obj.creditavel == "true" ? true : false;
 
                         TextoService.Edit(textoSelected).then(function (response) {
-                            $uibModalInstance.dismiss('dimiss');
-                            SweetAlert.swal({
-                                title: "Sucesso!",
-                                type: "success",
-                                text: response.data.message
+                            if (response.data.success) {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "Sucesso!",
+                                    type: "success",
+                                    text: response.data.message
+                                });
+                            } else {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "ERRO!",
+                                    type: "error",
+                                    text: response.data.message
+                                });
+                            }
+                        }, function (error) {
+                            angular.forEach(error.data, function (value, index) {
+                                if (index == 'errors') {
+                                    $uibModalInstance.dismiss('dimiss');
+                                    SweetAlert.swal({
+                                        title: "ERRO!",
+                                        type: "error",
+                                        text: "Erro ao atulaizar texto breve."
+                                    });
+
+                                    console.log("Erro ao atulaizar texto breve: " + JSON.stringify(error.data[index]));
+                                }
                             });
                         });
-                        
+
                     }
 
                     $scope.cancel = function () {
@@ -2440,16 +2467,38 @@ angular.module('gpca')
 
                     $scope.alterar = function () {
                         manualSelected.creditos = $scope.obj.Creditos
-                        manualSelected.tipoItem = $scope.obj.TipoItem
+                        manualSelected.tipoItem = $scope.obj.TipoItem ?? '';
 
-                        ManualService.EditH01(manualSelected).then(function () {
-                            $uibModalInstance.dismiss('dimiss');
-                            SweetAlert.swal({
-                                title: "Sucesso!",
-                                text: "valores alterados com sucesso",
-                                type: "success"
+                        ManualService.EditH01(manualSelected).then(function (response) {
+                            if (response.success) {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "Sucesso!",
+                                    type: "success",
+                                    text: response.message
+                                });
+                            } else {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "ERRO!",
+                                    type: "error",
+                                    text: response.message
+                                });
+                            }
+                        }, function (error) {
+                            angular.forEach(error.data, function (value, index) {
+                                if (index == 'errors') {
+                                    $uibModalInstance.dismiss('dimiss');
+                                    SweetAlert.swal({
+                                        title: "ERRO!",
+                                        type: "error",
+                                        text: "Erro ao fazer o ajuste manual."
+                                    });
+
+                                    console.log("Erro ao fazer o ajuste manual: " + JSON.stringify(error.data[index]));
+                                }
                             });
-                        })
+                        });
 
                     }
 
@@ -2583,20 +2632,42 @@ angular.module('gpca')
                     $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
                     $scope.obj = {};
                     $scope.obj.Creditos = manualSelected.creditos;
-                    $scope.obj.TipoItem = manualSelected.tipoItem
+                    manualSelected.tipoItem = $scope.obj.TipoItem ?? '';
 
                     $scope.alterar = function () {
                         manualSelected.creditos = $scope.obj.Creditos
                         manualSelected.tipoItem = $scope.obj.TipoItem
 
-                        ManualService.EditH02(manualSelected).then(function () {
-                            $uibModalInstance.dismiss('dimiss');
-                            SweetAlert.swal({
-                                title: "Sucesso!",
-                                text: "valores alterados com sucesso",
-                                type: "success"
+                        ManualService.EditH02(manualSelected).then(function (response) {
+                            if (response.success) {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "Sucesso!",
+                                    type: "success",
+                                    text: response.message
+                                });
+                            } else {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "ERRO!",
+                                    type: "error",
+                                    text: response.message
+                                });
+                            }
+                        }, function (error) {
+                            angular.forEach(error.data, function (value, index) {
+                                if (index == 'errors') {
+                                    $uibModalInstance.dismiss('dimiss');
+                                    SweetAlert.swal({
+                                        title: "ERRO!",
+                                        type: "error",
+                                        text: "Erro ao fazer o ajuste manual."
+                                    });
+
+                                    console.log("Erro ao fazer o ajuste manual: " + JSON.stringify(error.data[index]));
+                                }
                             });
-                        })
+                        });
 
                     }
 
@@ -2730,20 +2801,42 @@ angular.module('gpca')
                     $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
                     $scope.obj = {};
                     $scope.obj.Creditos = manualSelected.creditos;
-                    $scope.obj.TipoItem = manualSelected.tipoItem
+                    manualSelected.tipoItem = $scope.obj.TipoItem ?? '';
 
                     $scope.alterar = function () {
                         manualSelected.creditos = $scope.obj.Creditos
                         manualSelected.tipoItem = $scope.obj.TipoItem
 
-                        ManualService.EditH03(manualSelected).then(function () {
-                            $uibModalInstance.dismiss('dimiss');
-                            SweetAlert.swal({
-                                title: "Sucesso!",
-                                text: "valores alterados com sucesso",
-                                type: "success"
+                        ManualService.EditH03(manualSelected).then(function (response) {
+                            if (response.success) {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "Sucesso!",
+                                    type: "success",
+                                    text: response.message
+                                });
+                            } else {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "ERRO!",
+                                    type: "error",
+                                    text: response.message
+                                });
+                            }
+                        }, function (error) {
+                            angular.forEach(error.data, function (value, index) {
+                                if (index == 'errors') {
+                                    $uibModalInstance.dismiss('dimiss');
+                                    SweetAlert.swal({
+                                        title: "ERRO!",
+                                        type: "error",
+                                        text: "Erro ao fazer o ajuste manual."
+                                    });
+
+                                    console.log("Erro ao fazer o ajuste manual: " + JSON.stringify(error.data[index]));
+                                }
                             });
-                        })
+                        });
 
                     }
 
@@ -2877,20 +2970,42 @@ angular.module('gpca')
                     $scope.tiposCredito = ["01 - Imobilizado", "02 - Bens", "03 - Serviços", "06 - aluguel", "08 - aluguel", "01 - imobilizado importação", "02 - bens importação"];
                     $scope.obj = {};
                     $scope.obj.Creditos = manualSelected.creditos;
-                    $scope.obj.TipoItem = manualSelected.tipoItem
+                    manualSelected.tipoItem = $scope.obj.TipoItem ?? '';
 
                     $scope.alterar = function () {
                         manualSelected.creditos = $scope.obj.Creditos
                         manualSelected.tipoItem = $scope.obj.TipoItem
 
-                        ManualService.EditH04(manualSelected).then(function () {
-                            $uibModalInstance.dismiss('dimiss');
-                            SweetAlert.swal({
-                                title: "Sucesso!",
-                                text: "valores alterados com sucesso",
-                                type: "success"
+                        ManualService.EditH04(manualSelected).then(function (response) {
+                            if (response.success) {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "Sucesso!",
+                                    type: "success",
+                                    text: response.message
+                                });
+                            } else {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "ERRO!",
+                                    type: "error",
+                                    text: response.message
+                                });
+                            }
+                        }, function (error) {
+                            angular.forEach(error.data, function (value, index) {
+                                if (index == 'errors') {
+                                    $uibModalInstance.dismiss('dimiss');
+                                    SweetAlert.swal({
+                                        title: "ERRO!",
+                                        type: "error",
+                                        text: "Erro ao fazer o ajuste manual."
+                                    });
+
+                                    console.log("Erro ao fazer o ajuste manual: " + JSON.stringify(error.data[index]));
+                                }
                             });
-                        })
+                        });
 
                     }
 
@@ -3028,16 +3143,38 @@ angular.module('gpca')
 
                     $scope.alterar = function () {
                         manualSelected.creditos = $scope.obj.Creditos
-                        manualSelected.tipoItem = $scope.obj.TipoItem
+                        manualSelected.tipoItem = $scope.obj.TipoItem ?? '';
 
-                        ManualService.EditH05(manualSelected).then(function () {
-                            $uibModalInstance.dismiss('dimiss');
-                            SweetAlert.swal({
-                                title: "Sucesso!",
-                                text: "valores alterados com sucesso",
-                                type: "success"
+                        ManualService.EditH05(manualSelected).then(function (response) {
+                            if (response.success) {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "Sucesso!",
+                                    type: "success",
+                                    text: response.message
+                                });
+                            } else {
+                                $uibModalInstance.dismiss('dimiss');
+                                SweetAlert.swal({
+                                    title: "ERRO!",
+                                    type: "error",
+                                    text: response.message
+                                });
+                            }
+                        }, function (error) {
+                            angular.forEach(error.data, function (value, index) {
+                                if (index == 'errors') {
+                                    $uibModalInstance.dismiss('dimiss');
+                                    SweetAlert.swal({
+                                        title: "ERRO!",
+                                        type: "error",
+                                        text: "Erro ao fazer o ajuste manual."
+                                    });
+
+                                    console.log("Erro ao fazer o ajuste manual: " + JSON.stringify(error.data[index]));
+                                }
                             });
-                        })
+                        });
 
                     }
 

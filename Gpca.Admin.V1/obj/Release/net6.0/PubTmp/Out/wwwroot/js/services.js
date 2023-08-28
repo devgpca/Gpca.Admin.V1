@@ -10,9 +10,12 @@ angular.module('gpca')
         }
 
         this.logar = function (obj) {
+            $loading.start('load');
+
             return $http.post(constants.UrlAuthApi + 'Auth/Login', obj, pars)
                 .then(function (response) {
                     if (response.data.authenticated) {
+                        $loading.finish('load');
 
                         toaster.pop({
                             type: 'success',
@@ -42,19 +45,31 @@ angular.module('gpca')
                         });
 
                         $timeout(function () {
-                            window.location.reload(true);
-                        }, 2000);
+                            $loading.finish('load');
+                        }, 500);
                     }
                 }, function (error) {
-                    angular.forEach(error.data, function (value, index) {
+                    $loading.finish('load');
+
+                    if (error.data != null) {
+                        angular.forEach(error.data, function (value, index) {
+                            toaster.pop({
+                                type: 'error',
+                                title: value.propertyName,
+                                body: value.errorMessage,
+                                showCloseButton: true,
+                                timeout: 5000
+                            });
+                        });
+                    } else {
                         toaster.pop({
                             type: 'error',
-                            title: value.propertyName,
-                            body: value.errorMessage,
+                            title: 'Erro ao logar',
+                            body: 'Ocorreu um erro inesperado no login.',
                             showCloseButton: true,
                             timeout: 5000
                         });
-                    });
+                    }
                 });
         }
 
@@ -361,10 +376,6 @@ angular.module('gpca')
             return $http.post(constants.UrlRelatorioApi + 'Texto/Update', obj, params)
                 .then(function (response) {
                     return response;
-                }, function (error) {
-                    angular.forEach(error.data, function (value, index) {
-                        return value;
-                    });
                 });
         }
 
@@ -753,10 +764,6 @@ angular.module('gpca')
             return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/EditH01Async', obj)
                 .then(function (response) {
                     return response.data;
-                }, function (error) {
-                    angular.forEach(error.data, function (value, index) {
-                        return value;
-                    });
                 });
         }
 
@@ -764,10 +771,6 @@ angular.module('gpca')
             return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/EditH02Async', obj)
                 .then(function (response) {
                     return response.data;
-                }, function (error) {
-                    angular.forEach(error.data, function (value, index) {
-                        return value;
-                    });
                 });
         }
 
@@ -775,10 +778,6 @@ angular.module('gpca')
             return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/EditH03Async', obj)
                 .then(function (response) {
                     return response.data;
-                }, function (error) {
-                    angular.forEach(error.data, function (value, index) {
-                        return value;
-                    });
                 });
         }
 
@@ -786,10 +785,6 @@ angular.module('gpca')
             return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/EditH04Async', obj)
                 .then(function (response) {
                     return response.data;
-                }, function (error) {
-                    angular.forEach(error.data, function (value, index) {
-                        return value;
-                    });
                 });
         }
 
@@ -797,10 +792,6 @@ angular.module('gpca')
             return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/EditH05Async', obj)
                 .then(function (response) {
                     return response.data;
-                }, function (error) {
-                    angular.forEach(error.data, function (value, index) {
-                        return value;
-                    });
                 });
         }
 
