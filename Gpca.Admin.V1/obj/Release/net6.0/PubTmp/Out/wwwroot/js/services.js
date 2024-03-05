@@ -467,7 +467,30 @@ angular.module('gpca')
     })
     .service('RelatoriosService', function ($http, constants, $localStorage) {
 
-        this.CreateExcel = function (date, flagReproc) {
+        this.GerarRelatorio = function(date, reproc) {
+            var params = {
+                headers: {
+                    'RefreshToken': $localStorage.user.refreshToken
+                }
+            };
+
+            var model = {
+                MesCompetencia: date,
+                FlagReprocessa: reproc
+            }
+
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoConsolidado/GerarRelatorio', model, params)
+                .then(function (response) {
+                    return response;
+                }, function (error) {
+                    angular.forEach(error.data, function (value, index) {
+                        return value;
+                    });
+                });
+
+        }
+
+        this.CreateExcel = function (date) {
             var params = {
                 responseType: "blob",
                 timeout: 300000,
@@ -478,7 +501,7 @@ angular.module('gpca')
                 }
             };
 
-            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download?dateProccess=' + date + "&flagReprocessa=" + flagReproc, params)
+            return $http.get(constants.UrlRelatorioApi + 'ArquivoConsolidado/Download?dateProccess=' + date, params)
                 .then(function (response) {
                     return response;
                 }, function (error) {

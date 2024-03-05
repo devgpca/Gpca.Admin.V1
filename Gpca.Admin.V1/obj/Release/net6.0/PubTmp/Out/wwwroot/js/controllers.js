@@ -631,7 +631,7 @@ angular.module('gpca')
             }
             else {
                 $scope.loginForm.$removeControl(this);
-                AuthService.logar(user);                
+                AuthService.logar(user);
             }
         }
     })
@@ -1753,6 +1753,36 @@ angular.module('gpca')
             $loading.finish('load');
         });
 
+        $scope.btnBaixar = function (date) {
+            $loading.start('load');
+
+            RelatoriosService.CreateExcel(date).then(function (resp) {
+                if (resp.data != undefined) {
+
+                    const blob = resp.data;
+                    var url = window.URL.createObjectURL(blob);
+                    var a = document.createElement("a");
+                    document.body.appendChild(a);
+                    a.href = url;
+                    a.download = "Consolidação Relatórios de Gastos.xlsx";
+                    a.click();
+
+                    $loading.finish('load');
+                } else {
+
+                    $loading.finish('load');
+                    SweetAlert.swal({
+                        title: "Atenção!",
+                        type: "warning",
+                        text: "Algo deu errado na sua solicitação. Tente novamente mais tarde ou entre em contato com o suporte."
+                    });
+                }
+            }, function (error) {
+                console.log(error);
+                $loading.finish('load');
+            });
+        }
+
         $scope.btnGerar = function (date, flagReproc, action) {
             $loading.start('load');
 
@@ -1775,36 +1805,52 @@ angular.module('gpca')
 
             //date = '01/' + date;
             var reproc = flagReproc == 1 ? true : false;
-            var getExcel = RelatoriosService.CreateExcel(date, reproc);
 
-            $q.all([getExcel]).then(function (response) {
+            var gerarConsolidado = RelatoriosService.GerarRelatorio(date, reproc);
 
-                if (response[0] != undefined) {
-
-                    const blob = response[0].data;
-                    var url = window.URL.createObjectURL(blob);
-                    var a = document.createElement("a");
-                    document.body.appendChild(a);
-                    a.href = url;
-                    a.download = "Consolidação Relatórios de Gastos.xlsx";
-                    a.click();
-
-                    $loading.finish('load');
-                } else {
-                    //$timeout(function () {
-                    //    window.location.reload();
-                    //}, 10000);
-
-                    $loading.finish('load');
+            $q.all([gerarConsolidado]).then(function (response) {
+                if (response) {
                     SweetAlert.swal({
-                        title: "Atenção!",
-                        type: "warning",
-                        text: "Algo deu errado na sua solicitação. Tente novamente mais tarde ou entre em contato com o suporte."
-                    });
+                        title: response[0].data.message,
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Fazer download",
+                        closeOnConfirm: true,
+                        closeOnCancel: false
+                    },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                $loading.start('load');
+
+                                RelatoriosService.CreateExcel(date).then(function (resp) {
+                                    if (resp.data != undefined) {
+
+                                        const blob = resp.data;
+                                        var url = window.URL.createObjectURL(blob);
+                                        var a = document.createElement("a");
+                                        document.body.appendChild(a);
+                                        a.href = url;
+                                        a.download = "Consolidação Relatórios de Gastos.xlsx";
+                                        a.click();
+
+                                        $loading.finish('load');
+                                    } else {
+
+                                        $loading.finish('load');
+                                        SweetAlert.swal({
+                                            title: "Atenção!",
+                                            type: "warning",
+                                            text: "Algo deu errado na sua solicitação. Tente novamente mais tarde ou entre em contato com o suporte."
+                                        });
+                                    }
+                                }, function (error) {
+                                    console.log(error);
+                                    $loading.finish('load');
+                                });
+                            }
+                        });
                 }
-            }, function (error) {
-                console.log(error);
-                $loading.finish('load');
             });
 
         }
