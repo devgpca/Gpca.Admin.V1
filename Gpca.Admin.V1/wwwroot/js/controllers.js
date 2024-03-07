@@ -64,6 +64,7 @@ angular.module('gpca')
 
         // Filtros -------------------------------------------------------------------------------
 
+        $scope.lstPeriodo = [];
         $scope.lstPeriodoAnual = [];
         $scope.selectedPeriodoAno = "";
         $scope.selectedPeriodo = "";
@@ -72,19 +73,24 @@ angular.module('gpca')
 
         RelatoriosService.GetProcessedReports().then(function (response) {
             var data = response.data;
-            $scope.lstPeriodo = data;
 
-            var txt = "";
-            angular.forEach(data, function (value, key) {
-                if (txt != value.mesCompetencia.substr(3, 4)) {
-                    txt = value.mesCompetencia.substr(3, 4);
-                    $scope.lstPeriodoAnual.push({ ano: txt });
-                }
-            });
+            if (data != undefined && data != '') {
+                $scope.lstPeriodo = data;
 
-            $scope.selectedPeriodoAno = $scope.lstPeriodoAnual[$scope.lstPeriodoAnual.length - 1].ano;
-            $scope.montaDashsLine();
-            $scope.montaTotalAnual();
+                var txt = "";
+                angular.forEach(data, function (value, key) {
+                    if (txt != value.mesCompetencia.substr(3, 4)) {
+                        txt = value.mesCompetencia.substr(3, 4);
+                        $scope.lstPeriodoAnual.push({ ano: txt });
+                    }
+                });
+
+                $scope.selectedPeriodoAno = $scope.lstPeriodoAnual[$scope.lstPeriodoAnual.length - 1].ano;
+                $scope.montaDashsLine();
+                $scope.montaTotalAnual();
+            } else {
+                $loading.finish('load');
+            }
         });
 
         // ---------------------------------------------------------------------------------------
@@ -499,6 +505,8 @@ angular.module('gpca')
                 }
 
 
+            }, function (error) {
+                var erro = error;
             });
         }
 
@@ -512,6 +520,8 @@ angular.module('gpca')
                 var data = response.data;
                 if (data != null) {
                     $scope.volumeTotal = data.volumeTotal;
+                    $loading.finish('load');
+                } else {
                     $loading.finish('load');
                 }
             });
@@ -528,6 +538,8 @@ angular.module('gpca')
                 if (data != null) {
                     $scope.volumeTotalMensalCreditavel = data.volumeTotalCreditavel;
                     $scope.volumeTotalMensalNaoCreditavel = data.volumeTotalNaoCreditavel;
+                } else {
+                    $loading.finish('load');
                 }
             });
         }
