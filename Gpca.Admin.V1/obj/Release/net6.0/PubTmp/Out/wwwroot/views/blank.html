@@ -18,7 +18,7 @@
                 <li ng-class="{'active': tab == 1}" style="border-radius: 5px !important;"><a href="" ng-click="chosenTab(1);">Anual</a></li>
                 <li ng-class="{'active': tab == 2}" style="border-radius: 5px !important;"><a href="" ng-click="chosenTab(2);">Mensal</a></li>
                 <li ng-show="tab == 1" style="float: right !important;">
-                    <select class="form-control" ng-model="selectedPeriodoAno" ng-options="p.ano as p.ano for p in lstPeriodoAnual" ng-change="seletedYear();">
+                    <select ng-show="lstPeriodoAnual.length > 0" class="form-control" ng-model="selectedPeriodoAno" ng-options="p.ano as p.ano for p in lstPeriodoAnual" ng-change="seletedYear();">
                     </select>
                 </li>
                 <li ng-show="tab == 2" style="float: right !important;">

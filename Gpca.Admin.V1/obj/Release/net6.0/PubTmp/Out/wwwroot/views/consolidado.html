@@ -25,11 +25,16 @@
             <div class="row" style="width: 900px;">
                 <div class="col-md-2">
                     <!--<input type="text" class="form-control input-sm" ng-model="dtProcessamento" placeholder="Data de processamento" style="width: 160px;" />-->
-                    <select class="form-control" ng-model="dtProcessamento" ng-options="p.mesCompetencia as p.mesCompetencia for p in lstPeriodo"
-                            ng-change="seletedDate();" onfocus="this.size=5;" onblur="this.size=1;" onchange="this.size=1; this.blur();"
-                            style="float: right !important;">
+                    <!--<select class="form-control" ng-model="dtProcessamento" ng-options="p.mesCompetencia as p.mesCompetencia for p in lstPeriodo" ng-change="seletedDate();">
                         <option value="" selected>Selecione..</option>
-                    </select>
+                    </select>-->
+                    <div style="width: 100%; z-index: 20000; position: absolute; padding-right: 15px;">
+                        <select class="form-control" ng-model="dtProcessamento" ng-options="p.mesCompetencia as p.mesCompetencia for p in lstPeriodo"
+                                ng-change="seletedDate();" onfocus="this.size=5;" onblur="this.size=1;" onchange="this.size=1; this.blur();"
+                                style="float: right !important;">
+                            <option value="" selected>Selecione..</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-md-2">
                     <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" ng-click="btnGerar('01/'+dtProcessamento, 0, 'gerar');"><i class="fa fa-download"></i> Gerar relatório</button>

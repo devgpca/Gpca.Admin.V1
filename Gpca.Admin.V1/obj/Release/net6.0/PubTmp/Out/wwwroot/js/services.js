@@ -470,7 +470,7 @@ angular.module('gpca')
         this.GerarRelatorio = function(date, reproc) {
             var params = {
                 headers: {
-                    'RefreshToken': $localStorage.user.refreshToken
+                    "RefreshToken": $localStorage.user.refreshToken,
                 }
             };
 
@@ -495,6 +495,7 @@ angular.module('gpca')
                 responseType: "blob",
                 timeout: 300000,
                 headers: {
+                    "RefreshToken": $localStorage.user.refreshToken,
                     "Access-Control-Allow-Headers": "Content-Type",
                     "Access-Control-Allow-Origin": constants.UrlRelatorioApi,
                     "Access-Control-Allow-Methods": "OPTIONS,POST,GET"

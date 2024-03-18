@@ -41,10 +41,10 @@
         }
     }).constant('constants',
         {
-            //UrlAuthApi: 'http://auth.grupopca.kinghost.net/api/v1/',
-            //UrlRelatorioApi: 'http://rest.grupopca.kinghost.net/api/v1/'
-            UrlAuthApi: 'https://localhost:8089/api/v1/',
-            UrlRelatorioApi: 'https://localhost:7011/api/v1/'
+            UrlAuthApi: 'http://auth.grupopca.kinghost.net/api/v1/',
+            UrlRelatorioApi: 'http://rest.grupopca.kinghost.net/api/v1/'
+            //UrlAuthApi: 'https://localhost:8089/api/v1/',
+            //UrlRelatorioApi: 'https://localhost:7011/api/v1/'
         })
         .filter('parseUrl', function ($sce) {
             var urls = /(\b(https?|ftp):\/\/[A-Z0-9+&@#\/%?=~_|!:,.;-]*[-A-Z0-9+&@#\/%=~_|])/gim
