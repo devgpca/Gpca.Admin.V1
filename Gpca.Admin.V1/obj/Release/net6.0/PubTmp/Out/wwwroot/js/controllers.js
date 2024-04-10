@@ -1821,7 +1821,7 @@ angular.module('gpca')
             var gerarConsolidado = RelatoriosService.GerarRelatorio(date, reproc);
 
             $q.all([gerarConsolidado]).then(function (response) {
-                if (response) {
+                if (response && response[0] != undefined) {
                     SweetAlert.swal({
                         title: response[0].data.message,
                         type: "success",
@@ -1862,6 +1862,13 @@ angular.module('gpca')
                                 });
                             }
                         });
+                } else {
+                    $loading.finish('load');
+                    SweetAlert.swal({
+                        title: "Erro!",
+                        type: "error",
+                        text: "Erro ao gerar o relatório. Tente novamente mais tarde ou entre em contato com o suporte."
+                    });
                 }
             });
 

@@ -27,11 +27,37 @@
                     <div class="col-lg-12">
                         <div class="ibox float-e-margins">
                             <form>
-                                <input class="btn btn-sm btn-outline btn-success btn-rounded" type="file" id="files" name="files" ng-model="files" multiple bind-file="">
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <input class="btn btn-sm btn-outline btn-success btn-rounded" type="file" id="files" name="files" ng-model="files" multiple bind-file="">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <!--<select class="form-control" ng-class="{'erro-layout': erro}" ng-model="layout"
+                                                style="border-radius: 20px !important; width: 140px; margin-bottom: 5px;">
+                                            <option ng-repeat="layout in lstTipoLayout"
+                                                    ng-selected="{{layout.value == 0}}"
+                                                    value="{{layout.value}}" ng-click="sel(layout);">
+                                                {{layout.descricao}}
+                                            </option>
+                                        </select>-->
+                                        <select class="form-control" ng-model="layout" ng-options="p.descricao as p.descricao for p in lstTipoLayout"
+                                                ng-change="sel(layout);" style="border-radius: 20px !important; width: 140px; margin-bottom: 5px;">
+                                            <option value="" selected>Selecione..</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" ng-click="upload()"><i class="fa fa-upload"></i> Enviar arquivos</button>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <button class="btn btn-sm btn-outline btn-primary btn-rounded" style="float:right" type="button" ng-click="liberarTodos()"><i class="fa fa-unlock-alt"></i> Liberar todos</button>
+                                    </div>
+                                </div>
                             </form>
-                            <button class="btn btn-sm btn-outline btn-success btn-rounded" type="button" ng-click="upload()"><i class="fa fa-upload"></i> Enviar arquivos</button>
-                            <button class="btn btn-sm btn-outline btn-primary btn-rounded" style="float:right" type="button" ng-click="liberarTodos()"><i class="fa fa-unlock-alt"></i> Liberar todos</button>
+
                             <!--<button class="btn btn-sm btn-outline btn-primary btn-rounded" style="float:right" type="button" ng-click="novo()"><i class="fa fa-file-excel-o"></i> Processar arquivos liberados</button>-->
+
+
                             <div class="ibox-title bg-success">
                                 <h5>Relatório - <strong>Importação</strong></h5>
                                 <div ibox-tools></div>

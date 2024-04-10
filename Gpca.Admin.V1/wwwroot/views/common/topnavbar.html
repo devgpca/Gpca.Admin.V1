@@ -73,54 +73,29 @@
                         </div>
                     </li>
                 </ul>
-            </li>
-            <li uib-dropdown>
+            </li>-->
+            <!--<li uib-dropdown>
                 <a class="count-info" href uib-dropdown-toggle>
-                    <i class="fa fa-bell"></i> <span class="label label-primary">8</span>
+                    <i class="fa fa-bell"></i> <span class="label label-primary">{{totalMensagens}}</span>
                 </a>
                 <ul class="dropdown-alerts" uib-dropdown-menu>
-                    <li>
-                        <a ui-sref="inbox">
-                            <div>
-                                <i class="fa fa-envelope fa-fw"></i> You have 16 messages
-                                <span class="pull-right text-muted small">4 minutes ago</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a ui-sref="profile">
-                            <div>
-                                <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                <span class="pull-right text-muted small">12 minutes ago</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
+                    <li ng-repeat="item in listaMensagens">
                         <a ui-sref="grid_options">
                             <div>
-                                <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                <span class="pull-right text-muted small">4 minutes ago</span>
+                                <i class="fa fa-upload fa-fw" ng-class="{'icon-green': !item.baixado}"></i>
+                                <labe ng-class="{'text-weight': !item.baixado}">{{item.texto}}</labe>
+                                <span class="pull-right text-muted small">{{item.dataHora}}</span>
                             </div>
                         </a>
                     </li>
-                    <li class="divider"></li>
-                    <li>
-                        <div class="text-center link-block">
-                            <a ui-sref="miscellaneous.notify">
-                                <strong>See All Alerts</strong>
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </div>
-                    </li>
+                    <li class="divider"></li> 
                 </ul>
             </li>-->
             <li uib-dropdown>
                 <a uib-dropdown-toggle href>
                     <!--<a ui-sref="login">
-            <i class="fa fa-sign-out"></i> Log out
-        </a>-->
+                        <i class="fa fa-sign-out"></i> Log out
+                    </a>-->
                     <span class="clear">
                         <span class="text-muted text-xs block">{{user}}<b class="caret" style="margin-left: 12px !important;"></b></span>
                     </span>

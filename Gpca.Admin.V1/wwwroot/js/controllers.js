@@ -1,5 +1,5 @@
 angular.module('gpca')
-    .controller('MainCtrl', function ($scope, $http, constants, $interval, $localStorage, SweetAlert) {
+    .controller('MainCtrl', function ($http, constants, $interval, $localStorage, SweetAlert) {
 
         // valida session ----------------------------------------------------------------
 
@@ -673,14 +673,15 @@ angular.module('gpca')
             AuthService.cadastrar(user);
         }
     })
-    .controller('topNavCtrl', function ($scope, $localStorage, $http, $uibModal, SweetAlert) {
+    .controller('topNavCtrl', function ($scope, $localStorage, broadcast, $interval, $uibModal, SweetAlert) {
 
         //if ($localStorage.user == undefined) {
         //    window.location = "#/login";
         //}
 
-        $scope.user = $localStorage.user.userName.split('-')[1];
-
+        //$interval(function () {
+        //    VerificaMensagens();
+        //}, 10000);
 
         $scope.logout = function () {
             $localStorage.$reset();
@@ -706,6 +707,39 @@ angular.module('gpca')
                 })
             });
         };
+
+        var OnInit = function () {
+
+            angular.forEach($localStorage.listaMensagens, function (value, key) {
+                var aux = 0;
+            });
+
+            $scope.listaMensagens = $localStorage.listaMensagens;
+            var qtdMsg = $localStorage.listaMensagens.filter(msg => msg.baixado == false);
+            $scope.totalMensagens = qtdMsg.length;
+            $scope.user = $localStorage.user.userName.split('-')[1];
+
+            broadcast.connectionHub.on("ReceiveMessage", function (user, message) {
+
+                var newMsg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                var mensagem = { usuario: user, texto: newMsg, dataHora: new Date().toLocaleString(), baixado: false };
+
+                $scope.$apply(function () {
+
+                    $localStorage.listaMensagens.push(mensagem);
+
+                    if ($localStorage.listaMensagens.length == 5) {
+                        $localStorage.listaMensagens.splice(5, 1);
+                    }
+
+                    $scope.listaMensagens = $localStorage.listaMensagens;
+                    var qtdMsg = $localStorage.listaMensagens.filter(msg => msg.baixado == false);
+                    $scope.totalMensagens = qtdMsg.length;
+                });
+            });
+        }
+
+        OnInit();
     })
     .controller('consorcioCtrl', function ($scope, DTOptionsBuilder, $uibModal, $localStorage, ConsortiumService, $q, SweetAlert) {
 
@@ -1821,7 +1855,7 @@ angular.module('gpca')
             var gerarConsolidado = RelatoriosService.GerarRelatorio(date, reproc);
 
             $q.all([gerarConsolidado]).then(function (response) {
-                if (response) {
+                if (response && response[0] != undefined) {
                     SweetAlert.swal({
                         title: response[0].data.message,
                         type: "success",
@@ -1862,6 +1896,13 @@ angular.module('gpca')
                                 });
                             }
                         });
+                } else {
+                    $loading.finish('load');
+                    SweetAlert.swal({
+                        title: "Erro!",
+                        type: "error",
+                        text: "Erro ao gerar o relatório. Tente novamente mais tarde ou entre em contato com o suporte."
+                    });
                 }
             });
 
@@ -2085,6 +2126,15 @@ angular.module('gpca')
 
         $scope.GetAll = function () {
             $loading.start('load');
+            $scope.lstTipoLayout = [{
+                descricao: 'Layout 2023',
+                value: 1
+            }, {
+                descricao: 'Layout 2024',
+                value: 2
+            }];
+            $scope.erro = false;
+
             ArquivoService.GetAll().then(function (data) {
                 $scope.lstImportados = data.filter(function (x) {
                     return x.importado == true;
@@ -2241,6 +2291,10 @@ angular.module('gpca')
             });
         }
 
+        $scope.sel = function (layout) {
+            $scope.layout = (layout == null ? 0 : (layout == 'Layout 2023' ? 1 : 2));
+        }
+
         $scope.upload = function () {
 
             var formData = new FormData();
@@ -2249,126 +2303,139 @@ angular.module('gpca')
                 formData.append('files', document.getElementById('files').files[i]);
             }
 
+            if ($scope.layout == 0 || $scope.layout == undefined) {
+                $scope.erro = true;
 
-            SweetAlert.swal({
-                title: "Deseja fazer o upload dos arquivos?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Sim!",
-                cancelButtonText: "Não!",
-                closeOnConfirm: true,
-                closeOnCancel: false,
-                showLoaderOnConfirm: true
-            },
-                function (isConfirm) {
-                    if (isConfirm) {
+                SweetAlert.swal({
+                    title: "Para fazer upload dos arquivos é necessário informar o layout desejado.",
+                    type: "warning",
+                    confirmButtonColor: "#DD6B55",
+                    closeOnConfirm: true,
+                    closeOnCancel: false,
+                    showLoaderOnConfirm: true
+                });
+            } else {
+                $scope.erro = false;
 
-                        $uibModal.open({
-                            scope: $scope,
-                            templateUrl: 'views/modal/Importacao/editar_arquivo.html',
-                            controller: function ($scope, $uibModalInstance, selected) {
-                                $scope.value = selected;
+                SweetAlert.swal({
+                    title: "Deseja fazer o upload dos arquivos?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Sim!",
+                    cancelButtonText: "Não!",
+                    closeOnConfirm: true,
+                    closeOnCancel: false,
+                    showLoaderOnConfirm: true
+                },
+                    function (isConfirm) {
+                        if (isConfirm) {
 
-                                $scope.obj = {};
+                            $uibModal.open({
+                                scope: $scope,
+                                templateUrl: 'views/modal/Importacao/editar_arquivo.html',
+                                controller: function ($scope, $uibModalInstance, selected) {
+                                    $scope.value = selected;
 
-                                $scope.dateOptions = {
-                                    formatYear: 'yy',
-                                    maxDate: new Date(),
-                                    minDate: new Date(),
-                                    startingDay: 1
-                                };
+                                    $scope.obj = {};
 
-                                $scope.inlineOptions = {
-                                    customClass: getDayClass,
-                                    minDate: new Date(),
-                                    showWeeks: true
-                                };
+                                    $scope.dateOptions = {
+                                        formatYear: 'yy',
+                                        maxDate: new Date(),
+                                        minDate: new Date(),
+                                        startingDay: 1
+                                    };
 
-                                $scope.format = 'MM/yyyy'
+                                    $scope.inlineOptions = {
+                                        customClass: getDayClass,
+                                        minDate: new Date(),
+                                        showWeeks: true
+                                    };
 
-                                $scope.toggleMin = function () {
-                                    $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
-                                    $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
-                                    $scope.dateOptions.datepickerMode = "month";
-                                    $scope.dateOptions.minMode = "month";
-                                };
+                                    $scope.format = 'MM/yyyy'
 
-                                $scope.toggleMin();
+                                    $scope.toggleMin = function () {
+                                        $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+                                        $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+                                        $scope.dateOptions.datepickerMode = "month";
+                                        $scope.dateOptions.minMode = "month";
+                                    };
 
-                                $scope.open1 = function () {
-                                    $scope.popup1.opened = true;
-                                };
+                                    $scope.toggleMin();
 
-                                $scope.popup1 = {
-                                    opened: false
-                                };
+                                    $scope.open1 = function () {
+                                        $scope.popup1.opened = true;
+                                    };
 
-                                function getDayClass(data) {
-                                    var date = data.date,
-                                        mode = data.mode;
-                                    if (mode === 'day') {
-                                        var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+                                    $scope.popup1 = {
+                                        opened: false
+                                    };
 
-                                        for (var i = 0; i < $scope.events.length; i++) {
-                                            var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+                                    function getDayClass(data) {
+                                        var date = data.date,
+                                            mode = data.mode;
+                                        if (mode === 'day') {
+                                            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
 
-                                            if (dayToCheck === currentDay) {
-                                                return $scope.events[i].status;
+                                            for (var i = 0; i < $scope.events.length; i++) {
+                                                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                                                if (dayToCheck === currentDay) {
+                                                    return $scope.events[i].status;
+                                                }
                                             }
+                                        }
+
+                                        return '';
+                                    }
+
+                                    $scope.Alterar = function () {
+                                        if ($scope.obj.MesCompetencia == undefined || $scope.obj.MesCompetencia == null) {
+                                            SweetAlert.swal({
+                                                title: "Atenção",
+                                                text: "Preencha o mês da competência para liberar",
+                                                type: "warning"
+                                            });
+                                        }
+                                        else {
+
+                                            var mesCompentencia = $scope.obj.MesCompetencia.toLocaleDateString().substring(3, 10);
+                                            var layout = $scope.layout;
+
+                                            ArquivoService.Create(formData, mesCompentencia, layout).then(function (data) {
+                                                $uibModalInstance.dismiss('dimiss');
+                                                SweetAlert.swal({
+                                                    title: "Arquivos enviados!",
+                                                    text: "Os arquivos foram enviados com sucesso!",
+                                                    type: "success"
+                                                });
+                                                $scope.GetAll();
+                                            });
                                         }
                                     }
 
-                                    return '';
-                                }
-
-                                $scope.Alterar = function () {
-                                    if ($scope.obj.MesCompetencia == undefined || $scope.obj.MesCompetencia == null) {
-                                        SweetAlert.swal({
-                                            title: "Atenção",
-                                            text: "Preencha o mês da competência para liberar",
-                                            type: "warning"
-                                        });
-                                    }
-                                    else {
-
-                                        var mesCompentencia = $scope.obj.MesCompetencia.toLocaleDateString().substring(3, 10);
-
-                                        ArquivoService.Create(formData, mesCompentencia).then(function (data) {
-                                            $uibModalInstance.dismiss('dimiss');
-                                            SweetAlert.swal({
-                                                title: "Arquivos enviados!",
-                                                text: "Os arquivos foram enviados com sucesso!",
-                                                type: "success"
-                                            });
-                                            $scope.GetAll();
-                                        });
+                                    $scope.cancel = function () {
+                                        $uibModalInstance.dismiss('cancel');
+                                    };
+                                },
+                                windowClass: "animated fadeIn",
+                                resolve: {
+                                    selected: function () {
+                                        return;
                                     }
                                 }
+                            });
 
-                                $scope.cancel = function () {
-                                    $uibModalInstance.dismiss('cancel');
-                                };
-                            },
-                            windowClass: "animated fadeIn",
-                            resolve: {
-                                selected: function () {
-                                    return;
-                                }
-                            }
-                        });
-
-                    } else {
-                        $loading.finish('load');
-                        SweetAlert.swal({
-                            title: "Cancelado!",
-                            text: "Solicitação cancelada!",
-                            type: "error"
-                        });
-                    }
-                });
-
-
+                        } else {
+                            $loading.finish('load');
+                            SweetAlert.swal({
+                                title: "Cancelado!",
+                                text: "Solicitação cancelada!",
+                                type: "error"
+                            });
+                        }
+                    });
+            }
         }
 
         $scope.importar = function (file) {
@@ -3401,5 +3468,18 @@ angular.module('gpca')
                 }
             ]);
 
+    })
+    .controller('SignalRCtrl', function ($scope, broadcast) {
+
+        $scope.usuario = '';
+        $scope.mensagem = '';
+
+        if (broadcast.connectionHub.state == 'Disconnected')
+            broadcast.startBroadcast();
+
+        $scope.enviar = function () {
+
+            broadcast.invokeMessage($scope.usuario, $scope.mensagem);
+        }
     })
     ;

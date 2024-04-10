@@ -10401,6 +10401,17 @@ input[type="radio"] {
     font-weight: 700 !important;
 }
 
+.icon-green {
+    color: green !important;
+}
+
+.text-weight {
+    font-weight: 700 !important;
+}
+
+.erro-layout {
+    border: 1px solid #ff0000 !important;
+}
 
 @keyframes effect {
     0% {

@@ -78,3 +78,4 @@ C:\Dev\Pessoal\PCA-Novo\Gpca.Admin.V1\Gpca.Admin.V1\obj\Release\net6.0\refint\Gp
 C:\Dev\Pessoal\PCA-Novo\Gpca.Admin.V1\Gpca.Admin.V1\obj\Release\net6.0\Gpca.Admin.V1.pdb
 C:\Dev\Pessoal\PCA-Novo\Gpca.Admin.V1\Gpca.Admin.V1\obj\Release\net6.0\Gpca.Admin.V1.genruntimeconfig.cache
 C:\Dev\Pessoal\PCA-Novo\Gpca.Admin.V1\Gpca.Admin.V1\obj\Release\net6.0\ref\Gpca.Admin.V1.dll
+C:\Dev\Pessoal\PCA-Novo\Gpca.Admin.V1\Gpca.Admin.V1\bin\Release\net6.0\libman.json
