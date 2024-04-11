@@ -1856,52 +1856,62 @@ angular.module('gpca')
 
             $q.all([gerarConsolidado]).then(function (response) {
                 if (response && response[0] != undefined) {
-                    SweetAlert.swal({
-                        title: response[0].data.message,
-                        type: "success",
-                        showCancelButton: false,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Fazer download",
-                        closeOnConfirm: true,
-                        closeOnCancel: false
-                    },
-                        function (isConfirm) {
-                            if (isConfirm) {
-                                $loading.start('load');
+                    if (response[0].data.success) {
+                        SweetAlert.swal({
+                            title: response[0].data.message,
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Fazer download",
+                            closeOnConfirm: true,
+                            closeOnCancel: false
+                        },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    $loading.start('load');
 
-                                RelatoriosService.CreateExcel(date).then(function (resp) {
-                                    if (resp.data != undefined) {
+                                    RelatoriosService.CreateExcel(date).then(function (resp) {
+                                        if (resp.data != undefined) {
 
-                                        const blob = resp.data;
-                                        var url = window.URL.createObjectURL(blob);
-                                        var a = document.createElement("a");
-                                        document.body.appendChild(a);
-                                        a.href = url;
-                                        a.download = "Consolidação Relatórios de Gastos.xlsx";
-                                        a.click();
+                                            const blob = resp.data;
+                                            var url = window.URL.createObjectURL(blob);
+                                            var a = document.createElement("a");
+                                            document.body.appendChild(a);
+                                            a.href = url;
+                                            a.download = "Consolidação Relatórios de Gastos.xlsx";
+                                            a.click();
 
+                                            $loading.finish('load');
+                                        } else {
+
+                                            $loading.finish('load');
+                                            SweetAlert.swal({
+                                                title: "Atenção!",
+                                                type: "warning",
+                                                text: "Algo deu errado na sua solicitação. Tente novamente mais tarde ou entre em contato com o suporte."
+                                            });
+                                        }
+                                    }, function (error) {
+                                        console.log(error);
                                         $loading.finish('load');
-                                    } else {
-
-                                        $loading.finish('load');
-                                        SweetAlert.swal({
-                                            title: "Atenção!",
-                                            type: "warning",
-                                            text: "Algo deu errado na sua solicitação. Tente novamente mais tarde ou entre em contato com o suporte."
-                                        });
-                                    }
-                                }, function (error) {
-                                    console.log(error);
-                                    $loading.finish('load');
-                                });
-                            }
+                                    });
+                                }
+                            });
+                    } else {
+                        $loading.finish('load');
+                        console.log("log erro: " + response[0].data.data)
+                        SweetAlert.swal({
+                            title: "Erro!",
+                            type: "error",
+                            text: response[0].data.message
                         });
+                    }
                 } else {
                     $loading.finish('load');
                     SweetAlert.swal({
                         title: "Erro!",
                         type: "error",
-                        text: "Erro ao gerar o relatório. Tente novamente mais tarde ou entre em contato com o suporte."
+                        text: "Ocorreu um erro inesperado. Consulte detalhes do log para mais informações."
                     });
                 }
             });

@@ -1,5 +1,5 @@
 angular.module('gpca')
-    .service('AuthService', function ($http, constants, toaster, $timeout, $localStorage, $loading) {
+    .service('AuthService', function ($http, constants, toaster, $timeout, $localStorage, $loading, broadcast) {
 
         var pars = {
             headers: {
@@ -27,6 +27,8 @@ angular.module('gpca')
 
                         $localStorage.$reset();
                         $localStorage.user = response.data;
+                        $localStorage.listaMensagens = [];
+                        broadcast.startBroadcast();
 
                         $timeout(function () {
                             window.location = "#/inicio/blank";
@@ -651,8 +653,8 @@ angular.module('gpca')
                 });
         }
 
-        this.Create = function (files, date) {
-            return $http.post(constants.UrlRelatorioApi + 'ArquivoUpload/Upload?mesCompetencia=' + date, files, {
+        this.Create = function (files, date, tipoLayout) {
+            return $http.post(constants.UrlRelatorioApi + 'ArquivoUpload/Upload?mesCompetencia=' + date + '&tipoLayout=' + tipoLayout, files, {
                 transformRequest: angular.identity,
                 headers: { 'Content-Type': undefined }
             })
